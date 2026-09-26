@@ -1,0 +1,23 @@
+/* Allow everything: the checks are about the system calls, not the policy. */
+
+use nk.base._
+
+use EDL Einit
+use EDL kl.core.Core
+use EDL checks.Check
+
+use kl.core.DCM._
+use kl.EntropyEntity._
+use kl.VfsRamFs._
+use kl.VfsNet._
+use kl.drivers.DNetSrv._
+
+execute: kl.core.Execute
+
+execute { grant () }
+
+request { grant () }
+
+response { grant () }
+
+error { grant () }

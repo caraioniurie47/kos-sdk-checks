@@ -1,0 +1,14 @@
+entities:
+
+- name: checks.Check
+  env:
+    VFS_FILESYSTEM_BACKEND: client:kl.VfsRamFs
+    VFS_NETWORK_BACKEND: client:kl.VfsNet
+  connections:
+  - target: kl.VfsRamFs
+    id: kl.VfsRamFs
+  - target: kl.VfsNet
+    id: kl.VfsNet
+@INIT_Check_ENTITY_CONNECTIONS+@
+
+@INIT_EXTERNAL_ENTITIES@

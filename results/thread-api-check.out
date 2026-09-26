@@ -1,0 +1,18 @@
+$ grep -rhoE "\bKn(Thread|Task)[A-Za-z]*(Suspend|Resume|Freeze|Unfreeze|Context)[A-Za-z]*\b" coresrv | sort -u
+KnTaskGetThreadContext
+KnTaskResume
+KnThreadContext
+KnThreadResumeByHandle
+KnThreadSuspendCurrent
+
+$ grep -rn -B3 "KnTaskGetThreadContext" coresrv | grep -v "^--$" | head -20
+coresrv/task/task_api.h-261- * @return                        If successful, the function returns rcOk, otherwise it returns an
+coresrv/task/task_api.h-262- *                                error code.
+coresrv/task/task_api.h-263- */
+coresrv/task/task_api.h:264:Retcode KnTaskGetThreadContext(Handle task, unsigned index, KnThreadContext *context);
+
+$ grep -rn "KnTaskSetExceptionHandler" coresrv | head -5
+coresrv/task/task_api.h:390:TaskExceptionHandler KnTaskSetExceptionHandler(TaskExceptionHandler handler);
+
+$ grep -rhn "pthread_kill\|pthread_suspend\|pthread_getcontext" pthread.h signal.h | head
+

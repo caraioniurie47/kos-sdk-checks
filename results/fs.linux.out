@@ -1,0 +1,27 @@
+$ uname -sr; id -u
+Linux 6.18.33.2-microsoft-standard-WSL2
+0
+$ findmnt -no FSTYPE,OPTIONS /tmp
+tmpfs  rw,relatime,size=65536k
+[check] mkstemps("/tmp/tmpXXXXXX.tmp", 4)                          -> 3
+[check] mkstemp("/tmp/tmpXXXXXX")                                  -> 4
+[check] link("/tmp/plain.txt", "/tmp/hard.txt")                    -> 0
+[check] write(/dev/null, 8)                                        -> 8
+[check] pwrite(/dev/null, 8, offset 0)                             -> 8
+[check] pread(/dev/null, 8, offset 0)                              -> 0
+[check] ftruncate(/dev/null, 0)                                    -> -1, errno Invalid argument
+[check] fsync(/dev/null)                                           -> -1, errno Invalid argument
+[check] pread(pipe, 2, offset 0)                                   -> -1, errno Illegal seek
+[check] fsync(pipe write end)                                      -> -1, errno Invalid argument
+[check] ftruncate(pipe write end, 0)                               -> -1, errno Invalid argument
+[check] geteuid()                                                  -> 0
+[check] open(own 0444 file, O_WRONLY)                              -> 5
+[check] utimensat(own 0444 file, explicit times)                   -> 0
+[check] chmod(file, 06755)                                         -> mode 106755
+[check] chmod(directory, 06755)                                    -> mode 46755
+[check] unlink(empty directory)                                    -> -1, errno Is a directory
+[check]   stat(that directory) afterwards                          -> 0
+[check] rename(file, 32799-character path)                         -> -1, errno File name too long
+[check] posix_fallocate(fd, 0, 1 TiB) return value                 -> 28 (errno 0)
+[check] ftruncate(fd, 1 TiB)                                       -> 0
+[check] done

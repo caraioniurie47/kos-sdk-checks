@@ -1,0 +1,71 @@
+# OpenSSL: libraries without headers
+$ strings lib/libcrypto.a | grep -m1 "^OpenSSL 1"
+OpenSSL 1.1.1t  7 Feb 2023
+
+$ grep -h ^Version lib/pkgconfig/openssl.pc
+Version: 1.1.1t
+
+$ find . -name opensslv.h -o -type d -name openssl | wc -l
+0
+
+# getentropy: referenced by libcrypto, defined and declared nowhere
+$ $SDK/toolchain/bin/llvm-nm lib/libcrypto.a 2>/dev/null | grep -w getentropy
+                 w getentropy
+
+$ for a in lib/*.a; do $SDK/toolchain/bin/llvm-nm --defined-only $a 2>/dev/null | grep -qw -E "[TW] getentropy" && echo $a; done | wc -l
+0
+
+$ grep -rlw getentropy include --exclude-dir=boost | wc -l
+0
+
+# GSSAPI / Kerberos
+$ find . \( -iname "*gssapi*" -o -iname "libkrb5*" \) | wc -l
+0
+
+# Declared but defined in no library
+$ grep -nw -E "shm_open|setgrent|getgrent|endgrent" include/sys/mman.h include/grp.h
+include/sys/mman.h:240:int	shm_open(const char *, int, mode_t);
+include/grp.h:25:void endgrent(void);
+include/grp.h:26:struct group *getgrent(void);
+include/grp.h:31:void setgrent(void);
+
+$ for f in shm_open setgrent getgrent endgrent; do n=0; for a in lib/*.a; do $SDK/toolchain/bin/llvm-nm --defined-only $a 2>/dev/null | grep -qw -E "[TW] $f" && n=$((n+1)); done; echo "$f: defined in $n archives"; done
+shm_open: defined in 0 archives
+setgrent: defined in 0 archives
+getgrent: defined in 0 archives
+endgrent: defined in 0 archives
+
+# fallocate without FALLOC_FL_* flags
+$ grep -nw fallocate include/fcntl.h
+58:int fallocate(int fd, int mode, off_t offset, off_t len);
+
+$ $SDK/toolchain/bin/llvm-nm --defined-only lib/libc.a 2>/dev/null | grep -w -E "[TW] fallocate"
+0000000000000000 W fallocate
+
+$ grep -rn FALLOC_FL_ include | wc -l
+0
+
+# Headers that portable code often probes
+$ for h in sys/syscall.h sys/statfs.h sys/vfs.h endian.h elf.h malloc.h mntent.h sys/auxv.h sys/epoll.h sys/event.h sys/inotify.h linux/futex.h sys/endian.h sys/exec_elf.h; do [ -e include/$h ] && echo "present  $h" || echo "absent   $h"; done
+absent   sys/syscall.h
+absent   sys/statfs.h
+absent   sys/vfs.h
+absent   endian.h
+absent   elf.h
+absent   malloc.h
+absent   mntent.h
+absent   sys/auxv.h
+absent   sys/epoll.h
+absent   sys/event.h
+absent   sys/inotify.h
+absent   linux/futex.h
+present  sys/endian.h
+present  sys/exec_elf.h
+
+$ grep -c _SC_AVPHYS_PAGES include/unistd.h
+0
+
+$ grep -h -E "PRODUCT_NAME|PRODUCT_VERSION" include/platform/version.h
+#define PRODUCT_NAME "KasperskyOS-Community-Edition-Qemu"
+#define PRODUCT_VERSION "1.4.0.102"
+

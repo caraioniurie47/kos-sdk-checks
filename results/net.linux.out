@@ -1,0 +1,17 @@
+$ uname -sr; id -u
+Linux 6.18.33.2-microsoft-standard-WSL2
+0
+$ findmnt -no FSTYPE,OPTIONS /tmp
+tmpfs  rw,relatime,size=65536k
+[check] socket(AF_INET6, SOCK_STREAM, 0)                           -> 3
+[check] getaddrinfo("localhost")                                   -> 0
+[check] sendfile(tcp socket, file, &offset, 512)                   -> 512
+[check] recv(tcp socket, 81920-byte buffer), 70000 bytes sent      -> 70512
+[check] recv(tcp socket, 65536-byte buffer) after that             -> -1, errno Resource temporarily unavailable
+[check] shutdown(unconnected TCP socket, SHUT_RDWR)                -> -1, errno Transport endpoint is not connected
+[check] accept4(non-blocking listener, SOCK_CLOEXEC): O_NONBLOCK   -> clear
+[check] poll({open socket, closed descriptor}, 2, 0)               -> 2
+[check]   revents                                                  -> 0x14, 0x20
+[check] poll(513 entries, every fd -1, timeout 0)                  -> 0
+[check] poll(512 entries, every fd -1, timeout 0)                  -> 0
+[check] done

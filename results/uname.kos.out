@@ -1,0 +1,7 @@
+[check] uname() -> 0
+[check] sysname  "KOS"
+[check] nodename "kos-host"
+[check] release  "1.0"
+[check] version  "1.0"
+[check] machine  "aarch64"
+[check] done

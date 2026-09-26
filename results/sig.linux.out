@@ -1,0 +1,10 @@
+$ uname -sr; id -u
+Linux 6.18.33.2-microsoft-standard-WSL2
+0
+$ findmnt -no FSTYPE,OPTIONS /tmp
+tmpfs  rw,relatime,size=65536k
+[check] sigaction(SIGKILL, handler) -> -1, errno Invalid argument; handler read back: not installed
+[check] sigaction(SIGSTOP, handler) -> -1, errno Invalid argument; handler read back: not installed
+[check] sigaction(SIGTERM, handler) -> 0; handler read back: installed
+[check] sigaction(SIGUSR1, handler) -> 0; handler read back: installed
+[check] done

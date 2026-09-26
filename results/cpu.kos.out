@@ -1,0 +1,6 @@
+[check] sysctlbyname("hw.optional.AdvSIMD") -> -1, errno No such file or directory, value -1
+[check] sysctlbyname("hw.optional.arm.AdvSIMD") -> -1, errno No such file or directory, value -1
+[check] sysctlbyname("hw.optional.floatingpoint") -> -1, errno No such file or directory, value -1
+[check] sysctlbyname("hw.optional.arm.FEAT_AES") -> -1, errno No such file or directory, value -1
+[check] sysctlbyname("hw.ncpu") -> -1, errno Function not implemented, value -1
+[check] done

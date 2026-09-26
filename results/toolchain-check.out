@@ -1,0 +1,35 @@
+# -static-pie
+$ $SDK/toolchain/bin/aarch64-kos-clang -static-pie t.c -o t-static-pie
+clang: warning: argument unused during compilation: '-static-pie' [-Wunused-command-line-argument]
+
+$ file t-static-pie | sed "s|.*: ||"
+ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld.elf_so.2, BuildID[xxHash]=0451fbf9f1a52a6b, not stripped
+
+$ $SDK/toolchain/bin/aarch64-kos-clang -static t.c -o t-static
+
+$ file t-static | sed "s|.*: ||"
+ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), static-pie linked, BuildID[xxHash]=e93af8a7216db7c9, not stripped
+
+# unprefixed compilers in toolchain/bin
+$ ls $SDK/toolchain/bin | grep -E "^clang(-[0-9]+)?$|^clang\+\+$"
+clang
+clang++
+clang-17
+
+$ $SDK/toolchain/bin/clang-17 --version | head -2
+clang version 17.0.6
+Target: aarch64-unknown-kos
+
+# stdout without a VFS program: where the SDK says it
+$ grep -rn -i "stdout\|stderr" $SDK/examples/hello/hello/src/hello.c | head -5
+10:    /* The fprintf() function prints the text to the standard error stream stderr to simplify the
+11:       example. To work with the standard output stream stdout, a program that supports the VFS must
+13:    fprintf(stderr, "Hello world!\n");
+
+# typos in log messages
+$ strings $SDK/sysroot-aarch64-kos/lib/libvfs_remote.a | grep -m1 connetion
+Can't establish IPC connetion to VFS server
+
+$ strings $SDK/sysroot-aarch64-kos/lib/libem_transport_lib.a | grep -m1 succesfully
+EM transport succesfully connected
+
