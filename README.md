@@ -8,6 +8,7 @@ on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-develop
 | Check | What it shows | Forum report |
 |---|---|---|
 | [`src/net-check.c`](src/net-check.c) | IPv6, `localhost`, `sendfile`, `shutdown`, `accept4` and `O_NONBLOCK`, `poll` with VfsNet; also `recv` of more than 64 KiB, which did not fail | Sockets |
+| [`src/net2-check.c`](src/net2-check.c) | `sendmsg` of more than 64 KiB on TCP, `setsockopt` after the peer's reset | not yet reported |
 | [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | Files |
 | [`src/uname-check.c`](src/uname-check.c) | what `uname()` returns | Sysroot |
 | [`host/sdk-check.sh`](host/sdk-check.sh) | OpenSSL headers, `getentropy`, functions declared but defined nowhere, `FALLOC_FL_*`, commonly probed headers | Sysroot |
@@ -73,7 +74,7 @@ and runs regardless.
 
 ## The same programs on Linux
 
-`linux/run-linux.sh net`, `fs` or `sig`, as root, compiles the program with `gcc` and runs it with a
+`linux/run-linux.sh net`, `net2`, `fs` or `sig`, as root, compiles the program with `gcc` and runs it with a
 private 64 MiB tmpfs as `/tmp`. `linux/kos_net.h` replaces the SDK's network setup helpers with stubs. The other
 programs use KasperskyOS interfaces and have no Linux counterpart.
 

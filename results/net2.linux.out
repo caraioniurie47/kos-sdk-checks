@@ -1,0 +1,15 @@
+$ uname -sr; id -u
+Linux 6.18.33.2-microsoft-standard-WSL2
+0
+$ findmnt -no FSTYPE,OPTIONS /tmp
+tmpfs  rw,relatime,size=65536k
+[check] sendmsg(tcp, 65536 bytes)                                  -> 65536
+[check] sendmsg(tcp, 65537 bytes)                                  -> 65537
+[check] sendmsg(tcp, 1 MiB)                                        -> 1048576
+[check] sendmsg(tcp, 1 MiB, msg_name = peer)                       -> 1048576
+[check] send(tcp, 1 MiB)                                           -> 1048576
+[check] writev(tcp, 1 MiB)                                         -> 1048576
+[check] setsockopt(SO_LINGER {1, 0}) after the peer reset          -> 0
+[check] setsockopt(SO_KEEPALIVE, 1) after the peer reset           -> 0
+[check] close() after that                                         -> 0
+[check] done

@@ -18,7 +18,7 @@ include (platform/image)
 find_package (precompiled_vfs REQUIRED)
 find_package (vfs REQUIRED)
 
-set (CHECKS net fs mem uname cpu sig)
+set (CHECKS net fs mem uname cpu sig net2)
 set (CHECK "net" CACHE STRING "Which check to build: one of ${CHECKS}")
 if (NOT CHECK IN_LIST CHECKS)
     message (FATAL_ERROR "CHECK must be one of ${CHECKS} (got '${CHECK}')")
