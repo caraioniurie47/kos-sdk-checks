@@ -8,7 +8,7 @@ on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-develop
 | Check | What it shows | Forum report |
 |---|---|---|
 | [`src/net-check.c`](src/net-check.c) | IPv6, `localhost`, `sendfile`, `shutdown`, `accept4` and `O_NONBLOCK`, `poll` with VfsNet; also `recv` of more than 64 KiB, which did not fail | Sockets |
-| [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat` on VfsRamFs | Files |
+| [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | Files |
 | [`src/uname-check.c`](src/uname-check.c) | what `uname()` returns | Sysroot |
 | [`host/sdk-check.sh`](host/sdk-check.sh) | OpenSSL headers, `getentropy`, functions declared but defined nowhere, `FALLOC_FL_*`, commonly probed headers | Sysroot |
 | [`src/mem-check.c`](src/mem-check.c) | `mmap(PROT_NONE)` reservations, `MADV_DONTNEED`, `MADV_FREE`, write-and-execute mappings | Memory |
@@ -39,6 +39,7 @@ mention. "Manual" is the KasperskyOS Community Edition 1.4 manual (PDF); "POSIX"
 | `pread`, `pwrite`, `ftruncate`, `fsync` fail `ENOSYS` on `/dev/null` and pipes | fs | defect; docs wrong: the lib_fs table lists all four |
 | uid 0 without superuser rights; a directory loses the setuid and setgid bits | fs | docs |
 | `unlink()` removes an empty directory (POSIX: `EPERM` without appropriate privileges), `rename()` to an over-long path gives `EINVAL` (POSIX: `ENAMETOOLONG`), `posix_fallocate()` returns -1 and sets `errno` (POSIX: returns the error number), `utimensat()` with explicit times fails `EACCES` for the owner | fs | defect |
+| VfsRamFs's `statvfs()` reports the space in use as the size and no free space | fs | docs: POSIX says "It is unspecified whether all members of the statvfs structure have meaningful values on all file systems." |
 | `uname()` returns constants | uname | defect |
 | OpenSSL libraries without headers; no GSSAPI; commonly probed headers absent | sdk-check | gap |
 | `libcrypto.a` references `getentropy()`, defined and declared nowhere; functions declared but defined in no library; `fallocate()` without `FALLOC_FL_*` | sdk-check | defect |

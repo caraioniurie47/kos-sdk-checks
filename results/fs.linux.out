@@ -22,6 +22,8 @@ tmpfs  rw,relatime,size=65536k
 [check] unlink(empty directory)                                    -> -1, errno Is a directory
 [check]   stat(that directory) afterwards                          -> 0
 [check] rename(file, 32799-character path)                         -> -1, errno File name too long
+[check] statvfs(/tmp): f_blocks, f_bfree, f_bavail                 -> 16384, 16384, 16384 (f_frsize 4096)
+[check]   the same with a 4 MiB file in /tmp                       -> 16384, 15360, 15360
 [check] posix_fallocate(fd, 0, 1 TiB) return value                 -> 28 (errno 0)
 [check] ftruncate(fd, 1 TiB)                                       -> 0
 [check] done

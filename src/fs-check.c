@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -104,6 +105,28 @@ int main(void)
     memcpy(longpath, "/tmp/", 5);
     errno = 0;
     result("rename(file, 32799-character path)", rename("/tmp/plain.txt", longpath));
+
+    /* statvfs: size and free space of /tmp, before and while it holds a 4 MiB file */
+    static char chunk[65536];
+    struct statvfs vfs;
+    errno = 0;
+    if (statvfs("/tmp", &vfs) == 0)
+        printf("[check] %-58s -> %llu, %llu, %llu (f_frsize %lu)\n", "statvfs(/tmp): f_blocks, f_bfree, f_bavail",
+            (unsigned long long)vfs.f_blocks, (unsigned long long)vfs.f_bfree, (unsigned long long)vfs.f_bavail,
+            (unsigned long)vfs.f_frsize);
+    else
+        result("statvfs(/tmp)", -1);
+    fd = open("/tmp/4mib.bin", O_CREAT | O_WRONLY | O_TRUNC, 0600);
+    for (int i = 0; i < 64; i++)
+        write(fd, chunk, sizeof(chunk));
+    close(fd);
+    errno = 0;
+    if (statvfs("/tmp", &vfs) == 0)
+        printf("[check] %-58s -> %llu, %llu, %llu\n", "  the same with a 4 MiB file in /tmp",
+            (unsigned long long)vfs.f_blocks, (unsigned long long)vfs.f_bfree, (unsigned long long)vfs.f_bavail);
+    else
+        result("  statvfs(/tmp) with a 4 MiB file", -1);
+    unlink("/tmp/4mib.bin");
 
     /* space allocation beyond what the file system has */
     fd = open("/tmp/big.bin", O_CREAT | O_RDWR | O_TRUNC, 0600);
