@@ -1,0 +1,16 @@
+[check] free pages at start: 358440 (1400 MiB)
+[check] 1. mmap(256 MiB, R|W) #1 -> ok, free pages 290169; writing it
+[check] 1. mmap(256 MiB, R|W) #2 -> ok, free pages 224454; writing it
+[check] 1. mmap(256 MiB, R|W) #3 -> ok, free pages 159049; writing it
+[check] 1. mmap(256 MiB, R|W) #4 -> ok, free pages 93384; writing it
+[check] 1. mmap(256 MiB, R|W) #5 -> ok, free pages 27720; writing it
+[check] 1. mmap(256 MiB, R|W) #6 -> Cannot allocate memory, free pages 27715
+[check] 1. all unmapped, free pages 356036
+[check] 2. reserve, mprotect(R|W) #1 -> ok, free pages 355908; writing it
+[check] 2. reserve, mprotect(R|W) #2 -> ok, free pages 290244; writing it
+[check] 2. reserve, mprotect(R|W) #3 -> ok, free pages 224580; writing it
+[check] 2. reserve, mprotect(R|W) #4 -> ok, free pages 158915; writing it
+[check] 2. reserve, mprotect(R|W) #5 -> ok, free pages 93251; writing it
+[check] 2. reserve, mprotect(R|W) #6 -> ok, free pages 27587; writing it
+[VMM  ] Unhandled Overcommit, address: 0x578c4000
+Terminating task.

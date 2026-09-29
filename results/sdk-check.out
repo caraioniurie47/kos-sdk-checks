@@ -69,3 +69,37 @@ $ grep -h -E "PRODUCT_NAME|PRODUCT_VERSION" include/platform/version.h
 #define PRODUCT_NAME "KasperskyOS-Community-Edition-Qemu"
 #define PRODUCT_VERSION "1.4.0.102"
 
+# dlerror: POSIX declares char *dlerror(void)
+$ grep -nw dlerror include/dlfcn.h
+36:const char *dlerror(void);
+
+# sigaction flags: SA_RESETHAND and SA_NODEFER are POSIX base (not XSI) since Issue 7
+$ grep -n "define SA_" include/strict/posix/signal.h
+393:#define SA_NOCLDSTOP   0x0008
+394:#define SA_RESTART  0x0002
+395:#define SA_SIGINFO  0x0040
+
+$ grep -rlw -E "SA_RESETHAND|SA_NODEFER" include | wc -l
+0
+
+# <uchar.h> (C11, POSIX.1-2024): the header, its declarations, its functions
+$ find . -name uchar.h | wc -l
+0
+
+$ grep -rlw -E "mbrtoc16|c16rtomb|mbrtoc32|c32rtomb" include | wc -l
+0
+
+$ $SDK/toolchain/bin/llvm-nm --defined-only lib/libc.a 2>/dev/null | grep -cw -E "[TW] (mbrtoc16|c16rtomb|mbrtoc32|c32rtomb)"
+0
+
+# SO_REUSEPORT: the network stack honours NetBSD's 0x0200; no header defines the name
+$ grep -rn -E "define[[:space:]]+SO_REUSEPORT" include | wc -l
+0
+
+$ grep -rn -E "define[[:space:]]+RUMP_SO_REUSE" include
+include/rump/rumpdefs.h:288:#define	RUMP_SO_REUSEADDR	0x0004		
+include/rump/rumpdefs.h:295:#define	RUMP_SO_REUSEPORT	0x0200		
+
+$ grep -n "define SO_REUSEADDR" include/strict/posix/sys/socket.h
+482:#define SO_REUSEADDR    0x0004
+

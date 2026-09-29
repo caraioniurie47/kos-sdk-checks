@@ -1,0 +1,21 @@
+$ uname -sr; id -u
+Linux 6.18.33.2-microsoft-standard-WSL2
+0
+/tmp/ccfqlAOH.s: Assembler messages:
+/tmp/ccfqlAOH.s:337: Warning: ignoring changed section attributes for .rodata
+$ findmnt -no FSTYPE,OPTIONS /tmp
+tmpfs  rw,relatime,size=65536k
+[check] pthread_condattr_init(zeroed memory)                       -> 0
+[check] pthread_condattr_init(that attribute again)                -> 0
+[check] pthread_condattr_init(a byte copy of it)                   -> 0
+[check] pthread_condattr_init(after pthread_condattr_destroy)      -> 0
+[check] sysconf(_SC_PHYS_PAGES)                                    -> 4094112
+[check] sysconf(_SC_PAGESIZE)                                      -> 4096
+[check] sysconf(_SC_NPROCESSORS_ONLN)                              -> 12
+[check] sysconf(_SC_OPEN_MAX)                                      -> 10240
+[check] rmdir of that directory while the stream is open           -> 0
+[check]   then readdir()                                           -> NULL (end, errno unchanged)
+[check] mprotect(.rodata page, PROT_NONE), then PROT_READ          -> 0, then 0
+[check] mprotect(.rodata page, PROT_READ|PROT_WRITE), then PROT_READ -> 0, then 0
+[check] mprotect(anonymous page, PROT_READ|PROT_WRITE), then PROT_READ -> 0, then 0
+[check] done

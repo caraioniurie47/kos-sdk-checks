@@ -1,9 +1,9 @@
 #!/bin/bash
-# Run a check natively on Linux for comparison: net, fs and sig only (mem, uname and cpu use KasperskyOS interfaces).
-# kos_net.h here stubs out the KasperskyOS network setup. Needs root, for a private tmpfs /tmp.
-#   sudo linux/run-linux.sh <net|fs|sig>
+# Run a check natively on Linux for comparison: net, net2, net3, fs, sys and sig only (mem, oom, uname and cpu use
+# KasperskyOS interfaces). kos_net.h here stubs out the KasperskyOS network setup. Needs root, for a private tmpfs /tmp.
+#   sudo linux/run-linux.sh <net|net2|net3|fs|sys|sig>
 set -u
-CHECK=${1:?usage: run-linux.sh <net|fs|sig>}
+CHECK=${1:?usage: run-linux.sh <net|net2|net3|fs|sys|sig>}
 DIR=$(cd "$(dirname "$0")" && pwd)
 SRC=$DIR/../src/$CHECK-check.c
 # Not under /tmp, which the tmpfs below hides.

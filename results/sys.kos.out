@@ -1,0 +1,14 @@
+[check] pthread_condattr_init(zeroed memory)                       -> 0
+[check] pthread_condattr_init(that attribute again)                -> 22, errno Invalid argument
+[check] pthread_condattr_init(a byte copy of it)                   -> 22, errno Invalid argument
+[check] pthread_condattr_init(after pthread_condattr_destroy)      -> 0
+[check] sysconf(_SC_PHYS_PAGES)                                    -> -1, errno Invalid argument
+[check] sysconf(_SC_PAGESIZE)                                      -> 4096
+[check] sysconf(_SC_NPROCESSORS_ONLN)                              -> 4
+[check] sysconf(_SC_OPEN_MAX)                                      -> 512
+[check] rmdir of that directory while the stream is open           -> 0
+[check]   then readdir()                                           -> NULL, errno No such file or directory
+[check] mprotect(.rodata page, PROT_NONE), then PROT_READ          -> 0, then 0
+[check] mprotect(.rodata page, PROT_READ|PROT_WRITE), then PROT_READ -> -1, errno Permission denied, then 0
+[check] mprotect(anonymous page, PROT_READ|PROT_WRITE), then PROT_READ -> 0, then 0
+[check] done

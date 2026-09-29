@@ -1,0 +1,29 @@
+[check] UDP connect(127.0.0.1:<peer port>)                         -> 0
+[check]   then connect(AF_UNSPEC)                                  -> -1, errno Address family not supported by protocol family
+[check]   then connect(0.0.0.0:0)                                  -> -1, errno Can't assign requested address
+[check] recv(non-blocking TCP, 0 bytes), nothing queued            -> 0
+[check] ioctl(UDP, FIONREAD), one 3-byte datagram queued           -> 19
+[check] ioctl(TCP, FIONREAD), 3 bytes queued                       -> 3
+[check] read(TCP) blocked, another thread closes the socket        -> -1, errno -3 (Unknown error: -3)
+[check] recvmsg(UDP) blocked, another thread closes the socket     -> -1, errno -3 (Unknown error: -3)
+[check] setsockopt(TCP, SO_SNDBUF, 0)                              -> -1, errno Invalid argument
+[check] setsockopt(TCP, SO_RCVBUF, 0)                              -> -1, errno Invalid argument
+[check] setsockopt(UDP, SO_SNDBUF, 0)                              -> -1, errno Invalid argument
+[check] second UDP bind to one port, SO_REUSEADDR on both          -> -1, errno Address already in use
+[check] SO_REUSEPORT defined by <sys/socket.h>                     -> no
+[check] second UDP bind to one port, SO_REUSEPORT on both          -> 0
+[check] getsockopt(SO_RCVBUF, NULL, option_len 0)                  -> -1, errno Invalid argument
+[check] getsockopt(SO_RCVBUF, buffer, option_len 0)                -> 0
+[check] IOV_MAX                                                    -> 10
+[check] UDP sendmsg with 11 one-byte iovecs                        -> -1, errno Invalid argument
+[check] UDP sendmsg with 1024 one-byte iovecs                      -> -1, errno Invalid argument
+[check] UDP sendmsg with 1025 one-byte iovecs                      -> -1, errno Invalid argument
+[check] UDP sendto(0 bytes)                                        -> 0
+[check] UDP sendto(1 byte)                                         -> 1
+[check]   receiver's first recvfrom (0: the empty one)             -> 1
+[check]   receiver's second recvfrom                               -> -1, errno Resource temporarily unavailable
+[check] accept4(TCP listener, address_len 128)                     -> 0
+[check] accept4(TCP listener, address_len 244)                     -> -1, errno Permission denied
+[check] accept4(AF_UNIX listener, address_len 128)                 -> 0
+[check] accept4(AF_UNIX listener, address_len 244)                 -> -1, errno Permission denied
+[check] done

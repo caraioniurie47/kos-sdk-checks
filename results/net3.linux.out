@@ -1,0 +1,34 @@
+$ uname -sr; id -u
+Linux 6.18.33.2-microsoft-standard-WSL2
+0
+$ findmnt -no FSTYPE,OPTIONS /tmp
+tmpfs  rw,relatime,size=65536k
+[check] UDP connect(127.0.0.1:<peer port>)                         -> 0
+[check]   then connect(AF_UNSPEC)                                  -> 0
+[check]   then connect(0.0.0.0:0)                                  -> 0
+[check] recv(non-blocking TCP, 0 bytes), nothing queued            -> -1, errno Resource temporarily unavailable
+[check] ioctl(UDP, FIONREAD), one 3-byte datagram queued           -> 3
+[check] ioctl(TCP, FIONREAD), 3 bytes queued                       -> 3
+[check] read(TCP) blocked, another thread closes the socket        -> still blocked 5 s later
+[check] recvmsg(UDP) blocked, another thread closes the socket     -> still blocked 5 s later
+[check] setsockopt(TCP, SO_SNDBUF, 0)                              -> 0
+[check] setsockopt(TCP, SO_RCVBUF, 0)                              -> 0
+[check] setsockopt(UDP, SO_SNDBUF, 0)                              -> 0
+[check] second UDP bind to one port, SO_REUSEADDR on both          -> 0
+[check] SO_REUSEPORT defined by <sys/socket.h>                     -> yes
+[check] second UDP bind to one port, SO_REUSEPORT on both          -> 0
+[check] getsockopt(SO_RCVBUF, NULL, option_len 0)                  -> 0
+[check] getsockopt(SO_RCVBUF, buffer, option_len 0)                -> 0
+[check] IOV_MAX                                                    -> 1024
+[check] UDP sendmsg with 11 one-byte iovecs                        -> 11
+[check] UDP sendmsg with 1024 one-byte iovecs                      -> 1024
+[check] UDP sendmsg with 1025 one-byte iovecs                      -> -1, errno Message too long
+[check] UDP sendto(0 bytes)                                        -> 0
+[check] UDP sendto(1 byte)                                         -> 1
+[check]   receiver's first recvfrom (0: the empty one)             -> 0
+[check]   receiver's second recvfrom                               -> 1
+[check] accept4(TCP listener, address_len 128)                     -> 0
+[check] accept4(TCP listener, address_len 244)                     -> 0
+[check] accept4(AF_UNIX listener, address_len 128)                 -> 0
+[check] accept4(AF_UNIX listener, address_len 244)                 -> 0
+[check] done
