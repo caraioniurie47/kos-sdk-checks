@@ -28,7 +28,8 @@ The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `net2` 
 
 **defect**: differs from POSIX or breaks portable code; **docs wrong**: the manual states something the check
 contradicts; **gap**: a library, header or API is missing; **docs**: allowed behaviour that the documentation does not
-mention. "Manual" is the KasperskyOS Community Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017.
+mention; **allowed**: behaviour POSIX requires, listed because Linux differs. "Manual" is the KasperskyOS Community
+Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017, unless a row names POSIX.1-2024.
 
 | Behaviour | Check | Status |
 |---|---|---|
