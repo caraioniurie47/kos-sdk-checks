@@ -52,7 +52,7 @@ int main(void)
     result("fsync(/dev/null)", fsync(fd));
     close(fd);
 
-    /* pipes: POSIX gives ESPIPE for pread and EINVAL for fsync; ftruncate on a pipe is unspecified (Linux: EINVAL) */
+    /* pipes: POSIX gives ESPIPE for pread and EINVAL for fsync and (POSIX.1-2024) ftruncate, as Linux does */
     int p[2];
     pipe(p);
     write(p[1], "ab", 2);
@@ -72,14 +72,14 @@ int main(void)
     chmod("/tmp/readonly.txt", 0444);
     errno = 0;
     fd = open("/tmp/readonly.txt", O_WRONLY);
-    result("open(own 0444 file, O_WRONLY)", fd);
+    result("open(0444 file it created, O_WRONLY)", fd);
     if (fd >= 0)
         close(fd);
     struct timespec times[2];
     clock_gettime(CLOCK_REALTIME, &times[0]);
     times[1] = times[0];
     errno = 0;
-    result("utimensat(own 0444 file, explicit times)", utimensat(AT_FDCWD, "/tmp/readonly.txt", times, 0));
+    result("utimensat(0444 file it created, explicit times)", utimensat(AT_FDCWD, "/tmp/readonly.txt", times, 0));
 
     /* setuid and setgid bits */
     fd = open("/tmp/modes.txt", O_CREAT | O_WRONLY | O_TRUNC, 0600);
@@ -92,14 +92,14 @@ int main(void)
     stat("/tmp/modes.dir", &st);
     printf("[check] %-58s -> mode %o\n", "chmod(directory, 06755)", (unsigned)st.st_mode);
 
-    /* unlink of a directory (POSIX: EPERM; Linux: EISDIR) */
+    /* unlink of a directory (POSIX: EPERM unless privileged and supported; Linux: EISDIR) */
     mkdir("/tmp/empty.dir", 0755);
     errno = 0;
     result("unlink(empty directory)", unlink("/tmp/empty.dir"));
     errno = 0;
     result("  stat(that directory) afterwards", stat("/tmp/empty.dir", &st));
 
-    /* rename to a path longer than PATH_MAX (POSIX: ENAMETOOLONG) */
+    /* rename to a path longer than PATH_MAX, one component longer than NAME_MAX (POSIX: ENAMETOOLONG) */
     static char longpath[32800];
     memset(longpath, 'a', sizeof(longpath) - 1);
     memcpy(longpath, "/tmp/", 5);

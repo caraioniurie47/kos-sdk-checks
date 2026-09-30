@@ -42,15 +42,17 @@ Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017, unless a row names PO
 | `poll()` fails with `EINVAL` for more than 512 entries, even all -1 | net | allowed: POSIX requires `EINVAL` for more than `{OPEN_MAX}` entries, and the SDK's `limits.h` defines `OPEN_MAX` 512 |
 | `mkstemps()` fails `EINVAL` for a valid template | fs | defect |
 | `link()` fails `ENOSYS` | fs | docs wrong: the same lib_fs table lists `link()` |
-| `pread`, `pwrite`, `ftruncate`, `fsync` fail `ENOSYS` on `/dev/null` and pipes | fs | defect; docs wrong: the lib_fs table lists all four |
+| `pread`, `pwrite`, `ftruncate`, `fsync` fail `ENOSYS` on `/dev/null` and pipes (on a pipe, POSIX: `ESPIPE` from `pread`, `EINVAL` from `fsync`; POSIX.1-2024 also `EINVAL` from `ftruncate`) | fs | defect on pipes; docs wrong: the lib_fs table lists all four |
 | uid 0 without superuser rights; a directory loses the setuid and setgid bits | fs | docs |
-| `unlink()` removes an empty directory (POSIX: `EPERM` without appropriate privileges), `rename()` to an over-long path gives `EINVAL` (POSIX: `ENAMETOOLONG`), `posix_fallocate()` returns -1 and sets `errno` (POSIX: returns the error number), `utimensat()` with explicit times fails `EACCES` for the owner | fs | defect |
-| VfsRamFs's `statvfs()` reports the space in use as the size and no free space | fs | docs: POSIX says "It is unspecified whether all members of the statvfs structure have meaningful values on all file systems." |
+| `posix_fallocate()` returns -1 and sets `errno` (POSIX: returns the error number), `utimensat()` with explicit times fails `EACCES` on a file the process created (POSIX: the owner may set them) | fs | defect |
+| `unlink()` removes an empty directory (POSIX: only with appropriate privileges; the image's security policy grants everything) | fs | docs: what counts as appropriate privileges is not documented |
+| `rename()` to a path with a component over `NAME_MAX` gives `EINVAL` (POSIX: `ENAMETOOLONG`) | fs | defect |
+| VfsRamFs's `statvfs()` reports the space in use as the size and no free space | fs | docs: POSIX says "It is unspecified whether all members of the statvfs structure have meaningful values on all file systems."; the manual says `statvfs()` gives the "number of available blocks" (p. 460) |
 | `uname()` returns constants | uname | defect |
 | OpenSSL libraries without headers; no GSSAPI; commonly probed headers absent | sdk-check | gap |
 | `libcrypto.a` references `getentropy()`, defined and declared nowhere; functions declared but defined in no library; `fallocate()` without `FALLOC_FL_*` | sdk-check | defect |
 | `mmap(PROT_NONE)` takes physical memory; `MADV_DONTNEED` and `MADV_FREE` free nothing | mem | defect |
-| `mprotect()` to read, write and execute fails with `ENOMEM` | mem | docs wrong: refusing write-and-execute is documented, with `ENOTSUP`, in the POSIX limitations' `mprotect()` row (p. 452) |
+| `mprotect()` to read, write and execute fails with `ENOMEM` | mem | defect: POSIX.1-2024 lists `ENOTSUP` for an unsupported combination of accesses as "shall fail"; docs wrong: refusing write-and-execute is documented, with `ENOTSUP`, in the POSIX limitations' `mprotect()` row (p. 452) |
 | `sigaction()` installs a handler for `SIGKILL` and `SIGSTOP` (POSIX: `EINVAL`) | sig | defect |
 | no CPU feature query: none of the `hw.optional` names tried exists for `sysctlbyname`, and there is no `sys/auxv.h` (sdk-check) | cpu | gap |
 | no API to suspend another running thread (the headers have `KnThreadSuspendCurrent` only; `KnTaskGetThreadContext` reads a thread of a frozen process) | thread-api-check | gap |
@@ -67,7 +69,7 @@ Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017, unless a row names PO
 | `getsockopt()` with a NULL buffer and length 0 fails `EINVAL` | net3 | docs (NetBSD succeeds) |
 | `IOV_MAX` is 10; `sendmsg()` with more iovecs fails `EINVAL` (POSIX: `EMSGSIZE`) | net3 | defect; the limit itself is documented (`MaxIovecsCount`, p. 869) |
 | `sendto()` of zero bytes on UDP returns 0 and sends nothing | net3 | defect |
-| `accept4()` with `address_len` over 128 fails `EACCES` (POSIX: the address is truncated) | net3 | docs (the IPC's `MaxSockAddrSize`, p. 869, is 128) |
+| `accept4()` with `address_len` over 128 fails `EACCES` (POSIX: a larger buffer is legal) | net3 | docs (the IPC's `MaxSockAddrSize`, p. 869, is 128) |
 | `sendmsg()` of more than 64 KiB on TCP fails `EMSGSIZE`, while `send()` sends part | net2 | docs |
 | `setsockopt()` fails `ECONNRESET` after the peer's reset | net2 | docs |
 | `pthread_condattr_init()` fails `EINVAL` on an initialized attribute or a byte copy of one | sys | docs (POSIX: undefined) |

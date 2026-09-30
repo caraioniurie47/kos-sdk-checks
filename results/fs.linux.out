@@ -15,8 +15,8 @@ tmpfs  rw,relatime,size=65536k
 [check] fsync(pipe write end)                                      -> -1, errno Invalid argument
 [check] ftruncate(pipe write end, 0)                               -> -1, errno Invalid argument
 [check] geteuid()                                                  -> 0
-[check] open(own 0444 file, O_WRONLY)                              -> 5
-[check] utimensat(own 0444 file, explicit times)                   -> 0
+[check] open(0444 file it created, O_WRONLY)                       -> 5
+[check] utimensat(0444 file it created, explicit times)            -> 0
 [check] chmod(file, 06755)                                         -> mode 106755
 [check] chmod(directory, 06755)                                    -> mode 46755
 [check] unlink(empty directory)                                    -> -1, errno Is a directory

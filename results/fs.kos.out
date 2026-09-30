@@ -10,8 +10,8 @@
 [check] fsync(pipe write end)                                      -> -1, errno Function not implemented
 [check] ftruncate(pipe write end, 0)                               -> -1, errno Function not implemented
 [check] geteuid()                                                  -> 0
-[check] open(own 0444 file, O_WRONLY)                              -> -1, errno Permission denied
-[check] utimensat(own 0444 file, explicit times)                   -> -1, errno Permission denied
+[check] open(0444 file it created, O_WRONLY)                       -> -1, errno Permission denied
+[check] utimensat(0444 file it created, explicit times)            -> -1, errno Permission denied
 [check] chmod(file, 06755)                                         -> mode 106755
 [check] chmod(directory, 06755)                                    -> mode 40755
 [check] unlink(empty directory)                                    -> 0
