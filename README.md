@@ -32,13 +32,13 @@ mention. "Manual" is the KasperskyOS Community Edition 1.4 manual (PDF); "POSIX"
 
 | Behaviour | Check | Status |
 |---|---|---|
-| `socket(AF_INET6, ...)` fails `EAFNOSUPPORT` | net | docs wrong: the manual documents IPv6 configuration for `kos_net.h` ("Configure the available network interfaces with IPv4 and IPv6 addressing.", `configure_net_iface6()`, pp. 124-125); the SDK has no IPv6 build of its network stack |
+| `socket(AF_INET6, ...)` fails `EAFNOSUPPORT` | net | docs wrong: the manual documents IPv6 configuration for `kos_net.h` ("Configure the available network interfaces with IPv4 and IPv6 addressing.", `configure_net_iface6()`, pp. 124-125); this SDK package's network stack has no IPv6 library (`rumpConfig.cmake` adds `rump::rumpnet_netinet6` only if that target exists, and there is no `librumpnet_netinet6.a`) |
 | `localhost` does not resolve without a hosts file for VfsNet | net | docs |
 | `sendfile()` from a file to a TCP socket fails `EINVAL` | net | defect; docs wrong: the manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97) lists `sendfile()` |
-| `shutdown()` of an unconnected TCP socket succeeds (POSIX: `ENOTCONN`) | net | defect |
-| a socket accepted from a non-blocking listener is non-blocking | net | docs (as on BSD; POSIX leaves it open) |
+| `shutdown()` of an unconnected TCP socket succeeds (POSIX: `ENOTCONN`) | net | defect (as in NetBSD 10, whose `soshutdown()` has no connection check) |
+| a socket from `accept4()` without `SOCK_NONBLOCK`, from a non-blocking listener, is non-blocking | net | defect: POSIX.1-2024 says `accept4()` takes `O_NONBLOCK` "solely" from its flags, and NetBSD's `accept4()` (`paccept()`) clears it; only `accept()` may inherit it |
 | `poll()` fails with `EBADF` for a closed descriptor among open ones (POSIX: `POLLNVAL` in that entry) | net | defect |
-| `poll()` fails with `EINVAL` for more than 512 entries, even all -1 | net | allowed: POSIX lists `EINVAL` for more than `{OPEN_MAX}` entries, and the SDK's `limits.h` defines `OPEN_MAX` 512 |
+| `poll()` fails with `EINVAL` for more than 512 entries, even all -1 | net | allowed: POSIX requires `EINVAL` for more than `{OPEN_MAX}` entries, and the SDK's `limits.h` defines `OPEN_MAX` 512 |
 | `mkstemps()` fails `EINVAL` for a valid template | fs | defect |
 | `link()` fails `ENOSYS` | fs | docs wrong: the same lib_fs table lists `link()` |
 | `pread`, `pwrite`, `ftruncate`, `fsync` fail `ENOSYS` on `/dev/null` and pipes | fs | defect; docs wrong: the lib_fs table lists all four |
