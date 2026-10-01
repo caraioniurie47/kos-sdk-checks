@@ -9,7 +9,7 @@ on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-develop
 |---|---|---|
 | [`src/net-check.c`](src/net-check.c) | IPv6, `localhost`, `sendfile`, `shutdown`, `accept4` and `O_NONBLOCK`, `poll` with VfsNet; also `recv` of more than 64 KiB, which did not fail | Sockets |
 | [`src/net2-check.c`](src/net2-check.c) | `sendmsg` of more than 64 KiB on TCP, `setsockopt` after the peer's reset | Sockets (2) |
-| [`src/net3-check.c`](src/net3-check.c) | UDP `connect(AF_UNSPEC)`, zero-length `recv`, `FIONREAD`, a blocked call woken by `close`, `SO_SNDBUF`/`SO_RCVBUF` 0, `SO_REUSEPORT`, `getsockopt` with a NULL buffer, `IOV_MAX`, `sendto` of zero bytes, `accept4` address length | Sockets (2) |
+| [`src/net3-check.c`](src/net3-check.c) | UDP `connect(AF_UNSPEC)`, zero-length `recv`, `FIONREAD`, a blocked call woken by `close`, `SO_SNDBUF`/`SO_RCVBUF` 0, `SO_REUSEPORT`, `getsockopt` with a NULL buffer, `IOV_MAX`, `sendto` of zero bytes, `accept4` address length, `connect` and `accept` with no descriptor left | Sockets (2), small documentation items |
 | [`src/sys-check.c`](src/sys-check.c) | `pthread_condattr_init` on an initialized attribute, `sysconf`, `readdir` of a removed directory, `mprotect` of a read-only image page, `getrlimit`/`setrlimit` and the descriptor limit | Sysroot, Files, Memory, small documentation items |
 | [`src/oom-check.c`](src/oom-check.c) | running out of memory with plain and with `MAP_NORESERVE` mappings | Memory |
 | [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | Files |
@@ -22,7 +22,7 @@ on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-develop
 | [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, where the SDK says that stdout needs a VFS program, typos in log messages | Toolchain |
 
 The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `net2` before its commit on 2026-09-26;
-`net3`, `oom` and the last four sections of `sdk-check.sh` on 2026-09-29; `sys` on 2026-10-01), is in
+`oom` and the last four sections of `sdk-check.sh` on 2026-09-29; `sys` and `net3` on 2026-10-01), is in
 [`results/`](results/).
 
 ## What each behaviour is
@@ -71,6 +71,7 @@ Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017, unless a row names PO
 | `IOV_MAX` is 10; `sendmsg()` with more iovecs fails `EINVAL` (POSIX: `EMSGSIZE`) | net3 | defect; the limit itself is documented (`MaxIovecsCount`, p. 869) |
 | `sendto()` of zero bytes on UDP returns 0 and sends nothing | net3 | defect |
 | `accept4()` with `address_len` over 128 fails `EACCES` (POSIX: a larger buffer is legal) | net3 | docs (the IPC's `MaxSockAddrSize`, p. 869, is 128) |
+| `accept()` with no descriptor left fails `EMFILE` and drops the pending connection: the client reads EOF, a later `accept()` finds none (Linux keeps it queued) | net3 | docs (POSIX lists `EMFILE` and is silent on the connection; NetBSD keeps it queued) |
 | `sendmsg()` of more than 64 KiB on TCP fails `EMSGSIZE`, while `send()` sends part | net2 | docs |
 | `setsockopt()` fails `ECONNRESET` after the peer's reset | net2 | docs |
 | `pthread_condattr_init()` fails `EINVAL` on an initialized attribute or a byte copy of one | sys | docs (POSIX: undefined) |

@@ -11,6 +11,11 @@
  * - IOV_MAX, and UDP sendmsg() with 11, 1024 and 1025 one-byte iovecs (POSIX: EMSGSIZE above IOV_MAX).
  * - sendto() of zero bytes on a UDP socket, then of one byte: what the receiver's recvfrom() returns first.
  * - accept4() with an address buffer of 128 and of 244 bytes, on a TCP and on an AF_UNIX listener.
+ * - With no descriptor left (the limit lowered to 256 first where setrlimit() works; KasperskyOS has 512): a
+ *   non-blocking connect() to a loopback listener, its SO_ERROR, and accept() once one descriptor is free (once with the
+ *   table filled after the sockets were made, once with the sockets taking its last two descriptors); then a
+ *   connection made before the table is full, accept(), the client's recv() and accept() with descriptors free. Last,
+ *   since the limit stays lowered.
  * Runs with VfsNet as its network backend; en0 is configured first, as the SDK's network examples do. Every check
  * prints one "[check]" line. */
 #include <arpa/inet.h>
@@ -24,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/resource.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/un.h>
@@ -357,6 +363,116 @@ static void accept_unix(socklen_t length)
     unlink(a.sun_path);
 }
 
+enum { MAX_FILL = 2000 };
+static int fill_fds[MAX_FILL];
+static int fill_count;
+
+/* Opens UDP sockets until socket() fails, so that no descriptor is left. */
+static void fill_descriptors(void)
+{
+    fill_count = 0;
+    while (fill_count < MAX_FILL)
+    {
+        int s = socket(AF_INET, SOCK_DGRAM, 0);
+        if (s < 0)
+            break;
+        fill_fds[fill_count++] = s;
+    }
+}
+
+static void free_descriptors(int n)
+{
+    while (n-- > 0 && fill_count > 0)
+        close(fill_fds[--fill_count]);
+}
+
+static int tcp_listener(struct sockaddr_in* a)
+{
+    int l = socket(AF_INET, SOCK_STREAM, 0);
+    loopback(a);
+    bind(l, (struct sockaddr*)a, sizeof(*a));
+    listen(l, 1);
+    socklen_t len = sizeof(*a);
+    getsockname(l, (struct sockaddr*)a, &len);
+    return l;
+}
+
+static void descriptor_limit_checks(void)
+{
+    struct rlimit low = { 256, 256 };
+    result("setrlimit(RLIMIT_NOFILE, 256) for the checks below", setrlimit(RLIMIT_NOFILE, &low));
+
+    struct sockaddr_in a;
+    int l = tcp_listener(&a);
+    int c = socket(AF_INET, SOCK_STREAM, 0);
+    fcntl(c, F_SETFL, fcntl(c, F_GETFL) | O_NONBLOCK);
+    fill_descriptors();
+    errno = 0;
+    result("connect(non-blocking TCP), no descriptor left", connect(c, (struct sockaddr*)&a, sizeof(a)));
+    struct pollfd p = { c, POLLOUT, 0 };
+    poll(&p, 1, 3000);
+    int soerr = -1;
+    socklen_t sl = sizeof(soerr);
+    getsockopt(c, SOL_SOCKET, SO_ERROR, &soerr, &sl);
+    printf("[check] %-58s -> %d\n", "  then SO_ERROR after poll(POLLOUT)", soerr);
+    free_descriptors(1);
+    int s = accept(l, NULL, NULL);
+    result("  then accept() with one descriptor free", s < 0 ? -1 : 0);
+    if (s >= 0)
+        close(s);
+    free_descriptors(MAX_FILL);
+    close(c);
+    close(l);
+
+    /* The same, but the table filled first and the listener and client taking its last two descriptors. */
+    fill_descriptors();
+    free_descriptors(2);
+    l = tcp_listener(&a);
+    c = socket(AF_INET, SOCK_STREAM, 0);
+    fcntl(c, F_SETFL, fcntl(c, F_GETFL) | O_NONBLOCK);
+    errno = 0;
+    result("connect(non-blocking TCP), its socket took the last one", connect(c, (struct sockaddr*)&a, sizeof(a)));
+    p.fd = c;
+    p.revents = 0;
+    poll(&p, 1, 3000);
+    soerr = -1;
+    getsockopt(c, SOL_SOCKET, SO_ERROR, &soerr, &sl);
+    printf("[check] %-58s -> %d\n", "  then SO_ERROR after poll(POLLOUT)", soerr);
+    free_descriptors(1);
+    s = accept(l, NULL, NULL);
+    result("  then accept() with one descriptor free", s < 0 ? -1 : 0);
+    if (s >= 0)
+        close(s);
+    free_descriptors(MAX_FILL);
+    close(c);
+    close(l);
+
+    l = tcp_listener(&a);
+    fcntl(l, F_SETFL, fcntl(l, F_GETFL) | O_NONBLOCK);
+    c = socket(AF_INET, SOCK_STREAM, 0);
+    result("connect(blocking TCP), then no descriptor left", connect(c, (struct sockaddr*)&a, sizeof(a)));
+    fill_descriptors();
+    errno = 0;
+    s = accept(l, NULL, NULL);
+    result("  accept()", s < 0 ? -1 : 0);
+    if (s >= 0)
+        close(s);
+    free_descriptors(2);
+    wait_readable(c);
+    fcntl(c, F_SETFL, fcntl(c, F_GETFL) | O_NONBLOCK);
+    char b;
+    errno = 0;
+    result("  then the client's recv() (0: connection closed)", (long)recv(c, &b, 1, 0));
+    errno = 0;
+    s = accept(l, NULL, NULL);
+    result("  then accept() with descriptors free", s < 0 ? -1 : 0);
+    if (s >= 0)
+        close(s);
+    free_descriptors(MAX_FILL);
+    close(c);
+    close(l);
+}
+
 int main(void)
 {
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -385,6 +501,7 @@ int main(void)
     accept_tcp(244);
     accept_unix(128);
     accept_unix(244);
+    descriptor_limit_checks();
 
     printf("[check] done\n");
     return 0;

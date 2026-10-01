@@ -26,4 +26,15 @@
 [check] accept4(TCP listener, address_len 244)                     -> -1, errno Permission denied
 [check] accept4(AF_UNIX listener, address_len 128)                 -> 0
 [check] accept4(AF_UNIX listener, address_len 244)                 -> -1, errno Permission denied
+[check] setrlimit(RLIMIT_NOFILE, 256) for the checks below         -> -1, errno Function not implemented
+[check] connect(non-blocking TCP), no descriptor left              -> -1, errno Operation now in progress
+[check]   then SO_ERROR after poll(POLLOUT)                        -> 0
+[check]   then accept() with one descriptor free                   -> 0
+[check] connect(non-blocking TCP), its socket took the last one    -> -1, errno Operation now in progress
+[check]   then SO_ERROR after poll(POLLOUT)                        -> 0
+[check]   then accept() with one descriptor free                   -> 0
+[check] connect(blocking TCP), then no descriptor left             -> 0
+[check]   accept()                                                 -> -1, errno Too many open files
+[check]   then the client's recv() (0: connection closed)          -> 0
+[check]   then accept() with descriptors free                      -> -1, errno Resource temporarily unavailable
 [check] done
