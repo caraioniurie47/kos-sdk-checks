@@ -7,14 +7,20 @@
  * - mprotect() on the page of a read-only (.rodata) variable: lowering to PROT_NONE and back, and raising to
  *   PROT_READ|PROT_WRITE and back; an anonymous mapping's page for comparison. POSIX leaves mprotect() unspecified for memory not
  *   mapped by mmap(), and lists EACCES for a protection the underlying object does not allow.
+ * - getrlimit() and setrlimit() of RLIMIT_NOFILE (POSIX.1-2024 Base; XSI before), each followed by how many descriptors
+ *   open() of a /tmp file then gives (at the start /dev/null too: its errno at the limit differs on KasperskyOS): a
+ *   soft limit of 256 (lowering, as any process may), then 1024 for both limits (raising the hard limit needs
+ *   privileges; run as root on Linux).
  * Every check prints one "[check]" line. */
 #include <dirent.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/resource.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -118,6 +124,48 @@ static void protections(void)
     munmap(anon, (size_t)page);
 }
 
+/* Opens `path` until open() fails, closes them all again, and prints how many opened. */
+static void count_descriptors(const char* what, const char* path)
+{
+    enum { MAX_FDS = 5000 };
+    static int fds[MAX_FDS];
+    int n = 0;
+    int err = 0;
+    while (n < MAX_FDS)
+    {
+        int fd = open(path, O_RDONLY);
+        if (fd < 0)
+        {
+            err = errno;
+            break;
+        }
+        fds[n++] = fd;
+    }
+    for (int i = 0; i < n; i++)
+        close(fds[i]);
+    result(what, n, err);
+}
+
+static void descriptor_limits(void)
+{
+    const char* file = "/tmp/sys-check-limit";
+    close(open(file, O_CREAT | O_WRONLY, 0600));
+    struct rlimit rl;
+    int rc = getrlimit(RLIMIT_NOFILE, &rl);
+    result("getrlimit(RLIMIT_NOFILE)", rc, rc ? errno : 0);
+    count_descriptors("  open() of a /tmp file until it fails", file);
+    count_descriptors("  open() of /dev/null until it fails", "/dev/null");
+    struct rlimit low = { 256, rc == 0 ? rl.rlim_max : 256 };
+    rc = setrlimit(RLIMIT_NOFILE, &low);
+    result("setrlimit(RLIMIT_NOFILE, soft limit 256)", rc, rc ? errno : 0);
+    count_descriptors("  then open() of a /tmp file until it fails", file);
+    struct rlimit high = { 1024, 1024 };
+    rc = setrlimit(RLIMIT_NOFILE, &high);
+    result("setrlimit(RLIMIT_NOFILE, soft and hard limit 1024)", rc, rc ? errno : 0);
+    count_descriptors("  then open() of a /tmp file until it fails", file);
+    unlink(file);
+}
+
 int main(void)
 {
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -125,6 +173,7 @@ int main(void)
     sysconfs();
     removed_directory();
     protections();
+    descriptor_limits();
     printf("[check] done\n");
     return 0;
 }

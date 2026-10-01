@@ -1,3 +1,17 @@
+CMake Warning at /opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102/toolchain/share/cmake/Modules/platform/kos_image/image.cmake:681 (message):
+  Do not use build_kos_xxx_image() in root 'CMakeLists.txt':
+
+  Circular dependencies will be created:
+
+    See "kos-qemu-image: kos-qemu-image" in generated Makefile, where:
+        "kos-qemu-image:" - target name (target, rigth part)
+        "kos-qemu-image"  - file (prerequisites, left part)
+Call Stack (most recent call first):
+  /opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102/toolchain/share/cmake/Modules/platform/kos_image/image.cmake:2118 (__build_kos_image)
+  CMakeLists.txt:39 (build_kos_qemu_image)
+
+
+Entities + non-executables to be on image: Check;precompiled_vfs::VfsRamFs;precompiled_vfs::VfsNet;dnet_executables::whole;entropy::entity;dcm::entity
 [check] pthread_condattr_init(zeroed memory)                       -> 0
 [check] pthread_condattr_init(that attribute again)                -> 22, errno Invalid argument
 [check] pthread_condattr_init(a byte copy of it)                   -> 22, errno Invalid argument
@@ -11,4 +25,11 @@
 [check] mprotect(.rodata page, PROT_NONE), then PROT_READ          -> 0, then 0
 [check] mprotect(.rodata page, PROT_READ|PROT_WRITE), then PROT_READ -> -1, errno Permission denied, then 0
 [check] mprotect(anonymous page, PROT_READ|PROT_WRITE), then PROT_READ -> 0, then 0
+[check] getrlimit(RLIMIT_NOFILE)                                   -> -1, errno Invalid argument
+[check]   open() of a /tmp file until it fails                     -> 509, errno Too many open files
+[check]   open() of /dev/null until it fails                       -> 509, errno Too many open files in system
+[check] setrlimit(RLIMIT_NOFILE, soft limit 256)                   -> -1, errno Function not implemented
+[check]   then open() of a /tmp file until it fails                -> 509, errno Too many open files
+[check] setrlimit(RLIMIT_NOFILE, soft and hard limit 1024)         -> -1, errno Function not implemented
+[check]   then open() of a /tmp file until it fails                -> 509, errno Too many open files
 [check] done

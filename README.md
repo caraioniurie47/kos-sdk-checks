@@ -10,7 +10,7 @@ on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-develop
 | [`src/net-check.c`](src/net-check.c) | IPv6, `localhost`, `sendfile`, `shutdown`, `accept4` and `O_NONBLOCK`, `poll` with VfsNet; also `recv` of more than 64 KiB, which did not fail | Sockets |
 | [`src/net2-check.c`](src/net2-check.c) | `sendmsg` of more than 64 KiB on TCP, `setsockopt` after the peer's reset | Sockets (2) |
 | [`src/net3-check.c`](src/net3-check.c) | UDP `connect(AF_UNSPEC)`, zero-length `recv`, `FIONREAD`, a blocked call woken by `close`, `SO_SNDBUF`/`SO_RCVBUF` 0, `SO_REUSEPORT`, `getsockopt` with a NULL buffer, `IOV_MAX`, `sendto` of zero bytes, `accept4` address length | Sockets (2) |
-| [`src/sys-check.c`](src/sys-check.c) | `pthread_condattr_init` on an initialized attribute, `sysconf`, `readdir` of a removed directory, `mprotect` of a read-only image page | Sysroot, Files, Memory |
+| [`src/sys-check.c`](src/sys-check.c) | `pthread_condattr_init` on an initialized attribute, `sysconf`, `readdir` of a removed directory, `mprotect` of a read-only image page, `getrlimit`/`setrlimit` and the descriptor limit | Sysroot, Files, Memory, small documentation items |
 | [`src/oom-check.c`](src/oom-check.c) | running out of memory with plain and with `MAP_NORESERVE` mappings | Memory |
 | [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | Files |
 | [`src/uname-check.c`](src/uname-check.c) | what `uname()` returns | Sysroot |
@@ -22,7 +22,8 @@ on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-develop
 | [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, where the SDK says that stdout needs a VFS program, typos in log messages | Toolchain |
 
 The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `net2` before its commit on 2026-09-26;
-`net3`, `sys`, `oom` and the last four sections of `sdk-check.sh` on 2026-09-29), is in [`results/`](results/).
+`net3`, `oom` and the last four sections of `sdk-check.sh` on 2026-09-29; `sys` on 2026-10-01), is in
+[`results/`](results/).
 
 ## What each behaviour is
 
@@ -76,6 +77,8 @@ Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017, unless a row names PO
 | `sysconf(_SC_PHYS_PAGES)` fails `EINVAL` though `unistd.h` defines the name | sys | gap |
 | `readdir()` of a directory removed after `opendir()` fails `ENOENT` (Linux: end of stream) | sys | docs (POSIX lists `ENOENT`) |
 | `mprotect()` cannot raise a read-only image page to writable (`EACCES`); lowering works | sys | docs (POSIX: unspecified for memory not from `mmap()`) |
+| `getrlimit(RLIMIT_NOFILE)` fails `EINVAL` and `setrlimit` fails `ENOSYS`, so a process keeps 512 descriptors | sys | gap: POSIX.1-2024 has both in the Base, with `RLIMIT_NOFILE`; IEEE Std 1003.1-2017 has them in the XSI option, which the KasperskyOS documentation excludes |
+| at that limit `open()` of `/dev/null` fails `ENFILE`, where a `/tmp` file fails `EMFILE` | sys | defect (POSIX: `EMFILE` when "All file descriptors available to the process are currently open") |
 | `MAP_NORESERVE` memory is committed on first write, and when none is left the kernel ends the process (`Unhandled Overcommit`); a plain `mmap()` fails `ENOMEM` instead | oom | docs |
 | `dlerror()` is declared `const char *` (POSIX: `char *`) | sdk-check | defect |
 | no `SA_RESETHAND`, `SA_NODEFER` (POSIX base since Issue 7) | sdk-check | gap |
