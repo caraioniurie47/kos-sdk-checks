@@ -2,88 +2,29 @@
 
 Small programs and scripts that show where KasperskyOS Community Edition 1.4.0.102 (QEMU, aarch64) behaves differently
 from POSIX or Linux, or where the SDK lacks something portable code expects. I found these while porting .NET
-(NativeAOT) to KasperskyOS ([runtime-kos](https://github.com/caraioniurie47/runtime-kos)), and each one backs a report
-on the [KasperskyOS forum](https://forum.kaspersky.com/forum/kasperskyos-development-268/).
+(NativeAOT) to KasperskyOS ([runtime-kos](https://github.com/caraioniurie47/runtime-kos)). **[`FINDINGS.md`](FINDINGS.md)
+describes each finding**: what the checks show, what POSIX, NetBSD and Linux do, what it breaks, and the options; the
+last column below links the findings each check backs.
 
-| Check | What it shows | Forum report |
+| Check | What it shows | Findings |
 |---|---|---|
-| [`src/net-check.c`](src/net-check.c) | IPv6, `localhost`, `sendfile`, `shutdown`, `accept4` and `O_NONBLOCK`, `poll` with VfsNet; also `recv` of more than 64 KiB, which did not fail | Sockets |
-| [`src/net2-check.c`](src/net2-check.c) | `sendmsg` of more than 64 KiB on TCP, `setsockopt` after the peer's reset | Sockets (2) |
-| [`src/net3-check.c`](src/net3-check.c) | UDP `connect(AF_UNSPEC)`, zero-length `recv`, `FIONREAD`, a blocked call woken by `close`, `SO_SNDBUF`/`SO_RCVBUF` 0, `SO_REUSEPORT`, `getsockopt` with a NULL buffer, `IOV_MAX`, `sendto` of zero bytes, `accept4` address length, `connect` and `accept` with no descriptor left | Sockets (2), small documentation items |
-| [`src/sys-check.c`](src/sys-check.c) | `pthread_condattr_init` on an initialized attribute, `sysconf`, `readdir` of a removed directory, `mprotect` of a read-only image page, `getrlimit`/`setrlimit` and the descriptor limit | Sysroot, Files, Memory, small documentation items |
-| [`src/oom-check.c`](src/oom-check.c) | running out of memory with plain and with `MAP_NORESERVE` mappings | Memory |
-| [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | Files |
-| [`src/uname-check.c`](src/uname-check.c) | what `uname()` returns | Sysroot |
-| [`host/sdk-check.sh`](host/sdk-check.sh) | OpenSSL headers, `getentropy`, functions declared but defined nowhere, `FALLOC_FL_*`, commonly probed headers, `dlerror`'s declaration, `SA_RESETHAND`/`SA_NODEFER`, `<uchar.h>`, `SO_REUSEPORT` | Sysroot |
-| [`src/mem-check.c`](src/mem-check.c) | `mmap(PROT_NONE)` reservations, `MADV_DONTNEED`, `MADV_FREE`, write-and-execute mappings | Memory |
-| [`src/cpu-check.c`](src/cpu-check.c) | CPU feature queries through `sysctlbyname` | Managed runtime |
-| [`src/sig-check.c`](src/sig-check.c) | `sigaction` for `SIGKILL` and `SIGSTOP` | Managed runtime |
-| [`host/thread-api-check.sh`](host/thread-api-check.sh) | thread suspension and register access in the headers | Managed runtime |
-| [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, where the SDK says that stdout needs a VFS program, typos in log messages | Toolchain |
+| [`src/net-check.c`](src/net-check.c) | IPv6, `localhost`, `sendfile`, `shutdown` of TCP and UDP sockets, `accept4` and `O_NONBLOCK`, `poll` with VfsNet; also `recv` of more than 64 KiB, which did not fail | [B5](FINDINGS.md#b5), [B6](FINDINGS.md#b6), [B7](FINDINGS.md#b7), [E2](FINDINGS.md#e2), [E3](FINDINGS.md#e3), [U4](FINDINGS.md#u4), [Portability notes](FINDINGS.md#portability-notes) |
+| [`src/net2-check.c`](src/net2-check.c) | `sendmsg` of more than 64 KiB on TCP, `setsockopt` after the peer's reset | [U8](FINDINGS.md#u8), [U10](FINDINGS.md#u10) |
+| [`src/net3-check.c`](src/net3-check.c) | UDP `connect(AF_UNSPEC)`, zero-length `recv`, `FIONREAD`, a blocked call woken by `close`, `SO_SNDBUF`/`SO_RCVBUF` 0, `SO_REUSEPORT`, `getsockopt` with a NULL buffer, `IOV_MAX`, `sendto` of zero bytes, `accept4` address length, `connect` and `accept` with no descriptor left | [B8](FINDINGS.md#b8), [B9](FINDINGS.md#b9), [B10](FINDINGS.md#b10), [B11](FINDINGS.md#b11), [B12](FINDINGS.md#b12), [U5](FINDINGS.md#u5), [U6](FINDINGS.md#u6), [U7](FINDINGS.md#u7), [U9](FINDINGS.md#u9), [U11](FINDINGS.md#u11), [M1](FINDINGS.md#m1) |
+| [`src/sys-check.c`](src/sys-check.c) | `pthread_condattr_init` on an initialized attribute, `sysconf`, `readdir` of a removed directory, `mprotect` of a read-only image page, `getrlimit`/`setrlimit` and the descriptor limit | [B13](FINDINGS.md#b13), [U3](FINDINGS.md#u3), [U13](FINDINGS.md#u13), [U17](FINDINGS.md#u17), [M2](FINDINGS.md#m2) |
+| [`src/oom-check.c`](src/oom-check.c) | running out of memory with plain and with `MAP_NORESERVE` mappings | [U16](FINDINGS.md#u16) |
+| [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | [B1](FINDINGS.md#b1), [B2](FINDINGS.md#b2), [B3](FINDINGS.md#b3), [E1](FINDINGS.md#e1), [U1](FINDINGS.md#u1), [U2](FINDINGS.md#u2) |
+| [`src/uname-check.c`](src/uname-check.c) | what `uname()` returns | [U12](FINDINGS.md#u12) |
+| [`host/sdk-check.sh`](host/sdk-check.sh) | OpenSSL headers, `getentropy`, GSSAPI, functions declared but defined nowhere, `FALLOC_FL_*`, commonly probed headers, `dlerror`'s declaration, `SA_RESETHAND`/`SA_NODEFER`, `<uchar.h>`, `SO_REUSEPORT` | [B16](FINDINGS.md#b16), [M1](FINDINGS.md#m1), [M3](FINDINGS.md#m3), [M4](FINDINGS.md#m4), [M5](FINDINGS.md#m5), [M6](FINDINGS.md#m6), [M7](FINDINGS.md#m7), [M8](FINDINGS.md#m8), [M9](FINDINGS.md#m9), [M10](FINDINGS.md#m10) |
+| [`src/mem-check.c`](src/mem-check.c) | `mmap(PROT_NONE)` reservations, `MADV_DONTNEED`, `MADV_FREE`, write-and-execute mappings | [B15](FINDINGS.md#b15), [U15](FINDINGS.md#u15) |
+| [`src/cpu-check.c`](src/cpu-check.c) | CPU feature queries through `sysctlbyname` | [P3](FINDINGS.md#p3) |
+| [`src/sig-check.c`](src/sig-check.c) | `sigaction` for `SIGKILL` and `SIGSTOP` | [B14](FINDINGS.md#b14) |
+| [`host/thread-api-check.sh`](host/thread-api-check.sh) | thread suspension and register access in the headers | [P1](FINDINGS.md#p1) |
+| [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94: nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
 
 The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `net2` before its commit on 2026-09-26;
-`oom` and the last four sections of `sdk-check.sh` on 2026-09-29; `sys` and `net3` on 2026-10-01), is in
-[`results/`](results/).
-
-## What each behaviour is
-
-**defect**: differs from POSIX or breaks portable code; **docs wrong**: the manual states something the check
-contradicts; **gap**: a library, header or API is missing; **docs**: allowed behaviour that the documentation does not
-mention; **allowed**: behaviour POSIX requires, listed because Linux differs. "Manual" is the KasperskyOS Community
-Edition 1.4 manual (PDF); "POSIX" is IEEE Std 1003.1-2017, unless a row names POSIX.1-2024.
-
-| Behaviour | Check | Status |
-|---|---|---|
-| `socket(AF_INET6, ...)` fails `EAFNOSUPPORT` | net | docs wrong: the manual documents IPv6 configuration for `kos_net.h` ("Configure the available network interfaces with IPv4 and IPv6 addressing.", `configure_net_iface6()`, pp. 124-125); this SDK package's network stack has no IPv6 library (`rumpConfig.cmake` adds `rump::rumpnet_netinet6` only if that target exists, and there is no `librumpnet_netinet6.a`) |
-| `localhost` does not resolve without a hosts file for VfsNet | net | docs |
-| `sendfile()` from a file to a TCP socket fails `EINVAL` | net | defect; docs wrong: the manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97) lists `sendfile()` |
-| `shutdown()` of an unconnected TCP socket succeeds (POSIX: `ENOTCONN`) | net | defect (as in NetBSD 10, whose `soshutdown()` has no connection check) |
-| a socket from `accept4()` without `SOCK_NONBLOCK`, from a non-blocking listener, is non-blocking | net | defect: POSIX.1-2024 says `accept4()` takes `O_NONBLOCK` "solely" from its flags, and NetBSD's `accept4()` (`paccept()`) clears it; only `accept()` may inherit it |
-| `poll()` fails with `EBADF` for a closed descriptor among open ones (POSIX: `POLLNVAL` in that entry) | net | defect |
-| `poll()` fails with `EINVAL` for more than 512 entries, even all -1 | net | allowed: POSIX requires `EINVAL` for more than `{OPEN_MAX}` entries, and the SDK's `limits.h` defines `OPEN_MAX` 512 |
-| `mkstemps()` fails `EINVAL` for a valid template | fs | defect |
-| `link()` fails `ENOSYS` | fs | docs wrong: the same lib_fs table lists `link()` |
-| `pread`, `pwrite`, `ftruncate`, `fsync` fail `ENOSYS` on `/dev/null` and pipes (on a pipe, POSIX: `ESPIPE` from `pread`, `EINVAL` from `fsync`; POSIX.1-2024 also `EINVAL` from `ftruncate`) | fs | defect on pipes; docs wrong: the lib_fs table lists all four |
-| uid 0 without superuser rights; a directory loses the setuid and setgid bits | fs | docs |
-| `posix_fallocate()` returns -1 and sets `errno` (POSIX: returns the error number), `utimensat()` with explicit times fails `EACCES` on a file the process created (POSIX: the owner may set them) | fs | defect |
-| `unlink()` removes an empty directory (POSIX: only with appropriate privileges; the image's security policy grants everything) | fs | docs: what counts as appropriate privileges is not documented |
-| `rename()` to a path with a component over `NAME_MAX` gives `EINVAL` (POSIX: `ENAMETOOLONG`) | fs | defect |
-| VfsRamFs's `statvfs()` reports the space in use as the size and no free space | fs | docs: POSIX says "It is unspecified whether all members of the statvfs structure have meaningful values on all file systems."; the manual says `statvfs()` gives the "number of available blocks" (p. 460) |
-| `uname()` returns constants | uname | defect |
-| OpenSSL libraries without headers; no GSSAPI; commonly probed headers absent | sdk-check | gap |
-| `libcrypto.a` references `getentropy()`, defined and declared nowhere; functions declared but defined in no library; `fallocate()` without `FALLOC_FL_*` | sdk-check | defect |
-| `mmap(PROT_NONE)` takes physical memory; `MADV_DONTNEED` and `MADV_FREE` free nothing | mem | defect |
-| `mprotect()` to read, write and execute fails with `ENOMEM` | mem | defect: POSIX.1-2024 lists `ENOTSUP` for an unsupported combination of accesses as "shall fail"; docs wrong: refusing write-and-execute is documented, with `ENOTSUP`, in the POSIX limitations' `mprotect()` row (p. 452) |
-| `sigaction()` installs a handler for `SIGKILL` and `SIGSTOP` (POSIX: `EINVAL`) | sig | defect |
-| no CPU feature query: none of the `hw.optional` names tried exists for `sysctlbyname`, and there is no `sys/auxv.h` (sdk-check) | cpu | gap |
-| no API to suspend another running thread (the headers have `KnThreadSuspendCurrent` only; `KnTaskGetThreadContext` reads a thread of a frozen process) | thread-api-check | gap |
-| `aarch64-kos-clang -static-pie` links dynamically | toolchain-check | defect |
-| unprefixed `clang`/`clang-17` target KasperskyOS | toolchain-check | docs |
-| stdout needs a VFS program | toolchain-check | documented: the manual says so (p. 94), besides the hello example's comment; nothing to report |
-| "connetion", "succesfully" in log messages | toolchain-check | typo |
-| a connected UDP socket: `connect(AF_UNSPEC)` fails `EAFNOSUPPORT` (POSIX: "the socket's peer address shall be reset"), and `connect(0.0.0.0:0)` fails | net3 | defect |
-| `recv()` of zero bytes on an empty non-blocking TCP socket returns 0 (POSIX: `EAGAIN`) | net3 | defect (as NetBSD's `soreceive`) |
-| `FIONREAD` on UDP counts 16 bytes more than the datagram | net3 | docs (NetBSD counts the sender's address too) |
-| a `read`/`recvmsg` blocked while another thread closes the socket fails with `errno` -3, which is no error number | net3 | defect |
-| `SO_SNDBUF`/`SO_RCVBUF` of 0 fail `EINVAL` | net3 | docs |
-| the stack honours `SO_REUSEPORT` (0x0200, `RUMP_SO_REUSEPORT` in `rump/rumpdefs.h`), `sys/socket.h` does not define it | net3, sdk-check | gap |
-| `getsockopt()` with a NULL buffer and length 0 fails `EINVAL` | net3 | docs (NetBSD succeeds) |
-| `IOV_MAX` is 10; `sendmsg()` with more iovecs fails `EINVAL` (POSIX: `EMSGSIZE`) | net3 | defect; the limit itself is documented (`MaxIovecsCount`, p. 869) |
-| `sendto()` of zero bytes on UDP returns 0 and sends nothing | net3 | defect |
-| `accept4()` with `address_len` over 128 fails `EACCES` (POSIX: a larger buffer is legal) | net3 | docs (the IPC's `MaxSockAddrSize`, p. 869, is 128) |
-| `accept()` with no descriptor left fails `EMFILE` and drops the pending connection: the client reads EOF, a later `accept()` finds none (Linux keeps it queued) | net3 | docs (POSIX lists `EMFILE` and is silent on the connection; NetBSD keeps it queued) |
-| `sendmsg()` of more than 64 KiB on TCP fails `EMSGSIZE`, while `send()` sends part | net2 | docs |
-| `setsockopt()` fails `ECONNRESET` after the peer's reset | net2 | docs |
-| `pthread_condattr_init()` fails `EINVAL` on an initialized attribute or a byte copy of one | sys | docs (POSIX: undefined) |
-| `sysconf(_SC_PHYS_PAGES)` fails `EINVAL` though `unistd.h` defines the name | sys | gap |
-| `readdir()` of a directory removed after `opendir()` fails `ENOENT` (Linux: end of stream) | sys | docs (POSIX lists `ENOENT`) |
-| `mprotect()` cannot raise a read-only image page to writable (`EACCES`); lowering works | sys | docs (POSIX: unspecified for memory not from `mmap()`) |
-| `getrlimit(RLIMIT_NOFILE)` fails `EINVAL` and `setrlimit` fails `ENOSYS`, so a process keeps 512 descriptors | sys | gap: POSIX.1-2024 has both in the Base, with `RLIMIT_NOFILE`; IEEE Std 1003.1-2017 has them in the XSI option, which the KasperskyOS documentation excludes |
-| at that limit `open()` of `/dev/null` fails `ENFILE`, where a `/tmp` file fails `EMFILE` | sys | defect (POSIX: `EMFILE` when "All file descriptors available to the process are currently open") |
-| `MAP_NORESERVE` memory is committed on first write, and when none is left the kernel ends the process (`Unhandled Overcommit`); a plain `mmap()` fails `ENOMEM` instead | oom | docs |
-| `dlerror()` is declared `const char *` (POSIX: `char *`) | sdk-check | defect |
-| no `SA_RESETHAND`, `SA_NODEFER` (POSIX base since Issue 7) | sdk-check | gap |
-| no C `<uchar.h>` or its four functions (C11, POSIX.1-2024) | sdk-check | gap |
+`oom` and the last four sections of `sdk-check.sh` on 2026-09-29; `sys` and `net3` on 2026-10-01; `net` again on
+2026-10-02, adding the UDP `shutdown` lines), is in [`results/`](results/).
 
 ## Programs on KasperskyOS
 
