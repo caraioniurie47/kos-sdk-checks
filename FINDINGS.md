@@ -1180,6 +1180,12 @@ profiler must stop a thread to see where it is. .NET normally interrupts a threa
 (`pthread_kill`) to bring it to a safe point quickly. On KasperskyOS my port has the compiler insert polls in loops
 instead, which works but costs time in every loop.
 
+**Security.** This stays within one process, whose threads can already read and write all its memory, and
+`KnTaskGetThreadContext` already gets "the context of a thread that is part of a frozen process". And since "The Kaspersky Security
+Module makes decisions regarding interaction between processes and the kernel the same way it makes decisions regarding
+interaction between a process and other processes" (p. 46 of the 1.4 manual), a solution's policy could allow or deny
+such a call per program.
+
 Check: [`host/thread-api-check.sh`](host/thread-api-check.sh); output
 [`results/thread-api-check.out`](results/thread-api-check.out).
 
@@ -1199,6 +1205,11 @@ exception Trap Frame to the specified address."), which the manual does not ment
 thread at a different address with changed registers (what `ucontext`-based signal handlers do on other systems). My
 port does this today by restoring a changed copy of the trap frame itself from inside the handler, which depends on
 undocumented details that a new SDK release may change.
+
+**Security.** The handler belongs to the faulting thread's own process, and my port already resumes threads this way,
+so a supported call adds no new power, and it could have the kernel check what is resumed (no privileged state, an
+executable target address). Setting all registers from memory is the primitive behind sigreturn-oriented programming on
+other systems, so such a check matters.
 
 Check: [`host/thread-api-check.sh`](host/thread-api-check.sh), which prints the quoted header lines and
 `ExceptionInfo`'s declaration; output [`results/thread-api-check.out`](results/thread-api-check.out).
