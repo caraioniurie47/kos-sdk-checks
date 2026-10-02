@@ -13,7 +13,8 @@ first configure `en0` as the SDK's network examples do. `novfs` is the exception
 `net`, `net2`, `net3`, `fs`, `sys` and `sig` programs also ran on Linux for comparison (Ubuntu 22.04, kernel 6.18 under
 WSL2, as root, `/tmp` a 64 MiB tmpfs), with the two `kos_net.h` calls replaced by stubs. `host/sdk-check.sh`,
 `host/thread-api-check.sh` and `host/toolchain-check.sh` inspect an installed SDK (`$SDK`) and print each command before
-its output; commands with relative paths run in `$SDK/sysroot-aarch64-kos` (`thread-api-check.sh`'s in its `include/`).
+its output; commands with relative paths run in `$SDK/sysroot-aarch64-kos` (`thread-api-check.sh`'s in its `include/`,
+`toolchain-check.sh`'s in a temporary directory).
 How to build and run each check: [`README.md`](README.md).
 
 **Categories.** "POSIX" is POSIX.1-2024 unless a section names another edition; "the manual" is the KasperskyOS
@@ -27,7 +28,7 @@ Community Edition 1.4 manual (PDF; page numbers as printed).
 | Missing features | A library, header, function or constant that portable code expects and the SDK lacks. |
 | Proposals | An interface KasperskyOS has no equivalent for, with what it would let software do. |
 
-Each section ends with options: what POSIX, NetBSD or Linux do, keeping the current behaviour and documenting it, or
+Most sections end with options: what POSIX, NetBSD or Linux do, keeping the current behaviour and documenting it, or
 another choice of yours.
 
 ## Bugs
@@ -309,58 +310,27 @@ Options: fail with `EMSGSIZE`, as POSIX and NetBSD do; keep `EINVAL` and documen
 could the documentation state the value 10 with `IOV_MAX`?
 
 <a id="b12"></a>
-### B12. On TCP, `sendmsg()` of more than 64 KiB fails with `EMSGSIZE`, even on a blocking socket; `send()` and `writev()` send part
-
-| Check (`net2-check.c`, non-blocking loopback TCP, the peer reads nothing) | KasperskyOS CE 1.4.0.102 | Linux |
-|---|---|---|
-| `sendmsg(tcp, 65536 bytes)` | 49152 | 65536 |
-| `sendmsg(tcp, 65537 bytes)` | -1, errno Message too long | 65537 |
-| `sendmsg(tcp, 1 MiB)` | -1, errno Message too long | 1048576 |
-| `sendmsg(tcp, 1 MiB, msg_name = peer)` | -1, errno Message too long | 1048576 |
-| `send(tcp, 1 MiB)` | 49152 | 1048576 |
-| `writev(tcp, 1 MiB)` | 49152 | 1048576 |
-
-| Check (`net2-check.c`, blocking loopback TCP, the peer reads everything) | KasperskyOS CE 1.4.0.102 | Linux |
-|---|---|---|
-| `sendmsg(blocking tcp, 1 MiB), the peer reading` | -1, errno Message too long | 1048576 |
-| `  bytes the peer read after sendmsg` | 0 | 1048576 |
-| `send(blocking tcp, 1 MiB), the peer reading` | 65536 | 1048576 |
-| `  bytes the peer read after send` | 65536 | 1048576 |
-
-POSIX `sendmsg()`: "If space is not available at the sending socket to hold the message to be transmitted and the
-socket file descriptor does not have O_NONBLOCK set, the sendmsg() function shall block until space is available". On a
-blocking socket whose peer is reading, it fails at once and sends nothing. Its `EMSGSIZE` is for "The message is too
-large to be sent all at once (as the socket requires)", which a stream socket does not require; `send()` on the same
-sockets sends part. NetBSD's `sosend` fails with `EMSGSIZE` only for a socket that sends atomically, or for control data
-over the buffer size, so the limit comes from KasperskyOS's layer. .NET sends with a destination address, or from
-several buffers, through `sendmsg`; a 10 MB `SendToAsync` in its tests hung until my port retried with 64 KiB.
-
-Check: [`src/net2-check.c`](src/net2-check.c); output [`results/net2.kos.out`](results/net2.kos.out),
-[`results/net2.linux.out`](results/net2.linux.out).
-
-Options: block, or send part of the data as `send()` does, as POSIX describes; keep the limit and document it; or
-another choice of yours.
-
-<a id="b13"></a>
-### B13. A thread blocked in `read()` or `recvmsg()` returns with `errno` -3 when another thread closes the socket
+### B12. A thread blocked in `read()` or `recvmsg()` returns with `errno` -3 when another thread closes the socket
 
 | Check (`net3-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
 | `read(TCP) blocked, another thread closes the socket` | -1, errno -3 (Unknown error: -3) | still blocked 5 s later |
 | `recvmsg(UDP) blocked, another thread closes the socket` | -1, errno -3 (Unknown error: -3) | still blocked 5 s later |
+| `non-blocking write(TCP, 4 KiB) until it stops` | -1, errno Resource temporarily unavailable after 13 writes that sent data | -1, errno Resource temporarily unavailable after 646 writes that sent data |
 | `write(TCP) blocked, another thread closes the socket` | 4096 | still blocked 5 s later |
 
 POSIX's `<errno.h>` defines the error numbers as "distinct positive values"; -3 is not an error number at all, so
-`strerror()` and any error mapping cannot name it. A `write()` blocked on a full send buffer returns, when the socket
-is closed, the count of bytes it had written (4096 here), not an error. No failing .NET test traced to it.
+`strerror()` and any error mapping cannot name it. A 64 KiB `write()` made once the send buffer is full (the last
+non-blocking write failed with `EAGAIN`), and still blocked 1 s later, returns 4096 when the socket is closed, not an
+error. No failing .NET test traced to it.
 
 Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](results/net3.kos.out),
 [`results/net3.linux.out`](results/net3.linux.out).
 
 Options: return a positive error number, such as `EBADF`; keep -3 and document it; or another choice of yours.
 
-<a id="b14"></a>
-### B14. At the 512-descriptor limit `open()` of `/dev/null` fails with `ENFILE`; `getrlimit`/`setrlimit` are not implemented
+<a id="b13"></a>
+### B13. At the 512-descriptor limit `open()` of `/dev/null` fails with `ENFILE`; `getrlimit`/`setrlimit` are not implemented
 
 | Check (`sys-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -370,7 +340,7 @@ Options: return a positive error number, such as `EBADF`; keep -3 and document i
 | `  open() of /dev/null until it fails` | 509, errno Too many open files in system | 5000 |
 | `setrlimit(RLIMIT_NOFILE, soft limit 256)` | -1, errno Function not implemented | 0 |
 | `setrlimit(RLIMIT_NOFILE, soft and hard limit 1024)` | -1, errno Function not implemented | 0 |
-| `  then open() of a /tmp file until it fails` | 509, errno Too many open files | 1021, errno Too many open files |
+| `  then open() of a /tmp file until it fails (limit 1024)` | 509, errno Too many open files | 1020, errno Too many open files |
 
 A process cannot have more than 512 descriptors (`OPEN_MAX` in the SDK's `limits.h`), and nothing changes that:
 `getrlimit(RLIMIT_NOFILE)` fails with `EINVAL` and `setrlimit()` with `ENOSYS`. POSIX.1-2024 moved both functions, with
@@ -388,8 +358,8 @@ Options: fail `open()` of `/dev/null` with `EMFILE` at the process's limit, as P
 document it; or another choice of yours. And could the documentation give the limit and the status of `getrlimit()` and
 `setrlimit()`, or could they be implemented as POSIX.1-2024 has them?
 
-<a id="b15"></a>
-### B15. `sigaction()` installs a handler for `SIGKILL` and `SIGSTOP`
+<a id="b14"></a>
+### B14. `sigaction()` installs a handler for `SIGKILL` and `SIGSTOP`
 
 | Check (`sig-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -409,8 +379,8 @@ Check: [`src/sig-check.c`](src/sig-check.c); output [`results/sig.kos.out`](resu
 Options: fail with `EINVAL` for these two, as POSIX describes; keep the current behaviour and document that `sigaction`
 accepts any signal; or another choice of yours.
 
-<a id="b16"></a>
-### B16. `mprotect()` to read, write and execute fails with `ENOMEM`, where POSIX and the manual give `ENOTSUP`
+<a id="b15"></a>
+### B15. `mprotect()` to read, write and execute fails with `ENOMEM`, where POSIX and the manual give `ENOTSUP`
 
 ```
 [check] mmap(64 KiB, R|W|X, private anon)            -> Cannot allocate memory
@@ -430,8 +400,8 @@ Options: fail with `ENOTSUP`, as POSIX and the `mprotect()` row describe; keep `
 choice of yours. And could the row say which kernel configurations prohibit write-and-execute and whether the QEMU image
 uses one?
 
-<a id="b17"></a>
-### B17. `dlerror()` is declared `const char *`
+<a id="b16"></a>
+### B16. `dlerror()` is declared `const char *`
 
 ```
 $ grep -nw dlerror include/dlfcn.h
@@ -587,10 +557,12 @@ Options: end the stream, as Linux does; keep `ENOENT` and document it; or anothe
 | Check (`net-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
 | `getaddrinfo("localhost")` | 7, No address associated with hostname | 0 |
+| `  mkdir("/etc") in the program's file system` | 0 | not run |
+| `  then /etc/hosts created, bytes of 127.0.0.1 localhost` | 20 | not run |
 | `  again, with /etc/hosts in the program's file system` | 7, No address associated with hostname | not run |
 
 `getaddrinfo()` runs in VfsNet (the manual lists it under "Functions implemented by the vfs::lib_net library", p. 97),
-which reads `/etc/hosts` from its own file systems: an `/etc/hosts` in the program's file system changes nothing (on
+which reads `/etc/hosts` from its own file systems: an `/etc/hosts` written to the program's file system (the middle rows) changes nothing (on
 Linux that file is the system's, so the check does not write it). The manual's examples list a hosts file among VfsNet's configuration files, but nothing
 says that name resolution, `localhost` included, needs one; RFC 6761 (6.3) recommends that resolvers always return the
 loopback address for `localhost`. The program above gives VfsNet no hosts file.
@@ -634,7 +606,9 @@ Options: report the payload bytes, as Linux does; keep NetBSD's count and docume
 POSIX gives no minimum: the option "requests that the buffer space ... be set to the value". It lists `EINVAL` for
 "The specified option is invalid at the specified socket level", and XSH 2.3 lets an implementation use a listed error
 under other circumstances when it can be handled as the described one, which a rejected value can. NetBSD does the same:
-its `sosetopt1()` (`uipc_socket.c`, SDK revision) fails these options with `EINVAL` for "Values < 1"; from the source,
+its `sosetopt1()`
+([`uipc_socket.c`:1802-1809](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket.c#L1802-L1809),
+NetBSD 10) fails these options with `EINVAL` for "Values < 1"; from the source,
 not measured on NetBSD. Linux accepts the call (what size it then uses is not shown here). Setting .NET's
 `SendBufferSize` or `ReceiveBufferSize` to 0 throws.
 
@@ -663,7 +637,42 @@ Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](r
 Options: accept a NULL buffer with length 0, as NetBSD does; keep `EINVAL` and document it; or another choice of yours.
 
 <a id="u8"></a>
-### U8. `accept4()` fails with `EACCES` when `address_len` is over 128
+### U8. On TCP, `sendmsg()` of more than 64 KiB fails with `EMSGSIZE`, even on a blocking socket; `send()` and `writev()` send part
+
+| Check (`net2-check.c`, non-blocking loopback TCP, the peer reads nothing) | KasperskyOS CE 1.4.0.102 | Linux |
+|---|---|---|
+| `sendmsg(tcp, 65536 bytes)` | 49152 | 65536 |
+| `sendmsg(tcp, 65537 bytes)` | -1, errno Message too long | 65537 |
+| `sendmsg(tcp, 1 MiB)` | -1, errno Message too long | 1048576 |
+| `sendmsg(tcp, 1 MiB, msg_name = peer)` | -1, errno Message too long | 1048576 |
+| `send(tcp, 1 MiB)` | 49152 | 1048576 |
+| `writev(tcp, 1 MiB)` | 49152 | 1048576 |
+
+| Check (`net2-check.c`, blocking loopback TCP, the peer reads everything) | KasperskyOS CE 1.4.0.102 | Linux |
+|---|---|---|
+| `sendmsg(blocking tcp, 1 MiB), the peer reading` | -1, errno Message too long | 1048576 |
+| `  bytes the peer read after sendmsg` | 0 | 1048576 |
+| `send(blocking tcp, 1 MiB), the peer reading` | 65536 | 1048576 |
+| `  bytes the peer read after send` | 65536 | 1048576 |
+
+The limit is on the length, not on buffer space: on a blocking socket whose peer is reading, the call fails and sends
+nothing, where `send()` on the same sockets sends part. POSIX's `EMSGSIZE` is for "The message is too large to be sent
+all at once (as the socket requires)", which a stream socket does not require; XSH 2.3 lets an implementation use a
+listed error under other circumstances when it can be handled as the described one, which a caller can by sending less.
+NetBSD's `sosend` fails with `EMSGSIZE` only for a socket that sends atomically, or for control data over the buffer size
+([`uipc_socket.c`:966-968](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket.c#L966-L968),
+NetBSD 10), so the limit comes from KasperskyOS's layer, and the documentation does not mention it. .NET sends with a
+destination address, or from several buffers, through `sendmsg`; a 10 MB
+`SendToAsync` in its tests hung until my port retried with 64 KiB.
+
+Check: [`src/net2-check.c`](src/net2-check.c); output [`results/net2.kos.out`](results/net2.kos.out),
+[`results/net2.linux.out`](results/net2.linux.out).
+
+Options: send part of the data, as `send()` does, or block until it is sent, as POSIX describes for a blocking socket;
+keep the limit and document it; or another choice of yours.
+
+<a id="u9"></a>
+### U9. `accept4()` fails with `EACCES` when `address_len` is over 128
 
 | Check (`net3-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -673,7 +682,8 @@ Options: accept a NULL buffer with length 0, as NetBSD does; keep `EINVAL` and d
 | `accept4(AF_UNIX listener, address_len 244)` | -1, errno Permission denied | 0 |
 
 POSIX `accept()`: `address_len` "on input specifies the length of the supplied sockaddr structure", and a longer
-address "shall be truncated"; a larger buffer is legal. NetBSD shortens the returned length and never fails on it. 128
+address "shall be truncated"; a larger buffer is legal. `EACCES` is not among `accept()`'s errors, but XSH 2.3 lets an
+implementation "generate additional errors unless explicitly disallowed". NetBSD shortens the returned length and never fails on it. 128
 matches the VFS IPC's `MaxSockAddrSize` (p. 869). .NET passes a 244-byte buffer when accepting on an `AF_UNIX` listener,
 so its named-pipe server failed with "Permission denied" in 120 of the 128 named-pipe tests, until my port passed 128.
 
@@ -683,8 +693,8 @@ Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](r
 Options: accept a larger buffer and return the address's length, as POSIX and NetBSD do; keep the limit and document
 it; or another choice of yours.
 
-<a id="u9"></a>
-### U9. `setsockopt()` fails with `ECONNRESET` once the peer has reset the connection
+<a id="u10"></a>
+### U10. `setsockopt()` fails with `ECONNRESET` once the peer has reset the connection
 
 | Check (`net2-check.c`, loopback TCP) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -702,8 +712,8 @@ Check: [`src/net2-check.c`](src/net2-check.c); output [`results/net2.kos.out`](r
 Options: let `setsockopt()` succeed on a reset socket, as Linux does; keep the current behaviour and document it; or
 another choice of yours.
 
-<a id="u10"></a>
-### U10. `accept()` with no descriptor left drops the pending connection
+<a id="u11"></a>
+### U11. `accept()` with no descriptor left drops the pending connection
 
 | Check (`net3-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -724,8 +734,8 @@ Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](r
 
 Options: keep the connection queued, as NetBSD and Linux do; document that it is dropped; or another choice of yours.
 
-<a id="u11"></a>
-### U11. `uname()` returns constants rather than the product and version
+<a id="u12"></a>
+### U12. `uname()` returns constants rather than the product and version
 
 ```
 [check] uname() -> 0
@@ -746,8 +756,8 @@ Check: [`src/uname-check.c`](src/uname-check.c); output [`results/uname.kos.out`
 Options: have `uname()` report the kernel's product and version; document another supported way for a program to learn
 them; or another choice of yours.
 
-<a id="u12"></a>
-### U12. `pthread_condattr_init()` fails with `EINVAL` on memory that holds an initialized attribute
+<a id="u13"></a>
+### U13. `pthread_condattr_init()` fails with `EINVAL` on memory that holds an initialized attribute
 
 | Check (`sys-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -765,22 +775,26 @@ Check: [`src/sys-check.c`](src/sys-check.c); output [`results/sys.kos.out`](resu
 
 Options: skip the check; keep it and document it; or another choice of yours.
 
-<a id="u13"></a>
-### U13. A program linked with the VFS client, in an image without a VFS server, waits about 10 s at startup
+<a id="u14"></a>
+### U14. A program linked with the VFS client, in an image without a VFS server, waits about 10 s at startup
 
-A program linked with the VFS client (`vfs::client`) and started in an image that has no VFS program logs this before
-`main()` (`checks.Check`; Einit's and DCM's lines above it are left out):
+A program linked with the VFS client (`vfs::client`) and started in an image that has no VFS program logs this, and only
+then prints the program's own lines (`checks.Check`; Einit's and DCM's lines above it are left out):
 
 ```
-[2026-10-02T09:09:56.806][Info][checks.Check][14:14][CRT0] Initing main app: statically-linked, PIE.
-[2026-10-02T09:10:06.859][Error][checks.Check][14:14][VFS_CLIENT] DCM read pub queue failed, error Retcode 0x90000014: Space General, Facility 0, Error code 20 (Timeout)
-[2026-10-02T09:10:06.861][Fatal][checks.Check][14:14][VFS_CLIENT] Can't establish IPC connetion to VFS server
-[2026-10-02T09:10:06.868][Error][checks.Check][14:14][VFS_INIT] Failed to create backend "client", error 61 (Connection refused)
-[2026-10-02T09:10:06.869][Info][checks.Check][14:14][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-02T09:52:29.639][Info][checks.Check][14:14][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-02T09:52:39.710][Error][checks.Check][14:14][VFS_CLIENT] DCM read pub queue failed, error Retcode 0x90000014: Space General, Facility 0, Error code 20 (Timeout)
+[2026-10-02T09:52:39.713][Fatal][checks.Check][14:14][VFS_CLIENT] Can't establish IPC connetion to VFS server
+[2026-10-02T09:52:39.718][Error][checks.Check][14:14][VFS_INIT] Failed to create backend "client", error 61 (Connection refused)
+[2026-10-02T09:52:39.719][Info][checks.Check][14:14][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[check] CLOCK_MONOTONIC on entry to main()                         -> 11734 ms
+[check] open("/tmp/x", O_CREAT | O_RDWR)                           -> -1, errno Input/output error
+[check] done
 ```
 
-About 10 seconds pass between the start and the fallback to the stub (10.06 s here). The program's own output does not reach the console in such an image, so
-the log lines are the evidence.
+About 10 seconds pass between the start and the fallback to the stub (10.08 s here); `main()` runs after it, and file
+calls then fail with `EIO`, as the runtime's line says. The program prints to stderr; a line it writes to stdout does not
+appear, as the SDK's `hello` example says (stdout needs a VFS program).
 
 Check: [`src/novfs-check.c`](src/novfs-check.c) (`CHECK=novfs`: an image with no VFS program); output
 [`results/novfs.kos.out`](results/novfs.kos.out).
@@ -788,8 +802,8 @@ Check: [`src/novfs-check.c`](src/novfs-check.c) (`CHECK=novfs`: an image with no
 Options: have the client fail at once when no VFS server is configured for it; document the wait; or another choice of
 yours.
 
-<a id="u14"></a>
-### U14. Reserving address space with `PROT_NONE` takes physical memory and seconds; `MADV_DONTNEED` and `MADV_FREE` free nothing
+<a id="u15"></a>
+### U15. Reserving address space with `PROT_NONE` takes physical memory and seconds; `MADV_DONTNEED` and `MADV_FREE` free nothing
 
 The programs read free physical memory with `KnGroupStatGetParam(GROUP_PARAM_MEM_FREE)`, in pages, on QEMU with `-m 2048`
 (as the SDK's `sim` target starts it).
@@ -822,8 +836,8 @@ Options: make `PROT_NONE` reservations lazy by default, so that only committed p
 `MADV_DONTNEED` release the pages, so that the next access sees zero-filled pages; keep the current behaviour and
 document it; or another choice of yours.
 
-<a id="u15"></a>
-### U15. Memory from a `MAP_NORESERVE` mapping is taken at the first write, and when none is left the kernel ends the process
+<a id="u16"></a>
+### U16. Memory from a `MAP_NORESERVE` mapping is taken at the first write, and when none is left the kernel ends the process
 
 256 MiB at a time, every page written, first with plain read-write mappings (all unmapped afterwards), then as a garbage
 collector commits memory, reserving with `PROT_NONE` and `MAP_NORESERVE` and then calling
@@ -850,7 +864,7 @@ Terminating task.
 
 A plain mapping takes its memory when it is made, and the sixth fails cleanly with `ENOMEM`. A `MAP_NORESERVE` mapping
 takes memory as it is written (the free count drops only by the step before), `mprotect()` succeeds for the sixth with
-about 107 MiB free, and the write ends the process; no call reports the shortage. Because of [U14](#u14), my port of
+about 107 MiB free, and the write ends the process; no call reports the shortage. Because of [U15](#u15), my port of
 .NET reserves with `MAP_NORESERVE`, so a .NET program that runs out of memory is ended instead of getting
 `OutOfMemoryException`; one of .NET's cryptography tests, which allocates 512 MiB, ended this way. The documentation says
 nothing about when memory is committed.
@@ -860,8 +874,8 @@ Check: [`src/oom-check.c`](src/oom-check.c); output [`results/oom.kos.out`](resu
 Options: fail `mprotect()` (or the first write) with `ENOMEM` when a `MAP_NORESERVE` range cannot be backed; keep the
 current behaviour and document the commit and overcommit policy; or another choice of yours.
 
-<a id="u16"></a>
-### U16. `mprotect()` cannot make a read-only page of the program image writable
+<a id="u17"></a>
+### U17. `mprotect()` cannot make a read-only page of the program image writable
 
 | Check (`sys-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
@@ -881,8 +895,8 @@ Check: [`src/sys-check.c`](src/sys-check.c); output [`results/sys.kos.out`](resu
 Options: allow it; state in the `mprotect()` row that a segment of the program image cannot be given more access than it
 was loaded with, and that the call then fails with `EACCES`; or another choice of yours.
 
-<a id="u17"></a>
-### U17. `aarch64-kos-clang` ignores `-static-pie` with a warning and links dynamically
+<a id="u18"></a>
+### U18. `aarch64-kos-clang` ignores `-static-pie` with a warning and links dynamically
 
 ```
 $ $SDK/toolchain/bin/aarch64-kos-clang -static-pie t.c -o t-static-pie
@@ -907,8 +921,8 @@ Check: [`host/toolchain-check.sh`](host/toolchain-check.sh); output [`results/to
 If `-static-pie` is left out on purpose, why? Options: accept `-static-pie` as the same as `-static`; reject it with an
 error; document it; or another choice of yours.
 
-<a id="u18"></a>
-### U18. `toolchain/bin` has unprefixed `clang`, `clang++` and `clang-17` that target KasperskyOS
+<a id="u19"></a>
+### U19. `toolchain/bin` has unprefixed `clang`, `clang++` and `clang-17` that target KasperskyOS
 
 ```
 $ ls $SDK/toolchain/bin | grep -E "^clang(-[0-9]+)?$|^clang\+\+$"
@@ -958,7 +972,7 @@ choice of yours.
 
 | Check (`sys-check.c`) | KasperskyOS CE 1.4.0.102 | Linux |
 |---|---|---|
-| `sysconf(_SC_PHYS_PAGES)` | -1, errno Invalid argument | 4094842 |
+| `sysconf(_SC_PHYS_PAGES)` | -1, errno Invalid argument | 4094840 |
 | `sysconf(_SC_PAGESIZE)` | 4096 | 4096 |
 
 `_SC_PHYS_PAGES` is not in POSIX, so `EINVAL` is what POSIX asks for a name the system does not support; but `unistd.h`
