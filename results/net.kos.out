@@ -1,5 +1,6 @@
 [check] socket(AF_INET6, SOCK_STREAM, 0)                           -> -1, errno Address family not supported by protocol family
 [check] getaddrinfo("localhost")                                   -> 7, No address associated with hostname
+[check]   again, with /etc/hosts in the program's file system      -> 7, No address associated with hostname
 [check] sendfile(tcp socket, file, &offset, 512)                   -> -1, errno Invalid argument
 [check] recv(tcp socket, 81920-byte buffer), 70000 bytes sent      -> 32768
 [check] recv(tcp socket, 65536-byte buffer) after that             -> 24576

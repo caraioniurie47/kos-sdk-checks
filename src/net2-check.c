@@ -1,7 +1,8 @@
 /* More socket behaviour on KasperskyOS CE 1.4.0.102 (QEMU, aarch64) that differs from POSIX or Linux:
  * - sendmsg() on a TCP socket with more than 64 KiB. POSIX has a stream socket send part of what it is given; EMSGSIZE
  *   is for sockets that send messages atomically. Each call goes to a non-blocking loopback TCP socket whose peer has
- *   read nothing; send() and writev() of the same sizes are shown for comparison.
+ *   read nothing; send() and writev() of the same sizes are shown for comparison. Then 1 MiB through sendmsg() and
+ *   send() on a blocking socket whose peer reads everything, and how much the peer read.
  * - setsockopt() on a TCP socket whose peer has reset the connection, and close() after it.
  * Runs with VfsNet as its network backend; en0 is configured first, as the SDK's network examples do. Every check
  * prints one "[check]" line. */
@@ -10,6 +11,7 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <poll.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,6 +76,53 @@ static void check(const char* what, int how, size_t length)
     close(s);
 }
 
+struct drain
+{
+    int fd;
+    long total;
+};
+
+/* The peer reads until the connection closes. */
+static void* drain(void* arg)
+{
+    static char sink[65536];
+    struct drain* d = arg;
+    long n;
+    while ((n = read(d->fd, sink, sizeof(sink))) > 0)
+        d->total += n;
+    return NULL;
+}
+
+/* The same calls on a blocking socket whose peer reads everything: POSIX has a blocking sendmsg() wait for space. */
+static void check_blocking(const char* what, int how, size_t length)
+{
+    static char data[1024 * 1024];
+    int c, s;
+    struct sockaddr_in peer;
+    if (tcp_pair(&c, &s, &peer))
+    {
+        printf("[check] %-58s -> connection failed\n", what);
+        return;
+    }
+    fcntl(c, F_SETFL, fcntl(c, F_GETFL) & ~O_NONBLOCK);
+    struct drain d = { s, 0 };
+    pthread_t t;
+    pthread_create(&t, NULL, drain, &d);
+    struct iovec iov = { data, length };
+    struct msghdr m;
+    memset(&m, 0, sizeof(m));
+    m.msg_iov = &iov;
+    m.msg_iovlen = 1;
+    errno = 0;
+    long rc = how == 0 ? (long)sendmsg(c, &m, 0) : (long)send(c, data, length, 0);
+    result(what, rc);
+    close(c);
+    pthread_join(t, NULL);
+    printf("[check] %-58s -> %ld\n", how == 0 ? "  bytes the peer read after sendmsg" : "  bytes the peer read after send",
+           d.total);
+    close(s);
+}
+
 /* The peer resets the connection (SO_LINGER {1, 0}, then close); then options are set on this end, and it is closed. */
 static void reset_checks(void)
 {
@@ -110,6 +159,8 @@ int main(void)
     check("sendmsg(tcp, 1 MiB, msg_name = peer)", 1, 1024 * 1024);
     check("send(tcp, 1 MiB)", 2, 1024 * 1024);
     check("writev(tcp, 1 MiB)", 3, 1024 * 1024);
+    check_blocking("sendmsg(blocking tcp, 1 MiB), the peer reading", 0, 1024 * 1024);
+    check_blocking("send(blocking tcp, 1 MiB), the peer reading", 1, 1024 * 1024);
     reset_checks();
 
     printf("[check] done\n");

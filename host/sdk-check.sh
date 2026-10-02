@@ -1,7 +1,7 @@
 #!/bin/bash
 # Checks of the SDK sysroot: OpenSSL headers, getentropy, functions declared but defined nowhere, fallocate flags,
-# commonly probed headers, dlerror's declaration, sigaction flags, <uchar.h>, SO_REUSEPORT. Each command is printed as
-# "$ <command>" before its output.
+# commonly probed headers, dlerror's declaration, sigaction flags, <uchar.h>, SO_REUSEPORT, limits, sendfile, IPv6,
+# getauxval, the default C dialect. Each command is printed as "$ <command>" before its output.
 #   host/sdk-check.sh [SDK directory]
 export SDK=${1:-/opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102}
 cd "$SDK/sysroot-aarch64-kos" || exit 1
@@ -50,3 +50,22 @@ echo "# SO_REUSEPORT: the network stack honours NetBSD's 0x0200; no header defin
 run 'grep -rn -E "define[[:space:]]+SO_REUSEPORT" include | wc -l'
 run 'grep -rn -E "define[[:space:]]+RUMP_SO_REUSE" include'
 run 'grep -n "define SO_REUSEADDR" include/strict/posix/sys/socket.h'
+
+echo "# Limits the findings cite: descriptors per process, file name length, iovecs"
+run 'grep -n -E "define (OPEN_MAX|NAME_MAX|IOV_MAX)[[:space:]]" include/limits.h'
+
+echo "# sendfile: declared and defined, so configure checks find it"
+run 'grep -nw sendfile include/sys/sendfile.h'
+run '$SDK/toolchain/bin/llvm-nm --defined-only lib/libc.a 2>/dev/null | grep -w -E "[TW] sendfile"'
+
+echo "# IPv6: rump's CMake package adds netinet6 only if the target exists; no SDK file but the header directory has the name"
+run 'grep -n netinet6 lib/cmake/rump/rumpConfig.cmake'
+run 'find $SDK -name "*netinet6*" | sed "s|^$SDK/||"'
+
+echo "# CPU features: no getauxval"
+run 'grep -rlw getauxval include | wc -l'
+run 'for a in lib/*.a; do $SDK/toolchain/bin/llvm-nm --defined-only $a 2>/dev/null | grep -qw -E "[TW] getauxval" && echo $a; done | wc -l'
+
+echo "# The C dialect the compiler defaults to, and the only uchar.h in the SDK"
+run 'echo | $SDK/toolchain/bin/aarch64-kos-clang -dM -E -x c - | grep -w __STDC_VERSION__'
+run 'find $SDK -name uchar.h | sed "s|^$SDK/||"'

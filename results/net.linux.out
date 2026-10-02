@@ -5,6 +5,7 @@ $ findmnt -no FSTYPE,OPTIONS /tmp
 tmpfs  rw,relatime,size=65536k
 [check] socket(AF_INET6, SOCK_STREAM, 0)                           -> 3
 [check] getaddrinfo("localhost")                                   -> 0
+[check]   again, with /etc/hosts in the program's file system      -> not run
 [check] sendfile(tcp socket, file, &offset, 512)                   -> 512
 [check] recv(tcp socket, 81920-byte buffer), 70000 bytes sent      -> 70512
 [check] recv(tcp socket, 65536-byte buffer) after that             -> -1, errno Resource temporarily unavailable

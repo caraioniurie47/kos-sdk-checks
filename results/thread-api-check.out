@@ -14,5 +14,33 @@ coresrv/task/task_api.h:264:Retcode KnTaskGetThreadContext(Handle task, unsigned
 $ grep -rn "KnTaskSetExceptionHandler" coresrv | head -5
 coresrv/task/task_api.h:390:TaskExceptionHandler KnTaskSetExceptionHandler(TaskExceptionHandler handler);
 
+$ grep -n -F -e "Suspends the calling thread." -e "Gets the context of a thread that is part of a frozen process." coresrv/thread/thread_api.h coresrv/task/task_api.h
+coresrv/thread/thread_api.h:141: * Suspends the calling thread.
+coresrv/task/task_api.h:248: * Gets the context of a thread that is part of a frozen process.
+
+$ sed -n "/called when an exception occurs/,/RTL_NULL. Otherwise/p" coresrv/task/task_api.h
+ * An exception handling function is called when an exception occurs in any process thread. If the
+ * exception is successfully handled, this function returns a value other than RTL_NULL. Otherwise
+
+$ sed -n "/^typedef struct SExceptionInfo/,/} ExceptionInfo;/p" thread/tcbpage.h
+typedef struct SExceptionInfo {
+    HalExceptionCode type;
+    HalArchException code;
+
+    union {
+        struct {
+            vaddr_t    addr;        /**< fault address                    */
+            maccess_t  access;      /**< type of access to virtual memory */
+        } fault;
+    };
+} ExceptionInfo;
+
+$ grep -n -B4 "RtlGetLastTrapFrame" thread/tcbpage.h
+120- * Copies last exception Trap Frame to the specified address.
+121- *
+122- * @param[out]  frame       destination address of Trap Frame
+123- */
+124:void RtlGetLastTrapFrame(HalTrapFrame *frame);
+
 $ grep -rhn "pthread_kill\|pthread_suspend\|pthread_getcontext" pthread.h signal.h | head
 

@@ -1,0 +1,9 @@
+[2026-10-02T09:09:55.340][Info][Einit][12:12][CRT0] Initing main app: statically-linked, no-PIE.
+[2026-10-02T09:09:55.342][Info][Einit][12:12][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-02T09:09:56.792][Info][kl.core.DCM][13:13][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-02T09:09:56.797][Info][kl.core.DCM][13:13][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-02T09:09:56.806][Info][checks.Check][14:14][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-02T09:10:06.859][Error][checks.Check][14:14][VFS_CLIENT] DCM read pub queue failed, error Retcode 0x90000014: Space General, Facility 0, Error code 20 (Timeout)
+[2026-10-02T09:10:06.861][Fatal][checks.Check][14:14][VFS_CLIENT] Can't establish IPC connetion to VFS server
+[2026-10-02T09:10:06.868][Error][checks.Check][14:14][VFS_INIT] Failed to create backend "client", error 61 (Connection refused)
+[2026-10-02T09:10:06.869][Info][checks.Check][14:14][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)

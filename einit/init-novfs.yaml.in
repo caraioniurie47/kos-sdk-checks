@@ -1,0 +1,6 @@
+entities:
+
+- name: checks.Check
+@INIT_Check_ENTITY_CONNECTIONS@
+
+@INIT_EXTERNAL_ENTITIES@

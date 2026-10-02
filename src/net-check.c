@@ -11,6 +11,7 @@
 #include <string.h>
 #include <sys/sendfile.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/uio.h>
 #include <unistd.h>
 
@@ -64,6 +65,26 @@ int main(void)
     printf("[check] %-58s -> %d%s%s\n", "getaddrinfo(\"localhost\")", gai, gai ? ", " : "", gai ? gai_strerror(gai) : "");
     if (res)
         freeaddrinfo(res);
+
+    /* The same with an /etc/hosts in the program's own file system (VfsRamFs). Not on Linux, where /etc/hosts is the
+     * system's. */
+#ifdef __KOS__
+    mkdir("/etc", 0755);
+    int hosts = open("/etc/hosts", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    if (hosts >= 0)
+    {
+        write(hosts, "127.0.0.1 localhost\n", 20);
+        close(hosts);
+    }
+    res = NULL;
+    gai = getaddrinfo("localhost", NULL, &hints, &res);
+    printf("[check] %-58s -> %d%s%s\n", "  again, with /etc/hosts in the program's file system", gai, gai ? ", " : "",
+           gai ? gai_strerror(gai) : "");
+    if (res)
+        freeaddrinfo(res);
+#else
+    printf("[check] %-58s -> not run\n", "  again, with /etc/hosts in the program's file system");
+#endif
 
     int c, s;
     char buf[81920];

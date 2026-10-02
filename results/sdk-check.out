@@ -103,3 +103,38 @@ include/rump/rumpdefs.h:295:#define	RUMP_SO_REUSEPORT	0x0200
 $ grep -n "define SO_REUSEADDR" include/strict/posix/sys/socket.h
 482:#define SO_REUSEADDR    0x0004
 
+# Limits the findings cite: descriptors per process, file name length, iovecs
+$ grep -n -E "define (OPEN_MAX|NAME_MAX|IOV_MAX)[[:space:]]" include/limits.h
+964:#define IOV_MAX                             10
+993:#define OPEN_MAX                            512
+1176:#define NAME_MAX                            511
+
+# sendfile: declared and defined, so configure checks find it
+$ grep -nw sendfile include/sys/sendfile.h
+21:ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
+
+$ $SDK/toolchain/bin/llvm-nm --defined-only lib/libc.a 2>/dev/null | grep -w -E "[TW] sendfile"
+0000000000000000 T sendfile
+
+# IPv6: rump's CMake package adds netinet6 only if the target exists; no SDK file but the header directory has the name
+$ grep -n netinet6 lib/cmake/rump/rumpConfig.cmake
+116:    if (TARGET rump::rumpnet_netinet6)
+117:        list (APPEND rump_NET_LIB rump::rumpnet_netinet6)
+
+$ find $SDK -name "*netinet6*" | sed "s|^$SDK/||"
+sysroot-aarch64-kos/include/netinet6
+
+# CPU features: no getauxval
+$ grep -rlw getauxval include | wc -l
+0
+
+$ for a in lib/*.a; do $SDK/toolchain/bin/llvm-nm --defined-only $a 2>/dev/null | grep -qw -E "[TW] getauxval" && echo $a; done | wc -l
+0
+
+# The C dialect the compiler defaults to, and the only uchar.h in the SDK
+$ echo | $SDK/toolchain/bin/aarch64-kos-clang -dM -E -x c - | grep -w __STDC_VERSION__
+#define __STDC_VERSION__ 201710L
+
+$ find $SDK -name uchar.h | sed "s|^$SDK/||"
+toolchain/include/c++/v1/uchar.h
+

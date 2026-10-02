@@ -3,13 +3,15 @@
  * - recv() of zero bytes on an empty non-blocking TCP socket whose peer is open (POSIX: EAGAIN, not 0).
  * - FIONREAD with one 3-byte datagram, or 3 stream bytes, queued.
  * - A thread blocked in read() on TCP, or recvmsg() on UDP, while another thread closes the socket: what the blocked
- *   call returns within 5 s. errno is printed as a number too.
+ *   call returns within 5 s; then the same for write() on TCP blocked on a full send buffer. errno is printed as a
+ *   number too.
  * - SO_SNDBUF and SO_RCVBUF set to 0.
  * - Two UDP sockets bound to one 127.0.0.1 port, with SO_REUSEADDR and with SO_REUSEPORT. Where the headers do not
  *   define SO_REUSEPORT, NetBSD's value 0x0200 is used; a line says which.
  * - getsockopt(SO_RCVBUF) with option_len 0, with a NULL option_value and with a buffer.
  * - IOV_MAX, and UDP sendmsg() with 11, 1024 and 1025 one-byte iovecs (POSIX: EMSGSIZE above IOV_MAX).
- * - sendto() of zero bytes on a UDP socket, then of one byte: what the receiver's recvfrom() returns first.
+ * - sendto() of zero bytes on a UDP socket, then of one byte: what the receiver's recvfrom() returns first; the same
+ *   with sendmsg() of one empty iovec in place of the empty sendto().
  * - accept4() with an address buffer of 128 and of 244 bytes, on a TCP and on an AF_UNIX listener.
  * - With no descriptor left (the limit lowered to 256 first where setrlimit() works; KasperskyOS has 512): a
  *   non-blocking connect() to a loopback listener, its SO_ERROR, and accept() once one descriptor is free (once with the
@@ -154,6 +156,7 @@ static void fionread(void)
     }
 }
 
+/* udp: 0 read() on TCP, 1 recvmsg() on UDP, 2 write() on TCP whose send buffer is full */
 struct blocked
 {
     int fd;
@@ -167,8 +170,13 @@ static void* blocked_call(void* arg)
 {
     struct blocked* b = arg;
     char buf[16];
+    static char big[65536];
     errno = 0;
-    if (b->udp)
+    if (b->udp == 2)
+    {
+        b->rc = (long)write(b->fd, big, sizeof(big));
+    }
+    else if (b->udp)
     {
         struct iovec iov = { buf, sizeof(buf) };
         struct msghdr m;
@@ -189,13 +197,19 @@ static void* blocked_call(void* arg)
 /* The blocked thread is left behind if its call never returns. */
 static void close_under_blocked_call(const char* what, int fd, int udp)
 {
-    static struct blocked b[2];
+    static struct blocked b[3];
     struct blocked* x = &b[udp];
     x->fd = fd;
     x->udp = udp;
     pthread_t t;
     pthread_create(&t, NULL, blocked_call, x);
     sleep(1);
+    if (x->done)
+    {
+        printf("[check] %-58s -> %ld, before the close (not blocked)\n", what, x->rc);
+        close(fd);
+        return;
+    }
     close(fd);
     for (int i = 0; i < 50 && !x->done; i++)
         usleep(100000);
@@ -218,6 +232,17 @@ static void close_checks(void)
     struct sockaddr_in a;
     int u = bound_udp(&a);
     close_under_blocked_call("recvmsg(UDP) blocked, another thread closes the socket", u, 1);
+    /* Fill the client's send buffer while the peer reads nothing, then block in write(). */
+    if (tcp_pair(&c, &s) == 0)
+    {
+        static char fill[4096];
+        fcntl(c, F_SETFL, fcntl(c, F_GETFL) | O_NONBLOCK);
+        for (int i = 0; i < 100000 && write(c, fill, sizeof(fill)) > 0; i++)
+            ;
+        fcntl(c, F_SETFL, fcntl(c, F_GETFL) & ~O_NONBLOCK);
+        close_under_blocked_call("write(TCP) blocked, another thread closes the socket", c, 2);
+        close(s);
+    }
 }
 
 static void buffer_size(const char* what, int type, int option)
@@ -299,6 +324,34 @@ static void empty_datagram(void)
     result("  receiver's first recvfrom (0: the empty one)", (long)recvfrom(r, buf, sizeof(buf), MSG_DONTWAIT, NULL, NULL));
     errno = 0;
     result("  receiver's second recvfrom", (long)recvfrom(r, buf, sizeof(buf), MSG_DONTWAIT, NULL, NULL));
+    close(w);
+    close(r);
+}
+
+/* The same through sendmsg() with one empty iovec and the receiver's address as msg_name. */
+static void empty_datagram_sendmsg(void)
+{
+    struct sockaddr_in a;
+    int r = bound_udp(&a);
+    int w = socket(AF_INET, SOCK_DGRAM, 0);
+    char buf[4] = { 7 };
+    struct iovec iov = { buf, 0 };
+    struct msghdr m;
+    memset(&m, 0, sizeof(m));
+    m.msg_name = &a;
+    m.msg_namelen = sizeof(a);
+    m.msg_iov = &iov;
+    m.msg_iovlen = 1;
+    errno = 0;
+    result("UDP sendmsg(one empty iovec)", (long)sendmsg(w, &m, 0));
+    errno = 0;
+    result("UDP sendto(1 byte) after it", (long)sendto(w, buf, 1, 0, (struct sockaddr*)&a, sizeof(a)));
+    wait_readable(r);
+    usleep(200000);
+    errno = 0;
+    result("  then the receiver's first recvfrom", (long)recvfrom(r, buf, sizeof(buf), MSG_DONTWAIT, NULL, NULL));
+    errno = 0;
+    result("  then the receiver's second recvfrom", (long)recvfrom(r, buf, sizeof(buf), MSG_DONTWAIT, NULL, NULL));
     close(w);
     close(r);
 }
@@ -497,6 +550,7 @@ int main(void)
     iovecs(1024);
     iovecs(1025);
     empty_datagram();
+    empty_datagram_sendmsg();
     accept_tcp(128);
     accept_tcp(244);
     accept_unix(128);

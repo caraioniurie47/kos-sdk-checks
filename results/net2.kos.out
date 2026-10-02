@@ -4,6 +4,10 @@
 [check] sendmsg(tcp, 1 MiB, msg_name = peer)                       -> -1, errno Message too long
 [check] send(tcp, 1 MiB)                                           -> 49152
 [check] writev(tcp, 1 MiB)                                         -> 49152
+[check] sendmsg(blocking tcp, 1 MiB), the peer reading             -> -1, errno Message too long
+[check]   bytes the peer read after sendmsg                        -> 0
+[check] send(blocking tcp, 1 MiB), the peer reading                -> 65536
+[check]   bytes the peer read after send                           -> 65536
 [check] setsockopt(SO_LINGER {1, 0}) after the peer reset          -> -1, errno Connection reset by peer
 [check] setsockopt(SO_KEEPALIVE, 1) after the peer reset           -> -1, errno Connection reset by peer
 [check] close() after that                                         -> 0
