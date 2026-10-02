@@ -4,6 +4,10 @@
 [check] recv(tcp socket, 81920-byte buffer), 70000 bytes sent      -> 32768
 [check] recv(tcp socket, 65536-byte buffer) after that             -> 24576
 [check] shutdown(unconnected TCP socket, SHUT_RDWR)                -> 0
+[check] shutdown(bound unconnected UDP socket, SHUT_RDWR)          -> 0
+[check]   then poll(POLLIN, 0)                                     -> 1
+[check]   then revents                                             -> 0x1
+[check]   then recvmsg(1-byte buffer, MSG_DONTWAIT)                -> 0
 [check] accept4(non-blocking listener, SOCK_CLOEXEC): O_NONBLOCK   -> set
 [check] poll({open socket, closed descriptor}, 2, 0)               -> -1, errno Bad file descriptor
 [check]   revents                                                  -> 0x0, 0x0

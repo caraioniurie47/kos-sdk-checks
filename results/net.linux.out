@@ -1,5 +1,5 @@
 $ uname -sr; id -u
-Linux 6.18.33.2-microsoft-standard-WSL2
+Linux 6.18.40.1-microsoft-standard-WSL2
 0
 $ findmnt -no FSTYPE,OPTIONS /tmp
 tmpfs  rw,relatime,size=65536k
@@ -9,6 +9,10 @@ tmpfs  rw,relatime,size=65536k
 [check] recv(tcp socket, 81920-byte buffer), 70000 bytes sent      -> 70512
 [check] recv(tcp socket, 65536-byte buffer) after that             -> -1, errno Resource temporarily unavailable
 [check] shutdown(unconnected TCP socket, SHUT_RDWR)                -> -1, errno Transport endpoint is not connected
+[check] shutdown(bound unconnected UDP socket, SHUT_RDWR)          -> -1, errno Transport endpoint is not connected
+[check]   then poll(POLLIN, 0)                                     -> 1
+[check]   then revents                                             -> 0x11
+[check]   then recvmsg(1-byte buffer, MSG_DONTWAIT)                -> -1, errno Resource temporarily unavailable
 [check] accept4(non-blocking listener, SOCK_CLOEXEC): O_NONBLOCK   -> clear
 [check] poll({open socket, closed descriptor}, 2, 0)               -> 2
 [check]   revents                                                  -> 0x14, 0x20

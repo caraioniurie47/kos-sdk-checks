@@ -11,6 +11,7 @@
 #include <string.h>
 #include <sys/sendfile.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
 #include <unistd.h>
 
 #include <kos_net.h>
@@ -95,6 +96,31 @@ int main(void)
     int u = socket(AF_INET, SOCK_STREAM, 0);
     errno = 0;
     result("shutdown(unconnected TCP socket, SHUT_RDWR)", shutdown(u, SHUT_RDWR));
+    close(u);
+
+    /* The same on a bound UDP socket, then what a receive sees afterwards (Linux: ENOTCONN, then EAGAIN) */
+    u = socket(AF_INET, SOCK_DGRAM, 0);
+    struct sockaddr_in any;
+    memset(&any, 0, sizeof(any));
+    any.sin_family = AF_INET;
+    any.sin_addr.s_addr = htonl(INADDR_ANY);
+    if (bind(u, (struct sockaddr*)&any, sizeof(any)) == 0)
+    {
+        errno = 0;
+        result("shutdown(bound unconnected UDP socket, SHUT_RDWR)", shutdown(u, SHUT_RDWR));
+        struct pollfd up = { u, POLLIN, 0 };
+        errno = 0;
+        result("  then poll(POLLIN, 0)", poll(&up, 1, 0));
+        printf("[check] %-58s -> 0x%x\n", "  then revents", up.revents);
+        char one;
+        struct iovec iov = { &one, 1 };
+        struct msghdr m;
+        memset(&m, 0, sizeof(m));
+        m.msg_iov = &iov;
+        m.msg_iovlen = 1;
+        errno = 0;
+        result("  then recvmsg(1-byte buffer, MSG_DONTWAIT)", (long)recvmsg(u, &m, MSG_DONTWAIT));
+    }
     close(u);
 
     /* O_NONBLOCK of a socket accepted from a non-blocking listener (Linux: not inherited) */
