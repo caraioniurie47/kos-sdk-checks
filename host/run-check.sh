@@ -1,6 +1,7 @@
 #!/bin/bash
 # Build src/<check>-check.c into a KasperskyOS image, boot it in QEMU, and print the program's "[check]" lines.
-# QEMU is stopped once the program prints "[check] done", faults, is ended for lack of memory, or after 10 minutes.
+# QEMU is stopped once the program prints "[check] done", faults, is ended for lack of memory, or after 10 minutes;
+# for novfs also 15 s after its C runtime falls back to the VFS stub.
 #   host/run-check.sh <net|net2|net3|fs|mem|sys|oom|uname|cpu|sig|novfs> [SDK directory]
 # BUILD_DIR overrides the build directory (default: build-<check> in the repository); the QEMU console goes to
 # qemu.log in it.
@@ -27,7 +28,7 @@ for _ in $(seq 1 600); do
     grep -aqF "[check] done" "$LOG" && break
     grep -aq -E "Unhandled Page Fault|Unhandled Overcommit|Terminating task" "$LOG" && break
     kill -0 "$pid" 2>/dev/null || break
-    # novfs: the program's own output never reaches the console; stop 15 s after its runtime falls back to the stub.
+    # novfs: should its output not arrive, stop 15 s after its runtime falls back to the stub.
     # (Einit's and DCM's runtimes log the same fallback at boot in every image; only checks.Check's line counts.)
     [ "$CHECK" = novfs ] && grep -aq "checks\.Check.*initialized with stub" "$LOG" && stub=$((stub + 1)) &&
         [ "$stub" -ge 15 ] && break

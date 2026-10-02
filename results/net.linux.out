@@ -5,6 +5,8 @@ $ findmnt -no FSTYPE,OPTIONS /tmp
 tmpfs  rw,relatime,size=65536k
 [check] socket(AF_INET6, SOCK_STREAM, 0)                           -> 3
 [check] getaddrinfo("localhost")                                   -> 0
+[check]   mkdir("/etc") in the program's file system               -> not run
+[check]   then /etc/hosts created, bytes of 127.0.0.1 localhost    -> not run
 [check]   again, with /etc/hosts in the program's file system      -> not run
 [check] sendfile(tcp socket, file, &offset, 512)                   -> 512
 [check] recv(tcp socket, 81920-byte buffer), 70000 bytes sent      -> 70512

@@ -158,11 +158,11 @@ static void descriptor_limits(void)
     struct rlimit low = { 256, rc == 0 ? rl.rlim_max : 256 };
     rc = setrlimit(RLIMIT_NOFILE, &low);
     result("setrlimit(RLIMIT_NOFILE, soft limit 256)", rc, rc ? errno : 0);
-    count_descriptors("  then open() of a /tmp file until it fails", file);
+    count_descriptors("  then open() of a /tmp file until it fails (soft limit 256)", file);
     struct rlimit high = { 1024, 1024 };
     rc = setrlimit(RLIMIT_NOFILE, &high);
     result("setrlimit(RLIMIT_NOFILE, soft and hard limit 1024)", rc, rc ? errno : 0);
-    count_descriptors("  then open() of a /tmp file until it fails", file);
+    count_descriptors("  then open() of a /tmp file until it fails (limit 1024)", file);
     unlink(file);
 }
 

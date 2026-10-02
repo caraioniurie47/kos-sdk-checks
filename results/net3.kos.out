@@ -6,6 +6,7 @@
 [check] ioctl(TCP, FIONREAD), 3 bytes queued                       -> 3
 [check] read(TCP) blocked, another thread closes the socket        -> -1, errno -3 (Unknown error: -3)
 [check] recvmsg(UDP) blocked, another thread closes the socket     -> -1, errno -3 (Unknown error: -3)
+[check] non-blocking write(TCP, 4 KiB) until it stops              -> -1, errno Resource temporarily unavailable after 13 writes that sent data
 [check] write(TCP) blocked, another thread closes the socket       -> 4096
 [check] setsockopt(TCP, SO_SNDBUF, 0)                              -> -1, errno Invalid argument
 [check] setsockopt(TCP, SO_RCVBUF, 0)                              -> -1, errno Invalid argument

@@ -1,15 +1,15 @@
 $ uname -sr; id -u
 Linux 6.18.40.1-microsoft-standard-WSL2
 0
-/tmp/ccY5AzI1.s: Assembler messages:
-/tmp/ccY5AzI1.s:337: Warning: ignoring changed section attributes for .rodata
+/tmp/ccQXK6LZ.s: Assembler messages:
+/tmp/ccQXK6LZ.s:337: Warning: ignoring changed section attributes for .rodata
 $ findmnt -no FSTYPE,OPTIONS /tmp
 tmpfs  rw,relatime,size=65536k
 [check] pthread_condattr_init(zeroed memory)                       -> 0
 [check] pthread_condattr_init(that attribute again)                -> 0
 [check] pthread_condattr_init(a byte copy of it)                   -> 0
 [check] pthread_condattr_init(after pthread_condattr_destroy)      -> 0
-[check] sysconf(_SC_PHYS_PAGES)                                    -> 4094842
+[check] sysconf(_SC_PHYS_PAGES)                                    -> 4094840
 [check] sysconf(_SC_PAGESIZE)                                      -> 4096
 [check] sysconf(_SC_NPROCESSORS_ONLN)                              -> 12
 [check] sysconf(_SC_OPEN_MAX)                                      -> 10240
@@ -22,7 +22,7 @@ tmpfs  rw,relatime,size=65536k
 [check]   open() of a /tmp file until it fails                     -> 5000
 [check]   open() of /dev/null until it fails                       -> 5000
 [check] setrlimit(RLIMIT_NOFILE, soft limit 256)                   -> 0
-[check]   then open() of a /tmp file until it fails                -> 253, errno Too many open files
+[check]   then open() of a /tmp file until it fails (soft limit 256) -> 252, errno Too many open files
 [check] setrlimit(RLIMIT_NOFILE, soft and hard limit 1024)         -> 0
-[check]   then open() of a /tmp file until it fails                -> 1021, errno Too many open files
+[check]   then open() of a /tmp file until it fails (limit 1024)   -> 1020, errno Too many open files
 [check] done

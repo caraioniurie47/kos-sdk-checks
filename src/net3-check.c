@@ -3,8 +3,8 @@
  * - recv() of zero bytes on an empty non-blocking TCP socket whose peer is open (POSIX: EAGAIN, not 0).
  * - FIONREAD with one 3-byte datagram, or 3 stream bytes, queued.
  * - A thread blocked in read() on TCP, or recvmsg() on UDP, while another thread closes the socket: what the blocked
- *   call returns within 5 s; then the same for write() on TCP blocked on a full send buffer. errno is printed as a
- *   number too.
+ *   call returns within 5 s; then the same for a 64 KiB write() on TCP after non-blocking 4 KiB writes until one fails
+ *   (that failure is printed). errno is printed as a number too.
  * - SO_SNDBUF and SO_RCVBUF set to 0.
  * - Two UDP sockets bound to one 127.0.0.1 port, with SO_REUSEADDR and with SO_REUSEPORT. Where the headers do not
  *   define SO_REUSEPORT, NetBSD's value 0x0200 is used; a line says which.
@@ -237,8 +237,14 @@ static void close_checks(void)
     {
         static char fill[4096];
         fcntl(c, F_SETFL, fcntl(c, F_GETFL) | O_NONBLOCK);
-        for (int i = 0; i < 100000 && write(c, fill, sizeof(fill)) > 0; i++)
-            ;
+        long rc = 0;
+        int calls = 0;
+        errno = 0;
+        while (calls < 100000 && (rc = (long)write(c, fill, sizeof(fill))) > 0)
+            calls++;
+        int e = errno;
+        printf("[check] %-58s -> %ld%s%s after %d writes that sent data\n", "non-blocking write(TCP, 4 KiB) until it stops", rc,
+               rc < 0 ? ", errno " : "", rc < 0 ? strerror(e) : "", calls);
         fcntl(c, F_SETFL, fcntl(c, F_GETFL) & ~O_NONBLOCK);
         close_under_blocked_call("write(TCP) blocked, another thread closes the socket", c, 2);
         close(s);

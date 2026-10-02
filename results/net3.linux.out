@@ -11,6 +11,7 @@ tmpfs  rw,relatime,size=65536k
 [check] ioctl(TCP, FIONREAD), 3 bytes queued                       -> 3
 [check] read(TCP) blocked, another thread closes the socket        -> still blocked 5 s later
 [check] recvmsg(UDP) blocked, another thread closes the socket     -> still blocked 5 s later
+[check] non-blocking write(TCP, 4 KiB) until it stops              -> -1, errno Resource temporarily unavailable after 646 writes that sent data
 [check] write(TCP) blocked, another thread closes the socket       -> still blocked 5 s later
 [check] setsockopt(TCP, SO_SNDBUF, 0)                              -> 0
 [check] setsockopt(TCP, SO_RCVBUF, 0)                              -> 0

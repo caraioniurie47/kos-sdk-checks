@@ -69,13 +69,18 @@ int main(void)
     /* The same with an /etc/hosts in the program's own file system (VfsRamFs). Not on Linux, where /etc/hosts is the
      * system's. */
 #ifdef __KOS__
-    mkdir("/etc", 0755);
+    errno = 0;
+    result("  mkdir(\"/etc\") in the program's file system", mkdir("/etc", 0755));
+    errno = 0;
     int hosts = open("/etc/hosts", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    long wrote = hosts;
     if (hosts >= 0)
     {
-        write(hosts, "127.0.0.1 localhost\n", 20);
+        errno = 0;
+        wrote = (long)write(hosts, "127.0.0.1 localhost\n", 20);
         close(hosts);
     }
+    result("  then /etc/hosts created, bytes of 127.0.0.1 localhost", wrote);
     res = NULL;
     gai = getaddrinfo("localhost", NULL, &hints, &res);
     printf("[check] %-58s -> %d%s%s\n", "  again, with /etc/hosts in the program's file system", gai, gai ? ", " : "",
@@ -83,6 +88,8 @@ int main(void)
     if (res)
         freeaddrinfo(res);
 #else
+    printf("[check] %-58s -> not run\n", "  mkdir(\"/etc\") in the program's file system");
+    printf("[check] %-58s -> not run\n", "  then /etc/hosts created, bytes of 127.0.0.1 localhost");
     printf("[check] %-58s -> not run\n", "  again, with /etc/hosts in the program's file system");
 #endif
 
