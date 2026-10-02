@@ -214,7 +214,9 @@ document it; or another choice of yours.
 | `  revents` | 0x0, 0x0 | 0x14, 0x20 |
 
 POSIX: "poll() or ppoll() shall set the POLLHUP, POLLERR, and POLLNVAL flag in revents if the condition is true", where
-POLLNVAL means "The specified fd value is not an open file descriptor."; `EBADF` is not among its errors. NetBSD 10's `pollscan` sets
+POLLNVAL means "The specified fd value is not an open file descriptor."; `EBADF` is not among its errors. The
+requirement is the "shall set": POSIX describes this condition and its outcome, a flag in the entry, so failing the whole
+call is not one of the additional errors XSH 2.3 allows. NetBSD 10's `pollscan` sets
 `POLLNVAL` for such an entry and goes on, so the whole-call failure comes from KasperskyOS's layer.
 
 An event loop that polls many sockets while other threads close them gets whole-call failures instead of per-descriptor
@@ -658,7 +660,8 @@ Options: accept a NULL buffer with length 0, as NetBSD does; keep `EINVAL` and d
 The limit is on the length, not on buffer space: on a blocking socket whose peer is reading, the call fails and sends
 nothing, where `send()` on the same sockets sends part. POSIX's `EMSGSIZE` is for "The message is too large to be sent
 all at once (as the socket requires)", which a stream socket does not require; XSH 2.3 lets an implementation use a
-listed error under other circumstances when it can be handled as the described one, which a caller can by sending less.
+listed error under other circumstances when it can be handled as the described one, which, in my judgement, a caller
+can, by sending less.
 NetBSD's `sosend` fails with `EMSGSIZE` only for a socket that sends atomically, or for control data over the buffer size
 ([`uipc_socket.c`:966-968](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket.c#L966-L968),
 NetBSD 10), so the limit comes from KasperskyOS's layer, and the documentation does not mention it. .NET sends with a
@@ -668,7 +671,7 @@ destination address, or from several buffers, through `sendmsg`; a 10 MB
 Check: [`src/net2-check.c`](src/net2-check.c); output [`results/net2.kos.out`](results/net2.kos.out),
 [`results/net2.linux.out`](results/net2.linux.out).
 
-Options: send part of the data, as `send()` does, or block until it is sent, as POSIX describes for a blocking socket;
+Options: send part of the data, as `send()` does, or block until space is available, as POSIX describes for a blocking socket;
 keep the limit and document it; or another choice of yours.
 
 <a id="u9"></a>
@@ -793,8 +796,9 @@ then prints the program's own lines (`checks.Check`; Einit's and DCM's lines abo
 ```
 
 About 10 seconds pass between the start and the fallback to the stub (10.08 s here); `main()` runs after it, and file
-calls then fail with `EIO`, as the runtime's line says. The program prints to stderr; a line it writes to stdout does not
-appear, as the SDK's `hello` example says (stdout needs a VFS program).
+calls then fail with `EIO`, as the runtime's line says (the program's one `open()` does). The program prints to stderr; a
+line it writes to stdout does not appear. The SDK's `examples/hello/hello/src/hello.c` says why: "To work with the
+standard output stream stdout, a program that supports the VFS must be added to the solution."
 
 Check: [`src/novfs-check.c`](src/novfs-check.c) (`CHECK=novfs`: an image with no VFS program); output
 [`results/novfs.kos.out`](results/novfs.kos.out).

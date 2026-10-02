@@ -23,8 +23,8 @@ last column below links the findings each check backs.
 | [`host/thread-api-check.sh`](host/thread-api-check.sh) | thread suspension and register access in the headers; what the exception handler API documents | [P1](FINDINGS.md#p1), [P2](FINDINGS.md#p2) |
 | [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94: nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
 
-The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `oom` on 2026-09-29; `sys` on 2026-10-01;
-`novfs`, `net`, `net2`, `net3`, `sdk-check.sh` and `thread-api-check.sh` on 2026-10-02), is in
+The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `oom` on 2026-09-29; `fs` on 2026-09-30;
+`novfs`, `net`, `net2`, `net3`, `sys`, `sdk-check.sh` and `thread-api-check.sh` on 2026-10-02), is in
 [`results/`](results/).
 
 The VfsRamFs crash ([B4](FINDINGS.md#b4)) has its own reproducer:
@@ -32,13 +32,13 @@ The VfsRamFs crash ([B4](FINDINGS.md#b4)) has its own reproducer:
 
 ## Programs on KasperskyOS
 
-Each program in `src/` is the only application in its image, as `checks.Check`; except for `novfs-check.c`, with the
-SDK's prebuilt `VfsRamFs` as its file system (`/tmp` is a RAM file system, `/dev` its devfs) and `VfsNet` as its
-network stack. The security policy grants everything. `net-check.c`, `net2-check.c` and `net3-check.c` give `en0` the address QEMU user networking
-expects, as the SDK's network examples do. Every check prints one `[check]` line and the program ends with
-`[check] done`, except `oom-check.c`, which the kernel is expected to end. `novfs-check.c`, whose image has no VFS
-program, prints to stderr (stdout needs a VFS program), and `host/run-check.sh` prints the C runtime's VFS log lines with
-it, whose timestamps show the wait.
+Each program in `src/` is the only application in its image, as `checks.Check`. Every image but `novfs-check.c`'s has
+the SDK's prebuilt `VfsRamFs` as the program's file system (`/tmp` is a RAM file system, `/dev` its devfs) and `VfsNet`
+as its network stack; `novfs-check.c`'s has no VFS program. The security policy grants everything. `net-check.c`,
+`net2-check.c` and `net3-check.c` give `en0` the address QEMU user networking expects, as the SDK's network examples
+do. Every check prints one `[check]` line and the program ends with `[check] done`, except `oom-check.c`, which the
+kernel is expected to end. `novfs-check.c` prints to stderr, as stdout needs a VFS program; for it,
+`host/run-check.sh` also prints the C runtime's VFS log lines, whose timestamps show the wait.
 
 With the SDK's CMake (`SDK` is the SDK's install directory, `CHECK` one of `net`, `net2`, `net3`, `fs`, `mem`, `sys`,
 `oom`, `uname`, `cpu`, `sig`, `novfs`):
