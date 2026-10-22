@@ -25,7 +25,7 @@ Linux do, what it breaks, and the options; the last column below links the findi
 | [`src/sig-check.c`](src/sig-check.c) | `sigaction` for `SIGKILL` and `SIGSTOP` | [B14](FINDINGS.md#b14) |
 | [`host/image-check.sh`](host/image-check.sh) | SDK 2.0 only: this repository's 1.4 image project (`build_kos_qemu_image()`) configured and built with SDK 2.0; what the SDK has instead | [U21](FINDINGS.md#u21) |
 | [`host/thread-api-check.sh`](host/thread-api-check.sh) | thread suspension and register access in the headers; what the exception handler API documents | [P1](FINDINGS.md#p1), [P2](FINDINGS.md#p2) |
-| [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94 of the 1.4 manual, p. 100 of the 2.0 manual: nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
+| [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94 of the 1.4 manual, p. 100 of the 2.0 manual, [web page](https://support.kaspersky.com/kos-community-edition/2.0/sc_filesystems_and_net): nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
 
 The output of each on 1.4.0.102, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `oom` on 2026-09-29; `fs` on
 2026-09-30; `novfs`, `net`, `net2`, `net3`, `sys`, `sdk-check.sh` and `thread-api-check.sh` on 2026-10-02; `falloc` on

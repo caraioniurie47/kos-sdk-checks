@@ -27,7 +27,8 @@ policy grants everything on top of MinimalKOS's own. QEMU runs with `-cpu cortex
 `-m 2048`. The Linux outputs are those of the 1.4 runs.
 
 **Categories.** "POSIX" is POSIX.1-2024 unless a section names another edition; "the manual" is the KasperskyOS
-Community Edition 1.4 manual and "the 2.0 manual" that of 2.0 (PDFs; page numbers as printed).
+Community Edition 1.4 manual and "the 2.0 manual" that of 2.0 (PDFs; page numbers as printed). Each citation also
+links the page of the online documentation that holds the passage, for a quick check (checked 2026-10-22).
 
 | Category | What it means |
 |---|---|
@@ -89,16 +90,16 @@ of yours.
 
 On a pipe, POSIX.1-2024 gives `ESPIPE` for `pread` and `EINVAL` for `fsync` and `ftruncate`, in its "shall fail" lists,
 and Linux returns those; on `/dev/null`, Linux lets `pread` and `pwrite` succeed. Portable code handles those; `ENOSYS`
-it does not. The manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97 of the 1.4 PDF) lists all
+it does not. The manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97 of the 1.4 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview)) lists all
 four. (Correction, 2026-10-22: another table of the same manual, "Description and implementation details of the
 functions of the standard C library for file system management", says of `fsync()` and `fdatasync()`: "It works if the
 call is supported in the file system in which the file is open, otherwise it returns the ENOSYS error." (p. 116 of
-the 1.4 PDF, p. 119 of the 2.0 PDF). So `ENOSYS` from `fsync` is documented; on a pipe POSIX's "shall fail" `EINVAL`
+the 1.4 PDF, p. 119 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_filesys_specialities)). So `ENOSYS` from `fsync` is documented; on a pipe POSIX's "shall fail" `EINVAL`
 still applies (XSH 2.3, above).)
 
 **On 2.0.0.179, partly fixed:** `pwrite` and `pread` on `/dev/null` succeed, as on Linux, and `pread` on a pipe fails
 with `ESPIPE`, as POSIX requires; `ftruncate` and `fsync` on `/dev/null` and on a pipe still fail with `ENOSYS`. The
-2.0 manual has both tables (p. 103, p. 119).
+2.0 manual has both tables (p. 103, p. 119; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview), [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_filesys_specialities)).
 
 .NET falls back from `pread`/`pwrite` to `read`/`write` on `ESPIPE`, and ignores `EINVAL` from `ftruncate` and `fsync`,
 as portable code does. With `ENOSYS`, `File.OpenNullHandle()`, writing to `/dev/null` and flushing a pipe threw
@@ -200,7 +201,7 @@ When several threads of one client create, stat, list and unlink files in `/tmp`
 VfsRamFs takes an unhandled page fault (a NULL pointer dereference in `inode_destructor`, reached from `_vfs_unlinkat`)
 and the kernel terminates it, so its client loses its file system (`[VFS_CLIENT] Connection to vfs lost.` on every
 later call). The reproducer with `THREADS=4` (12 worker threads) faulted in the first round in 3 of 3 runs; with
-`THREADS=1` (3 worker threads) both runs completed. The SDK's "Limitations and known issues" page states "a limit of 30
+`THREADS=1` (3 worker threads) both runs completed. The SDK's "Limitations and known issues" page ([web page](https://support.kaspersky.com/kos-community-edition/2.0/limitations_and_known_problems)) states "a limit of 30
 VFS clients and 5 threads per client", which `THREADS=4` exceeds; even so, a client over the limit takes the file
 system server down rather than getting an error. A .NET program does not control how many of its threads call into
 VFS (the runtime starts threads of its own); one of six full runs of .NET's System.IO.FileSystem tests lost its file
@@ -372,7 +373,7 @@ yours.
 
 POSIX's `sendmsg()` lists "[EMSGSIZE] ... the msg_iovlen member of the msghdr structure pointed to by message is less
 than or equal to 0 or is greater than {IOV_MAX}." as a "shall fail" error; NetBSD returns `EMSGSIZE` there. The value 10
-itself is documented as the VFS IPC's `MaxIovecsCount` (p. 869 of the 1.4 PDF, p. 832 of the 2.0 PDF), but it is below `_XOPEN_IOV_MAX` (16).
+itself is documented as the VFS IPC's `MaxIovecsCount` (p. 869 of the 1.4 PDF, p. 832 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/system_limits)), but it is below `_XOPEN_IOV_MAX` (16).
 .NET's datagram sends and receives with more than 10 buffers fail with "Invalid argument", where its tests expect
 "message too long".
 
@@ -464,7 +465,7 @@ accepts any signal; or another choice of yours.
 
 POSIX lists "[ENOTSUP] The implementation does not support the combination of accesses requested in the prot argument."
 among the errors `mprotect()` "shall fail" with, and the `mprotect()` row of the POSIX limitations says "it will only
-return the -1 value and will assign the ENOTSUP value to the errno variable" (p. 452 of the 1.4 PDF, p. 462 of the 2.0 PDF). Writing a page,
+return the -1 value and will assign the ENOTSUP value to the errno variable" (p. 452 of the 1.4 PDF, p. 462 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_uns_ifaces)). Writing a page,
 then switching it to `PROT_READ | PROT_EXEC`, works.
 
 **On 2.0.0.179:** the same output.
@@ -501,8 +502,8 @@ Options: declare it as POSIX has it; keep it and document the difference; or ano
 |---|---|---|---|
 | `link("/tmp/plain.txt", "/tmp/hard.txt")` | -1, errno Function not implemented | -1, errno Function not implemented | 0 |
 
-The manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97 of the 1.4 PDF, p. 103 of the 2.0 PDF) lists `link()` without
-qualification, and the POSIX support limitations list `mkfifo()` as a stub but not `link()`.
+The manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97 of the 1.4 PDF, p. 103 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview)) lists `link()` without
+qualification, and the POSIX support limitations ([web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_uns_ifaces)) list `mkfifo()` as a stub but not `link()`.
 
 Check: [`src/fs-check.c`](src/fs-check.c); output [`results/fs.kos.out`](results/fs.kos.out), [`results/2.0.0.179/fs.kos.out`](results/2.0.0.179/fs.kos.out),
 [`results/fs.linux.out`](results/fs.linux.out).
@@ -517,7 +518,7 @@ Options: implement hard links on VfsRamFs; keep `ENOSYS` and document it, with `
 | `sendfile(tcp socket, file, &offset, 512)` | -1, errno Invalid argument | -1, errno Invalid argument | 512 |
 
 `sendfile()` is declared and defined, so configure checks find it, and the manual's table "Functions implemented by the
-vfs::lib_fs library" (pp. 96-97; 2.0: p. 103) lists it. `sendfile()` is not POSIX, and NetBSD has none. `Socket.SendFile` in .NET
+vfs::lib_fs library" (pp. 96-97; 2.0: p. 103; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview)) lists it. `sendfile()` is not POSIX, and NetBSD has none. `Socket.SendFile` in .NET
 threw "Invalid argument"; my port now copies with `read` and `write` on KasperskyOS.
 
 Check: [`src/net-check.c`](src/net-check.c), [`host/sdk-check.sh`](host/sdk-check.sh) (the declaration and definition); output
@@ -534,7 +535,7 @@ supports; or another choice of yours.
 | `socket(AF_INET6, SOCK_STREAM, 0)` | -1, errno Address family not supported by protocol family | -1, errno Address family not supported by protocol family | 3 |
 
 The manual documents IPv6 configuration for `kos_net.h` ("Configure the available network interfaces with IPv4 and IPv6
-addressing.", `configure_net_iface6()`, pp. 124-125 of the 1.4 PDF, pp. 128-129 of the 2.0 PDF). The network stack has no IPv6 library:
+addressing.", `configure_net_iface6()`, pp. 124-125 of the 1.4 PDF, pp. 128-129 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/kos_net_api)). The network stack has no IPv6 library:
 `rumpConfig.cmake` adds `rump::rumpnet_netinet6` only if that target exists, and the sysroot has no
 `librumpnet_netinet6.a`. Portable code and test suites often assume at least an IPv6 loopback; many of .NET's socket
 tests do.
@@ -576,7 +577,8 @@ Check: [`host/toolchain-check.sh`](host/toolchain-check.sh); output [`results/to
 | `chmod(directory, 06755)` | mode 40755 | mode 40755 | mode 46755 |
 
 Portable code and test suites commonly take uid 0 to mean "permission checks are bypassed"; .NET's tests do, and
-expected writes to read-only files to succeed. The POSIX support limitations and POSIX implementation specifics pages do
+expected writes to read-only files to succeed. The POSIX support limitations ([web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_uns_ifaces)) and POSIX implementation specifics
+([web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_ifaces_impl_features)) pages do
 not say what uid 0 means on KasperskyOS.
 
 Yet the same process may remove an empty directory with `unlink()`, which POSIX allows only if "the process has
@@ -604,7 +606,7 @@ choice of yours.
 
 `f_bfree` and `f_bavail` stay 0, and `f_blocks` counts only the space in use. POSIX allows that ("It is unspecified
 whether all members of the statvfs structure have meaningful values on all file systems."), but the manual says
-`statvfs()` gives the "number of available blocks" (p. 460 of the 1.4 PDF, p. 470 of the 2.0 PDF), and nothing says VfsRamFs reports none.
+`statvfs()` gives the "number of available blocks" (p. 460 of the 1.4 PDF, p. 470 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/sys_inf_libc)), and nothing says VfsRamFs reports none.
 .NET's `DriveInfo` reports 0 bytes free and the space in use as the drive's size, and its test that expects free space on
 `/` failed.
 
@@ -641,7 +643,7 @@ Options: end the stream, as Linux does; keep `ENOENT` and document it; or anothe
 | `  then /etc/hosts created, bytes of 127.0.0.1 localhost` | 20 | 20 | not run |
 | `  again, with /etc/hosts in the program's file system` | 7, No address associated with hostname | 7, No address associated with hostname | not run |
 
-`getaddrinfo()` runs in VfsNet (the manual lists it under "Functions implemented by the vfs::lib_net library", p. 97; 2.0: p. 103),
+`getaddrinfo()` runs in VfsNet (the manual lists it under "Functions implemented by the vfs::lib_net library", p. 97; 2.0: p. 103; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview)),
 which reads `/etc/hosts` from its own file systems: an `/etc/hosts` written to the program's file system (the middle rows) changes nothing (on
 Linux that file is the system's, so the check does not write it). The manual's examples list a hosts file among VfsNet's configuration files, but nothing
 says that name resolution, `localhost` included, needs one; RFC 6761 (6.3) recommends that resolvers always return the
@@ -652,7 +654,7 @@ loopback address for `localhost`. The program above gives VfsNet no hosts file.
 alone, no longer failed: 20 passed, and 4 skipped because `localhost` has no IPv6 address (the 2 IPv6 cases among the 26
 are no longer run, as there is no IPv6).
 
-**On 2.0.0.179:** the same. The 2.0 manual adds an example `product_init.yaml.in` (p. 557) that gives VfsNet
+**On 2.0.0.179:** the same. The 2.0 manual adds an example `product_init.yaml.in` (p. 557; [web page](https://support.kaspersky.com/kos-community-edition/2.0/cmake_yaml_templates)) that gives VfsNet
 `ALLOWED_FS_PATHS: "/etc/hosts;/etc/resolv.conf"`; still nothing says that `localhost` needs a hosts file.
 
 Check: [`src/net-check.c`](src/net-check.c); output [`results/net.kos.out`](results/net.kos.out), [`results/2.0.0.179/net.kos.out`](results/2.0.0.179/net.kos.out),
@@ -768,7 +770,7 @@ keep the limit and document it; or another choice of yours.
 POSIX `accept()`: `address_len` "on input specifies the length of the supplied sockaddr structure", and a longer
 address "shall be truncated"; a larger buffer is legal. `EACCES` is not among `accept()`'s errors, but XSH 2.3 lets an
 implementation "generate additional errors unless explicitly disallowed". NetBSD shortens the returned length and never fails on it. 128
-matches the VFS IPC's `MaxSockAddrSize` (p. 869; 2.0: p. 832). .NET passes a 244-byte buffer when accepting on an `AF_UNIX` listener,
+matches the VFS IPC's `MaxSockAddrSize` (p. 869; 2.0: p. 832; [web page](https://support.kaspersky.com/kos-community-edition/2.0/system_limits)). .NET passes a 244-byte buffer when accepting on an `AF_UNIX` listener,
 so its named-pipe server failed with "Permission denied" in 120 of the 128 named-pipe tests, until my port passed 128.
 
 Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](results/net3.kos.out), [`results/2.0.0.179/net3.kos.out`](results/2.0.0.179/net3.kos.out),
@@ -919,7 +921,7 @@ is normal.
 ```
 
 Only `munmap` returns the pages. To give memory back without losing the reservation, the GC on Linux maps `PROT_NONE`
-over the range with `MAP_FIXED` (documented as not supported on KasperskyOS) or calls `madvise(MADV_FREE)`, so my port
+over the range with `MAP_FIXED` (documented as not supported on KasperskyOS: [web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_ifaces_impl_features)) or calls `madvise(MADV_FREE)`, so my port
 cannot return freed heap memory to the system short of unmapping it. POSIX does not say when memory is committed, and
 `madvise` and `MAP_NORESERVE` are not POSIX.
 
@@ -991,11 +993,11 @@ nothing about when memory is committed.
 
 The writing thread now waits for free pages instead of ending the process, and nothing more happened in the 60 s before
 the run was stopped. The 2.0 manual lists this among the critical changes ("the kernel will now wait for free pages to appear
-instead of throwing an EXCEPTION_OVERCOMMIT error", p. 33) and documents the kernel startup parameter
-`vmm.overcommit` (p. 171): by default "the thread is locked while waiting for the necessary amount of physical memory
+instead of throwing an EXCEPTION_OVERCOMMIT error", p. 33; [web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) and documents the kernel startup parameter
+`vmm.overcommit` (p. 171; [web page](https://support.kaspersky.com/kos-community-edition/2.0/kernel_command_line)): by default "the thread is locked while waiting for the necessary amount of physical memory
 to be freed"; `exception` throws `EXCEPTION_OVERCOMMIT` (with it, the check above ended as on 1.4: `Unhandled
 Overcommit`, `Terminating task.`); `disabled` commits at once (the sixth reservation then fails with `ENOMEM`, and the
-program ends normally). Flags of `task.h` set the policy per process (p. 246). That answers this finding.
+program ends normally). Flags of `task.h` set the policy per process (p. 246; [web page](https://support.kaspersky.com/kos-community-edition/2.0/libkos_task_high_api)). That answers this finding.
 
 Check: [`src/oom-check.c`](src/oom-check.c); output [`results/oom.kos.out`](results/oom.kos.out), [`results/2.0.0.179/oom.kos.out`](results/2.0.0.179/oom.kos.out),
 [`results/2.0.0.179/oom-overcommit-exception.kos.out`](results/2.0.0.179/oom-overcommit-exception.kos.out),
@@ -1070,7 +1072,7 @@ Target: aarch64-unknown-kos
 
 Host build scripts that look for `clang-<N>` or `clang` on `PATH` (.NET's does) find these and build host tools for
 KasperskyOS, which fails later in confusing ways. The Visual Studio Code extension puts the directory there by default
-("Add the path $SDK_PREFIX/toolchain/bin to the PATH variable. Enabled by default.", p. 74 of the 1.4 manual, p. 85 of the 2.0 manual).
+("Add the path $SDK_PREFIX/toolchain/bin to the PATH variable. Enabled by default.", p. 74 of the 1.4 manual, p. 85 of the 2.0 manual; [web page](https://support.kaspersky.com/kos-community-edition/2.0/301291)).
 
 **On 2.0.0.179:** the same output.
 
@@ -1134,10 +1136,10 @@ With the kernel startup parameter `handle.disable_detect_invalid_access`, 2.0 co
 
 The 2.0 manual describes detecting the use of invalid handles as part of a handle sanitizer that "must be activated
 separately in each process for which checks for invalid handles and/or handle leaks are required", with the
-environment variable `KOS_HANDLE_SANITIZER=True` (p. 592), and "Invalid handle usage is detected automatically in all
+environment variable `KOS_HANDLE_SANITIZER=True` (p. 592; [web page](https://support.kaspersky.com/kos-community-edition/2.0/debugging_handle_sanitizer)), and "Invalid handle usage is detected automatically in all
 processes in which the handle sanitizer is enabled." (p. 593); this image does not set the variable. The parameter
-above "Disables the handle sanitizer functionality for detecting the use of invalid handles." (p. 170). So the detection is on in every
-process by default and ends the process, which the manual does not say; its "Critical changes in version 2.0" do not
+above "Disables the handle sanitizer functionality for detecting the use of invalid handles." (p. 170; [web page](https://support.kaspersky.com/kos-community-edition/2.0/kernel_command_line)). So the detection is on in every
+process by default and ends the process, which the manual does not say; its "Critical changes in version 2.0" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) do not
 mention it. POSIX's `close()` and `poll()` say nothing about a descriptor closed while another thread polls it. NetBSD's
 `fd_close()` calls such a close "typically an application error - the descriptor is being closed while still in use.
 (Or just a threaded application trying to unblock its thread that sleeps in (say) accept()).", and waits for the other
@@ -1198,11 +1200,11 @@ $ grep -rl generate_qemu_target $SDK/examples --include=CMakeLists.txt | wc -l
 The function is still defined, but it adds no target, with only a warning, and the build fails at `make`. The examples
 now boot a prebuilt MinimalKOS with `generate_qemu_target()`. The 2.0 documentation does not say that an image around
 Einit alone can no longer be built. The 1.4 manual says "build_kos_qemu_image() creates the target for building a
-solution image for QEMU." (p. 550), and its web page `cmake_build_qemu` has no 2.0 version; the 2.0 page "Breaking
-changes" names neither the function nor such images, and the closest statement in the 2.0 "What's new" is "The internal architecture and the process of loading OS
+solution image for QEMU." (p. 550), and its web page `cmake_build_qemu` ([web page](https://support.kaspersky.com/kos-community-edition/1.4/cmake_build_qemu)) has no 2.0 version; the 2.0 page "Breaking
+changes" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) names neither the function nor such images, and the closest statement in the 2.0 "What's new" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/whats_new)) is "The internal architecture and the process of loading OS
 components and system programs have been modified."; the 2.0 manual's "Critical changes in version 2.0" (p. 32) say
 nothing on building images, and the manual never names `build_kos_qemu_image`. One leftover: the PAL test steps still
-say "select the target named `kos-qemu-image-PalTest<N>-sim`" (p. 73). This repository's [`sdk2/`](sdk2/) builds the same programs the
+say "select the target named `kos-qemu-image-PalTest<N>-sim`" (p. 73; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vscode_ext_use)). This repository's [`sdk2/`](sdk2/) builds the same programs the
 2.0 way.
 
 Check: [`host/image-check.sh`](host/image-check.sh), which runs the commands above; output
@@ -1332,7 +1334,7 @@ Options: provide a GSSAPI library; list it as absent in the documentation; or an
 <a id="m6"></a>
 ### M6. Functions declared in the headers but defined in no library
 
-The documentation says "There is no XSI support or optional functionality" (POSIX support limitations). `setgrent`,
+The documentation says "There is no XSI support or optional functionality" (POSIX support limitations, [web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_uns_ifaces)). `setgrent`,
 `getgrent`, `endgrent` are XSI and `shm_open` belongs to an option, so their absence is expected, but the headers still
 declare them:
 
@@ -1465,7 +1467,7 @@ KnThreadSuspendCurrent
 These are the APIs in the thread and task headers (`$SDK/sysroot-aarch64-kos/include/coresrv`) with Suspend, Resume,
 Freeze or Context in their names. `KnThreadSuspendCurrent` "Suspends the calling thread", and `KnTaskGetThreadContext`
 "Gets the context of a thread that is part of a frozen process" (`coresrv/thread/thread_api.h`,
-`coresrv/task/task_api.h`). The POSIX route is closed, as the POSIX support limitations page documents: for
+`coresrv/task/task_api.h`). The POSIX route is closed, as the POSIX support limitations page ([web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_uns_ifaces)) documents: for
 `pthread_kill()`, "You cannot send a signal to a thread", and for `kill()`, "Only the `SIGTERM` signal can be sent."
 
 **Motivation.** A garbage-collected runtime must stop its threads at safe points before it collects, and a debugger or
@@ -1476,7 +1478,7 @@ instead, which works but costs time in every loop.
 **Security.** This stays within one process, whose threads can already read and write all its memory, and
 `KnTaskGetThreadContext` already gets "the context of a thread that is part of a frozen process". And since "The Kaspersky Security
 Module makes decisions regarding interaction between processes and the kernel the same way it makes decisions regarding
-interaction between a process and other processes" (p. 46 of the 1.4 manual; in the 2.0 manual, p. 59: "The Kaspersky
+interaction between a process and other processes" (p. 46 of the 1.4 manual, [web page](https://support.kaspersky.com/kos-community-edition/1.4/overview_ipc_kernel); in the 2.0 manual, p. 59, [web page](https://support.kaspersky.com/kos-community-edition/2.0/overview_ipc_kernel): "The Kaspersky
 Security Module controls interactions between processes and the kernel the same way it controls interactions between a
 process and other processes."), a solution's policy could allow or deny such a call per program.
 
