@@ -129,7 +129,9 @@ int main(void)
     unlink("/tmp/4mib.bin");
 
     /* space allocation beyond what the file system has */
+    errno = 0;
     fd = open("/tmp/big.bin", O_CREAT | O_RDWR | O_TRUNC, 0600);
+    result("open(\"/tmp/big.bin\", O_CREAT | O_RDWR)", fd);
     errno = 0;
     int pf = posix_fallocate(fd, 0, (off_t)1 << 40);
     printf("[check] %-58s -> %d (errno %d)\n", "posix_fallocate(fd, 0, 1 TiB) return value", pf, errno);

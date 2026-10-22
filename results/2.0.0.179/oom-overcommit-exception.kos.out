@@ -1,0 +1,21 @@
+[check] free pages at start: 459268 (1794 MiB)
+[check] 1. mmap(256 MiB, R|W) #1 -> ok, free pages 393599; writing it
+[check] 1. mmap(256 MiB, R|W) #2 -> ok, free pages 328283; writing it
+[check] 1. mmap(256 MiB, R|W) #3 -> ok, free pages 262975; writing it
+[check] 1. mmap(256 MiB, R|W) #4 -> ok, free pages 197576; writing it
+[check] 1. mmap(256 MiB, R|W) #5 -> ok, free pages 132684; writing it
+[check] 1. mmap(256 MiB, R|W) #6 -> ok, free pages 67280; writing it
+[check] 1. mmap(256 MiB, R|W) #7 -> ok, free pages 1923; writing it
+[check] 1. mmap(256 MiB, R|W) #8 -> Cannot allocate memory, free pages 2775
+[check] 1. all unmapped, free pages 462640
+[check] 2. reserve, mprotect(R|W) #1 -> ok, free pages 462602; writing it
+[check] 2. reserve, mprotect(R|W) #2 -> ok, free pages 396820; writing it
+[check] 2. reserve, mprotect(R|W) #3 -> ok, free pages 331154; writing it
+[check] 2. reserve, mprotect(R|W) #4 -> ok, free pages 265488; writing it
+[check] 2. reserve, mprotect(R|W) #5 -> ok, free pages 199821; writing it
+[check] 2. reserve, mprotect(R|W) #6 -> ok, free pages 134155; writing it
+[check] 2. reserve, mprotect(R|W) #7 -> ok, free pages 68489; writing it
+[check] 2. reserve, mprotect(R|W) #8 -> ok, free pages 2823; writing it
+[VMM ] Unhandled Overcommit, address: 0x1b705ec31000
+[VMM ] Unhandled Overcommit, address: 0x15707beaa000
+Terminating task.

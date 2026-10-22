@@ -1,0 +1,2 @@
+[check] 8 UDP sockets, first fd 3, last fd 10
+[check] pthread_create -> 0

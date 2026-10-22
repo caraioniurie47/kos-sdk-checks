@@ -1,0 +1,43 @@
+[2026-10-19T17:25:35.417][Info][Einit][15:15][CRT0] Initing main app: statically-linked, no-PIE.
+[2026-10-19T17:25:35.427][Info][Einit][15:15][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:37.310][Info][kl.core.DCM][16:16][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:37.311][Info][kl.VendorEinit][17:17][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:37.325][Info][kl.core.DCM][16:16][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:37.327][Info][kl.VendorEinit][17:17][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:38.498][Info][kl.drivers.PCIE][27:27][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:38.509][Info][kl.drivers.PCIE][27:27][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:38.921][Info][kl.drivers.BSP][28:28][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:38.931][Info][kl.drivers.BSP][28:28][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:39.345][Info][kl.drivers.GPIO][29:29][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:39.358][Info][kl.drivers.GPIO][29:29][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:39.358][Info][kl.drivers.SDCard][30:30][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:39.373][Info][kl.drivers.SDCard][30:30][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:41.570][Info][kl.MountSettings][18:18][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:41.579][Info][kl.MountSettings][18:18][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-19T17:25:41.699][Info][kl.VfsEntity][19:19][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:43.366][Info][kl.VfsEntity][19:19][CRT0] VFS filesystem and network backends initialized with server
+[2026-10-19T17:25:43.782][Info][kl.dc.DumpCollector][20:20][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:43.790][Info][kl.bc.BlobContainer][21:21][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:25:43.847][Info][kl.bc.BlobContainer][21:21][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:25:43.864][Info][kl.bc.BlobContainer][21:21][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-19T17:25:44.226][Info][kl.dc.DumpCollector][20:20][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:25:44.309][Info][kl.dc.DumpCollector][20:20][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-19T17:25:50.978][Info][kl.settings_manager.SystemSettings][22:22][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:25:50.993][Info][kl.settings_manager.SystemSettings][22:22][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-19T17:25:51.014][Info][kl.settings_manager.SystemSettings][22:22][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-19T17:25:52.665][Info][kl.PkgMgrEntity][23:23][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:25:52.677][Info][kl.PkgMgrEntity][23:23][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-19T17:25:52.707][Info][kl.PkgMgrEntity][23:23][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-19T17:25:55.054][Info][kl.ExecMgrEntity][24:24][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:25:55.070][Info][kl.ExecMgrEntity][24:24][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-19T17:25:55.079][Info][kl.ExecMgrEntity][24:24][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-19T17:25:58.589][Info][ServiceManager.0][131:131][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:25:58.603][Info][ServiceManager.0][131:131][CRT0] VFS filesystem backend initialized with env(client:kl.VfsEntity)
+[2026-10-19T17:25:58.615][Info][ServiceManager.0][131:131][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-19T17:26:03.224][Info][Check.1][142:142][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-19T17:26:03.449][Info][Check.1][142:142][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-19T17:26:03.466][Info][Check.1][142:142][CRT0] VFS filesystem and network backends initialized with client
+[check] CLOCK_MONOTONIC on entry to main()                         -> 28499 ms
+[check] open("/tmp/x", O_CREAT | O_RDWR)                           -> 3
+[check] this line goes to stdout
+[check] done

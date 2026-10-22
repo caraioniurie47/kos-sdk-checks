@@ -8,7 +8,7 @@ cd "$SDK/sysroot-aarch64-kos" || exit 1
 run() { echo "\$ $*"; bash -c "$*" 2>&1; echo; }
 
 echo "# OpenSSL: libraries without headers"
-run 'strings lib/libcrypto.a | grep -m1 "^OpenSSL 1"'
+run 'strings lib/libcrypto.a | grep -m1 "^OpenSSL [0-9]"'
 run 'grep -h ^Version lib/pkgconfig/openssl.pc'
 run 'find . -name opensslv.h -o -type d -name openssl | wc -l'
 

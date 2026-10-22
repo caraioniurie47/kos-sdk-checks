@@ -1,0 +1,12 @@
+{
+  "services": {
+    "ProductRomfsLoader": {
+      "packageId": "kl.ProductRomfsLoader",
+      "runConfigurationId": "default"
+    },
+    "Check": {
+      "packageId": "Check",
+      "runConfigurationId": "default"
+    }
+  }
+}

@@ -1,20 +1,31 @@
 #!/bin/bash
 # Build src/<check>-check.c into a KasperskyOS image, boot it in QEMU, and print the program's "[check]" lines.
 # QEMU is stopped once the program prints "[check] done", faults, is ended for lack of memory, or after 10 minutes;
-# for novfs also 15 s after its C runtime falls back to the VFS stub.
-#   host/run-check.sh <net|net2|net3|fs|mem|sys|oom|uname|cpu|sig|novfs> [SDK directory]
-# BUILD_DIR overrides the build directory (default: build-<check> in the repository); the QEMU console goes to
+# for novfs also 15 s after its C runtime falls back to the VFS stub; on SDK 2.0 also 60 s after the kernel starts
+# making a thread wait for free pages.
+#   host/run-check.sh <net|net2|net3|fs|mem|sys|oom|uname|cpu|sig|novfs|falloc|falloc4g|pollclose> [SDK directory]
+# CHECK_TIMEOUT overrides the 10 minutes (in seconds); CHECK_CMAKE_ARGS adds configure arguments. BUILD_DIR overrides the build directory (default: build-<check> in the repository); the QEMU console goes to
 # qemu.log in it.
 set -u
-CHECK=${1:?usage: run-check.sh <net|net2|net3|fs|mem|sys|oom|uname|cpu|sig|novfs> [SDK directory]}
+CHECK=${1:?usage: run-check.sh <net|net2|net3|fs|mem|sys|oom|uname|cpu|sig|novfs|falloc|falloc4g|pollclose> [SDK directory]}
 SDK=${2:-/opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102}
 REPO=$(cd "$(dirname "$0")/.." && pwd)
 BUILD=${BUILD_DIR:-$REPO/build-$CHECK}
 LOG=$BUILD/qemu.log
 
-"$SDK"/toolchain/bin/cmake -S "$REPO" -B "$BUILD" \
+# SDK 2.0 boots a prebuilt MinimalKOS and builds no Einit-only image: sdk2/ builds the same program as a KPA package.
+SRCDIR=$REPO
+IMAGE=kos-qemu-image
+if [ -d "$SDK/sysroot-aarch64-kos/lib/cmake/minimal_kos" ]; then
+    SRCDIR=$REPO/sdk2
+    IMAGE=qemu
+fi
+
+# CHECK_CMAKE_ARGS: extra configure arguments, e.g. "-D KOS_KERNEL_CMDLINE=vmm.overcommit=disabled" (sdk2/ only).
+# shellcheck disable=SC2086
+"$SDK"/toolchain/bin/cmake -S "$SRCDIR" -B "$BUILD" ${CHECK_CMAKE_ARGS:-} \
     -D CMAKE_TOOLCHAIN_FILE="$SDK"/toolchain/share/toolchain-aarch64-kos.cmake -D CHECK="$CHECK" > /dev/null || exit 1
-if ! "$SDK"/toolchain/bin/cmake --build "$BUILD" --target kos-qemu-image > "$BUILD/build.log" 2>&1; then
+if ! "$SDK"/toolchain/bin/cmake --build "$BUILD" --target "$IMAGE" > "$BUILD/build.log" 2>&1; then
     tail -20 "$BUILD/build.log"
     exit 1
 fi
@@ -24,9 +35,12 @@ fi
 setsid "$SDK"/toolchain/bin/cmake --build "$BUILD" --target sim > "$LOG" 2>&1 < /dev/null &
 pid=$!
 stub=0
-for _ in $(seq 1 600); do
+ocmt=0
+for _ in $(seq 1 "${CHECK_TIMEOUT:-600}"); do
     grep -aqF "[check] done" "$LOG" && break
     grep -aq -E "Unhandled Page Fault|Unhandled Overcommit|Terminating task" "$LOG" && break
+    # SDK 2.0: out of memory, the kernel blocks the thread ("[OCMT] ... waiting for free pages"); stop 60 s later.
+    grep -aq "waiting for free pages" "$LOG" && ocmt=$((ocmt + 1)) && [ "$ocmt" -ge 60 ] && break
     kill -0 "$pid" 2>/dev/null || break
     # novfs: should its output not arrive, stop 15 s after its runtime falls back to the stub.
     # (Einit's and DCM's runtimes log the same fallback at boot in every image; only checks.Check's line counts.)
@@ -41,5 +55,6 @@ wait "$pid" 2>/dev/null
 # novfs: also the C runtime's and the VFS client's log lines, whose timestamps show the wait.
 VFSLOG='\[check\]'
 [ "$CHECK" = novfs ] && VFSLOG='\]\[(CRT0|VFS_CLIENT|VFS_INIT)\]'
-grep -a -E -e "\[check\]|Unhandled Page Fault|Unhandled Overcommit|Terminating task" -e "$VFSLOG" "$LOG" | tr -d '\r'
+grep -a -E -e "\[check\]|Unhandled Page Fault|Unhandled Overcommit|Terminating task|waiting for free pages" \
+    -e "$VFSLOG" "$LOG" | tr -d '\r'
 grep -aqF "[check] done" "$LOG"

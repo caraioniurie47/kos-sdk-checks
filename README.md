@@ -1,10 +1,10 @@
 # KasperskyOS SDK checks
 
 Small programs and scripts that show where KasperskyOS Community Edition 1.4.0.102 (QEMU, aarch64) behaves differently
-from POSIX or Linux, or where the SDK lacks something portable code expects. I found these while porting .NET
-(NativeAOT) to KasperskyOS ([runtime-kos](https://github.com/caraioniurie47/runtime-kos)). **[`FINDINGS.md`](FINDINGS.md)
-describes each finding**: what the checks show, what POSIX, NetBSD and Linux do, what it breaks, and the options; the
-last column below links the findings each check backs.
+from POSIX or Linux, or where the SDK lacks something portable code expects, re-run on 2.0.0.179. I found these while
+porting .NET (NativeAOT) to KasperskyOS ([runtime-kos](https://github.com/caraioniurie47/runtime-kos)).
+**[`FINDINGS.md`](FINDINGS.md) describes each finding**: what the checks show on each version, what POSIX, NetBSD and
+Linux do, what it breaks, and the options; the last column below links the findings each check backs.
 
 | Check | What it shows | Findings |
 |---|---|---|
@@ -14,6 +14,9 @@ last column below links the findings each check backs.
 | [`src/sys-check.c`](src/sys-check.c) | `pthread_condattr_init` on an initialized attribute, `sysconf`, `readdir` of a removed directory, `mprotect` of a read-only image page, `getrlimit`/`setrlimit` and the descriptor limit | [B13](FINDINGS.md#b13), [U3](FINDINGS.md#u3), [U13](FINDINGS.md#u13), [U17](FINDINGS.md#u17), [M2](FINDINGS.md#m2) |
 | [`src/oom-check.c`](src/oom-check.c) | running out of memory with plain and with `MAP_NORESERVE` mappings | [U16](FINDINGS.md#u16) |
 | [`src/fs-check.c`](src/fs-check.c) | `mkstemps`, `link`, `/dev/null` and pipes, uid 0 and mode bits, `unlink`, `rename`, `posix_fallocate`, `utimensat`, `statvfs` on VfsRamFs | [B1](FINDINGS.md#b1), [B2](FINDINGS.md#b2), [B3](FINDINGS.md#b3), [E1](FINDINGS.md#e1), [U1](FINDINGS.md#u1), [U2](FINDINGS.md#u2) |
+| [`src/falloc-check.c`](src/falloc-check.c) | `posix_fallocate` on VfsRamFs from 1 MiB to 1 TiB: result, time, memory taken | [B3](FINDINGS.md#b3) |
+| [`src/falloc4g-check.c`](src/falloc4g-check.c) | `posix_fallocate` of 4 GiB, more than the machine's memory, then `fstat` and `statvfs` | [B3](FINDINGS.md#b3) |
+| [`src/pollclose-check.c`](src/pollclose-check.c) | `poll` while another thread closes the polled sockets | [U20](FINDINGS.md#u20) |
 | [`src/uname-check.c`](src/uname-check.c) | what `uname()` returns | [U12](FINDINGS.md#u12) |
 | [`src/novfs-check.c`](src/novfs-check.c) | a program linked with the VFS client in an image without a VFS program: the wait at startup | [U14](FINDINGS.md#u14) |
 | [`host/sdk-check.sh`](host/sdk-check.sh) | OpenSSL headers, `getentropy`, GSSAPI, functions declared but defined nowhere, `FALLOC_FL_*`, commonly probed headers, `dlerror`'s declaration, `SA_RESETHAND`/`SA_NODEFER`, `<uchar.h>`, `SO_REUSEPORT`, `OPEN_MAX`/`NAME_MAX`/`IOV_MAX`, `sendfile`, IPv6 in the network stack's package, `getauxval`, the compiler's C dialect | [B3](FINDINGS.md#b3), [B11](FINDINGS.md#b11), [B13](FINDINGS.md#b13), [B16](FINDINGS.md#b16), [E2](FINDINGS.md#e2), [E3](FINDINGS.md#e3), [M1](FINDINGS.md#m1), [M3](FINDINGS.md#m3), [M4](FINDINGS.md#m4), [M5](FINDINGS.md#m5), [M6](FINDINGS.md#m6), [M7](FINDINGS.md#m7), [M8](FINDINGS.md#m8), [M9](FINDINGS.md#m9), [M10](FINDINGS.md#m10), [P3](FINDINGS.md#p3), [Portability notes](FINDINGS.md#portability-notes) |
@@ -21,11 +24,16 @@ last column below links the findings each check backs.
 | [`src/cpu-check.c`](src/cpu-check.c) | CPU feature queries through `sysctlbyname` | [P3](FINDINGS.md#p3) |
 | [`src/sig-check.c`](src/sig-check.c) | `sigaction` for `SIGKILL` and `SIGSTOP` | [B14](FINDINGS.md#b14) |
 | [`host/thread-api-check.sh`](host/thread-api-check.sh) | thread suspension and register access in the headers; what the exception handler API documents | [P1](FINDINGS.md#p1), [P2](FINDINGS.md#p2) |
-| [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94: nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
+| [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94 of the 1.4 manual, p. 100 of the 2.0 manual: nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
 
-The output of each, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `oom` on 2026-09-29; `fs` on 2026-09-30;
-`novfs`, `net`, `net2`, `net3`, `sys`, `sdk-check.sh` and `thread-api-check.sh` on 2026-10-02), is in
-[`results/`](results/).
+The output of each on 1.4.0.102, as run on 2026-09-24 (`mem` and `sig` on 2026-09-25; `oom` on 2026-09-29; `fs` on
+2026-09-30; `novfs`, `net`, `net2`, `net3`, `sys`, `sdk-check.sh` and `thread-api-check.sh` on 2026-10-02; `falloc` on
+2026-10-19; `pollclose` on 2026-10-20), is in [`results/`](results/); `fs-check.c` has printed the result of its
+`open("/tmp/big.bin")` since 2026-10-19, so the 1.4 output lacks that line. The output on 2.0.0.179, run from
+2026-10-19 to 2026-10-22, is in [`results/2.0.0.179/`](results/2.0.0.179/), with `oom` also under the kernel startup
+parameters `vmm.overcommit=exception` and `disabled`, `pollclose` also under `handle.disable_detect_invalid_access`, and
+`build-1.4-project.out`, the 1.4 image project built with SDK 2.0 ([U21](FINDINGS.md#u21)). The Linux outputs are
+those of the 1.4 runs.
 
 The VfsRamFs crash ([B4](FINDINGS.md#b4)) has its own reproducer:
 [kos-vfsramfs-repro](https://github.com/caraioniurie47/kos-vfsramfs-repro).
@@ -41,7 +49,7 @@ kernel is expected to end. `novfs-check.c` prints to stderr, as stdout needs a V
 `host/run-check.sh` also prints the C runtime's VFS log lines, whose timestamps show the wait.
 
 With the SDK's CMake (`SDK` is the SDK's install directory, `CHECK` one of `net`, `net2`, `net3`, `fs`, `mem`, `sys`,
-`oom`, `uname`, `cpu`, `sig`, `novfs`):
+`oom`, `uname`, `cpu`, `sig`, `novfs`, `falloc`, `falloc4g`, `pollclose`), on 1.4:
 
 ```
 $SDK/toolchain/bin/cmake -B build-net -D CMAKE_TOOLCHAIN_FILE=$SDK/toolchain/share/toolchain-aarch64-kos.cmake -D CHECK=net
@@ -52,6 +60,16 @@ or `host/run-check.sh net [SDK directory]`, which does both, prints the `[check]
 `[check] done`. The SDK's CMake warns "Do not use build_kos_xxx_image() in root 'CMakeLists.txt'"; the image builds
 and runs regardless.
 
+The 2.0 SDK used here, `KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179`, is downloaded by hand from
+https://appicenter.kaspersky.dev/tools/sdk/kos.ce (it needs Ubuntu 24.04). SDK 2.0 builds no image around Einit alone
+([U21](FINDINGS.md#u21)). [`sdk2/`](sdk2/) builds the same programs as the
+KPA package `Check` on the SDK's prebuilt MinimalKOS, with VfsRamFs, VfsNet and the `dnet` programs in a product ROMFS
+(`cmake -S sdk2 ...`, target `qemu` to build, `sim` to run); `host/run-check.sh` picks it for an SDK that has
+MinimalKOS. On 2.0 the security policy grants everything on top of MinimalKOS's own, and `novfs` cannot leave out
+MinimalKOS's VFS program. `-D KOS_KERNEL_CMDLINE=<parameters>` passes kernel startup parameters (`sdk2/` only;
+`host/run-check.sh` takes it in `CHECK_CMAKE_ARGS`). `run-check.sh` stops QEMU after 10 minutes, or after
+`CHECK_TIMEOUT` seconds: `falloc4g` needs about 3000 on 2.0.
+
 ## The same programs on Linux
 
 `linux/run-linux.sh net`, `net2`, `net3`, `fs`, `sys` or `sig`, as root, compiles the program with `gcc` and runs it with a
@@ -61,5 +79,6 @@ programs use KasperskyOS interfaces and have no Linux counterpart.
 ## Scripts on the host
 
 `host/sdk-check.sh`, `host/thread-api-check.sh` and `host/toolchain-check.sh` inspect an installed SDK (default
-`/opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102`, or the directory given as the first argument). Each prints every
+`/opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102`, or the directory given as the first argument, such as
+`/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179`). Each prints every
 command as `$ <command>` before its output.

@@ -1,0 +1,19 @@
+[check] free pages at start: 459967 (1796 MiB)
+[check] 1. mmap(256 MiB, R|W) #1 -> ok, free pages 394298; writing it
+[check] 1. mmap(256 MiB, R|W) #2 -> ok, free pages 328960; writing it
+[check] 1. mmap(256 MiB, R|W) #3 -> ok, free pages 263573; writing it
+[check] 1. mmap(256 MiB, R|W) #4 -> ok, free pages 198185; writing it
+[check] 1. mmap(256 MiB, R|W) #5 -> ok, free pages 132831; writing it
+[check] 1. mmap(256 MiB, R|W) #6 -> ok, free pages 67364; writing it
+[check] 1. mmap(256 MiB, R|W) #7 -> ok, free pages 1994; writing it
+[check] 1. mmap(256 MiB, R|W) #8 -> Cannot allocate memory, free pages 2227
+[check] 1. all unmapped, free pages 461993
+[check] 2. reserve, mprotect(R|W) #1 -> ok, free pages 461937; writing it
+[check] 2. reserve, mprotect(R|W) #2 -> ok, free pages 396923; writing it
+[check] 2. reserve, mprotect(R|W) #3 -> ok, free pages 331254; writing it
+[check] 2. reserve, mprotect(R|W) #4 -> ok, free pages 265570; writing it
+[check] 2. reserve, mprotect(R|W) #5 -> ok, free pages 199891; writing it
+[check] 2. reserve, mprotect(R|W) #6 -> ok, free pages 134224; writing it
+[check] 2. reserve, mprotect(R|W) #7 -> ok, free pages 68557; writing it
+[check] 2. reserve, mprotect(R|W) #8 -> ok, free pages 2890; writing it
+[OCMT] Task 139 (Check.1) thread 139 is waiting for free pages

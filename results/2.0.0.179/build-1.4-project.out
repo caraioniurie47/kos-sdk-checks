@@ -1,0 +1,29 @@
+$ $SDK/toolchain/bin/cmake -B build -D CMAKE_TOOLCHAIN_FILE=$SDK/toolchain/share/toolchain-aarch64-kos.cmake -D CHECK=uname > configure.log 2>&1; echo "exit code $?"
+exit code 0
+
+$ grep -B1 -A4 "be added" configure.log | sed "s|$SDK|\$SDK|g"
+CMake Warning at $SDK/toolchain/share/cmake/Modules/platform/kos_image/image.cmake:1273 (message):
+  Target aarch64-kos won't be added:
+  $SDK/sysroot-aarch64-kos/../libexec/aarch64-kos/kos-qemu
+  or
+  $SDK/sysroot-aarch64-kos/../libexec/aarch64-kos/kos-qemu.ld
+  not found
+
+$ $SDK/toolchain/bin/cmake --build build --target kos-qemu-image > build.log 2>&1; echo "exit code $?"
+exit code 2
+
+$ grep -m1 "No rule" build.log
+gmake: *** No rule to make target 'kos-qemu-image'.  Stop.
+
+$ ls -A $SDK/libexec | wc -l
+0
+
+$ grep -rln "^ *function *(build_kos_qemu_image" $SDK --include=*.cmake | sed "s|$SDK|\$SDK|"
+$SDK/toolchain/share/cmake/Modules/platform/kos_image/image.cmake
+
+$ grep -rl build_kos_qemu_image $SDK/examples --include=CMakeLists.txt | wc -l
+0
+
+$ grep -rl generate_qemu_target $SDK/examples --include=CMakeLists.txt | wc -l
+31
+

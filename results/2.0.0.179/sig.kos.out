@@ -1,0 +1,5 @@
+[check] sigaction(SIGKILL, handler) -> 0; handler read back: installed
+[check] sigaction(SIGSTOP, handler) -> 0; handler read back: installed
+[check] sigaction(SIGTERM, handler) -> 0; handler read back: installed
+[check] sigaction(SIGUSR1, handler) -> 0; handler read back: installed
+[check] done

@@ -1,0 +1,22 @@
+[check] mkstemps("/tmp/tmpXXXXXX.tmp", 4)                          -> -1, errno Invalid argument
+[check] mkstemp("/tmp/tmpXXXXXX")                                  -> 3
+[check] link("/tmp/plain.txt", "/tmp/hard.txt")                    -> -1, errno Function not implemented
+[check] write(/dev/null, 8)                                        -> 8
+[check] pwrite(/dev/null, 8, offset 0)                             -> 8
+[check] pread(/dev/null, 8, offset 0)                              -> 0
+[check] ftruncate(/dev/null, 0)                                    -> -1, errno Function not implemented
+[check] fsync(/dev/null)                                           -> -1, errno Function not implemented
+[check] pread(pipe, 2, offset 0)                                   -> -1, errno Illegal seek
+[check] fsync(pipe write end)                                      -> -1, errno Function not implemented
+[check] ftruncate(pipe write end, 0)                               -> -1, errno Function not implemented
+[check] geteuid()                                                  -> 0
+[check] open(0444 file it created, O_WRONLY)                       -> -1, errno Permission denied
+[check] utimensat(0444 file it created, explicit times)            -> -1, errno Permission denied
+[check] chmod(file, 06755)                                         -> mode 106755
+[check] chmod(directory, 06755)                                    -> mode 40755
+[check] unlink(empty directory)                                    -> 0
+[check]   stat(that directory) afterwards                          -> -1, errno No such file or directory
+[check] rename(file, 32799-character path)                         -> -1, errno Invalid argument
+[check] statvfs(/tmp): f_blocks, f_bfree, f_bavail                 -> 1, 0, 0 (f_frsize 1024)
+[check]   the same with a 4 MiB file in /tmp                       -> 4098, 0, 0
+[check] open("/tmp/big.bin", O_CREAT | O_RDWR)                     -> 4

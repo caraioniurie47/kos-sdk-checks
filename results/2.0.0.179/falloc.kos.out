@@ -1,0 +1,121 @@
+[check] watcher thread: pthread_create -> 0
+[check] ftruncate 1 TiB: open -> 3
+[check] ftruncate 1 TiB: calling, free pages 459113
+[check] ftruncate 1 TiB -> -1 (errno 12 Cannot allocate memory), 436 ms, free pages 459113 -> 459024
+[check] ftruncate 1 TiB: unlink -> 0, free pages 459024
+[check] posix_fallocate 1 MiB: open -> 3
+[check] posix_fallocate 1 MiB: calling, free pages 459017
+[check] posix_fallocate 1 MiB -> 0 (errno 0 Success), 737 ms, free pages 459017 -> 458675
+[check] posix_fallocate 1 MiB: unlink -> 0, free pages 458675
+[check] posix_fallocate 64 MiB: open -> 3
+[check] posix_fallocate 64 MiB: calling, free pages 458923
+[check]     ... still in the call after 3346 ms, free pages 455237
+[check]     ... still in the call after 8846 ms, free pages 453606
+[check]     ... still in the call after 13953 ms, free pages 454928
+[check]     ... still in the call after 19039 ms, free pages 456555
+[check]     ... still in the call after 24068 ms, free pages 459517
+[check]     ... still in the call after 29109 ms, free pages 461674
+[check] posix_fallocate 64 MiB -> 0 (errno 0 Success), 31011 ms, free pages 458923 -> 458387
+[check] posix_fallocate 64 MiB: unlink -> 0, free pages 462504
+[check] posix_fallocate 512 MiB: open -> 3
+[check] posix_fallocate 512 MiB: calling, free pages 462503
+[check]     ... still in the call after 3066 ms, free pages 456238
+[check]     ... still in the call after 8171 ms, free pages 442093
+[check]     ... still in the call after 13254 ms, free pages 442169
+[check]     ... still in the call after 18304 ms, free pages 441754
+[check]     ... still in the call after 23373 ms, free pages 441820
+[check]     ... still in the call after 28451 ms, free pages 445722
+[check]     ... still in the call after 33569 ms, free pages 451526
+[check]     ... still in the call after 38635 ms, free pages 450957
+[check]     ... still in the call after 43709 ms, free pages 450185
+[check]     ... still in the call after 48747 ms, free pages 450168
+[check]     ... still in the call after 53793 ms, free pages 449953
+[check]     ... still in the call after 58839 ms, free pages 450053
+[check]     ... still in the call after 63911 ms, free pages 450146
+[check]     ... still in the call after 68973 ms, free pages 450336
+[check]     ... still in the call after 74026 ms, free pages 450459
+[check]     ... still in the call after 79073 ms, free pages 450857
+[check]     ... still in the call after 84116 ms, free pages 452028
+[check]     ... still in the call after 89169 ms, free pages 453060
+[check]     ... still in the call after 94228 ms, free pages 453896
+[check]     ... still in the call after 99302 ms, free pages 455012
+[check]     ... still in the call after 104334 ms, free pages 456731
+[check]     ... still in the call after 109355 ms, free pages 438941
+[check]     ... still in the call after 114440 ms, free pages 423359
+[check]     ... still in the call after 119487 ms, free pages 424604
+[check]     ... still in the call after 124545 ms, free pages 426483
+[check]     ... still in the call after 129586 ms, free pages 427317
+[check]     ... still in the call after 134648 ms, free pages 427307
+[check]     ... still in the call after 139697 ms, free pages 427586
+[check]     ... still in the call after 144732 ms, free pages 428443
+[check]     ... still in the call after 149772 ms, free pages 429543
+[check]     ... still in the call after 154803 ms, free pages 431472
+[check]     ... still in the call after 159841 ms, free pages 433234
+[check]     ... still in the call after 164902 ms, free pages 434443
+[check]     ... still in the call after 169960 ms, free pages 435105
+[check]     ... still in the call after 174987 ms, free pages 436180
+[check]     ... still in the call after 180024 ms, free pages 439013
+[check]     ... still in the call after 185061 ms, free pages 441149
+[check]     ... still in the call after 190114 ms, free pages 442085
+[check]     ... still in the call after 195176 ms, free pages 443480
+[check]     ... still in the call after 200234 ms, free pages 446296
+[check]     ... still in the call after 205291 ms, free pages 447185
+[check]     ... still in the call after 210321 ms, free pages 448422
+[check]     ... still in the call after 215398 ms, free pages 451235
+[check]     ... still in the call after 220443 ms, free pages 452660
+[check] posix_fallocate 512 MiB -> 0 (errno 0 Success), 222118 ms, free pages 462503 -> 452898
+[check] posix_fallocate 512 MiB: unlink -> 0, free pages 453050
+[check] posix_fallocate 4 GiB: open -> 3
+[check] posix_fallocate 4 GiB: calling, free pages 462499
+[check]     ... still in the call after 2932 ms, free pages 455819
+[check]     ... still in the call after 7987 ms, free pages 442666
+[check]     ... still in the call after 13031 ms, free pages 437149
+[check]     ... still in the call after 18069 ms, free pages 437264
+[check]     ... still in the call after 23105 ms, free pages 444713
+[check]     ... still in the call after 28163 ms, free pages 450458
+[check]     ... still in the call after 33206 ms, free pages 449832
+[check]     ... still in the call after 38275 ms, free pages 449422
+[check]     ... still in the call after 43351 ms, free pages 449382
+[check]     ... still in the call after 48405 ms, free pages 449170
+[check]     ... still in the call after 53522 ms, free pages 449360
+[check]     ... still in the call after 58575 ms, free pages 449102
+[check]     ... still in the call after 63621 ms, free pages 450228
+[check]     ... still in the call after 68664 ms, free pages 451334
+[check]     ... still in the call after 73690 ms, free pages 453212
+[check]     ... still in the call after 78714 ms, free pages 454770
+[check]     ... still in the call after 83743 ms, free pages 457115
+[check]     ... still in the call after 88786 ms, free pages 458908
+[check]     ... still in the call after 93837 ms, free pages 461532
+[check]     ... still in the call after 98863 ms, free pages 443883
+[check]     ... still in the call after 103920 ms, free pages 425787
+[check]     ... still in the call after 108972 ms, free pages 425885
+[check]     ... still in the call after 114017 ms, free pages 425444
+[check]     ... still in the call after 119079 ms, free pages 425251
+[check]     ... still in the call after 124113 ms, free pages 425628
+[check]     ... still in the call after 129166 ms, free pages 425417
+[check]     ... still in the call after 134223 ms, free pages 424971
+[check]     ... still in the call after 139256 ms, free pages 424420
+[check]     ... still in the call after 144324 ms, free pages 425396
+[check]     ... still in the call after 149353 ms, free pages 426608
+[check]     ... still in the call after 154381 ms, free pages 427921
+[check]     ... still in the call after 159421 ms, free pages 429023
+[check]     ... still in the call after 164475 ms, free pages 430744
+[check]     ... still in the call after 169534 ms, free pages 431794
+[check]     ... still in the call after 174597 ms, free pages 432399
+[check]     ... still in the call after 179652 ms, free pages 433152
+[check]     ... still in the call after 184703 ms, free pages 434048
+[check]     ... still in the call after 189753 ms, free pages 434733
+[check]     ... still in the call after 194840 ms, free pages 435560
+[check]     ... still in the call after 199892 ms, free pages 436109
+[check]     ... still in the call after 204963 ms, free pages 436660
+[check]     ... still in the call after 210046 ms, free pages 438450
+[check]     ... still in the call after 215087 ms, free pages 438664
+[check]     ... still in the call after 220142 ms, free pages 438924
+[check]     ... still in the call after 225197 ms, free pages 438245
+[check]     ... still in the call after 230246 ms, free pages 438332
+[check]     ... still in the call after 235283 ms, free pages 439212
+[check]     ... still in the call after 240306 ms, free pages 440057
+[check]     ... still in the call after 245352 ms, free pages 440080
+[check]     ... still in the call after 250429 ms, free pages 440568
+[check]     ... still in the call after 255472 ms, free pages 441199
+[check]     ... still in the call after 260508 ms, free pages 443036

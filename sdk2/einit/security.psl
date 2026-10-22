@@ -1,0 +1,19 @@
+/* Allow everything: the checks are about the system calls, not the policy. */
+
+use nk.base._
+use minimal_kos._
+
+use EDL ProductEinit
+use EDL checks.Check
+
+use kl.drivers.DNetSrv._
+use kl.VfsNet._
+use kl.VfsRamFs._
+
+execute { grant () }
+
+request { grant () }
+
+response { grant () }
+
+error { grant () }

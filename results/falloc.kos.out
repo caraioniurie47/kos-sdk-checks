@@ -1,0 +1,132 @@
+[check] watcher thread: pthread_create -> 0
+[check] ftruncate 1 TiB: open -> 3
+[check] ftruncate 1 TiB: calling, free pages 355648
+[check] ftruncate 1 TiB -> -1 (errno 12 Cannot allocate memory), 111 ms, free pages 355648 -> 355590
+[check] ftruncate 1 TiB: unlink -> 0, free pages 355583
+[check] posix_fallocate 1 MiB: open -> 3
+[check] posix_fallocate 1 MiB: calling, free pages 355582
+[check] posix_fallocate 1 MiB -> 0 (errno 0 Success), 622 ms, free pages 355582 -> 355036
+[check] posix_fallocate 1 MiB: unlink -> 0, free pages 355036
+[check] posix_fallocate 64 MiB: open -> 3
+[check] posix_fallocate 64 MiB: calling, free pages 355035
+[check]     ... still in the call after 2555 ms, free pages 351182
+[check]     ... still in the call after 7792 ms, free pages 344933
+[check]     ... still in the call after 12856 ms, free pages 336709
+[check] posix_fallocate 64 MiB -> 0 (errno 0 Success), 15535 ms, free pages 355035 -> 336709
+[check] posix_fallocate 64 MiB: unlink -> 0, free pages 353127
+[check] posix_fallocate 512 MiB: open -> 3
+[check] posix_fallocate 512 MiB: calling, free pages 353127
+[check]     ... still in the call after 2317 ms, free pages 349532
+[check]     ... still in the call after 7351 ms, free pages 335168
+[check]     ... still in the call after 12402 ms, free pages 335168
+[check]     ... still in the call after 17420 ms, free pages 318736
+[check]     ... still in the call after 22444 ms, free pages 318736
+[check]     ... still in the call after 27471 ms, free pages 285888
+[check]     ... still in the call after 32497 ms, free pages 285888
+[check]     ... still in the call after 37581 ms, free pages 285888
+[check]     ... still in the call after 42622 ms, free pages 285888
+[check]     ... still in the call after 47636 ms, free pages 220208
+[check]     ... still in the call after 52693 ms, free pages 220208
+[check]     ... still in the call after 57761 ms, free pages 220208
+[check]     ... still in the call after 62812 ms, free pages 220208
+[check]     ... still in the call after 67839 ms, free pages 220208
+[check]     ... still in the call after 72890 ms, free pages 220208
+[check]     ... still in the call after 77947 ms, free pages 220208
+[check]     ... still in the call after 82950 ms, free pages 220208
+[check]     ... still in the call after 87957 ms, free pages 220208
+[check] posix_fallocate 512 MiB -> 0 (errno 0 Success), 88794 ms, free pages 353127 -> 220208
+[check] posix_fallocate 512 MiB: unlink -> 0, free pages 220208
+[check] posix_fallocate 4 GiB: open -> 3
+[check] posix_fallocate 4 GiB: calling, free pages 351538
+[check]     ... still in the call after 4092 ms, free pages 343328
+[check]     ... still in the call after 9098 ms, free pages 335120
+[check]     ... still in the call after 14119 ms, free pages 318704
+[check]     ... still in the call after 19160 ms, free pages 318704
+[check]     ... still in the call after 24168 ms, free pages 285872
+[check]     ... still in the call after 29224 ms, free pages 285872
+[check]     ... still in the call after 34316 ms, free pages 285872
+[check]     ... still in the call after 39384 ms, free pages 285872
+[check]     ... still in the call after 44419 ms, free pages 220208
+[check]     ... still in the call after 49466 ms, free pages 220208
+[check]     ... still in the call after 54585 ms, free pages 220208
+[check]     ... still in the call after 59697 ms, free pages 220208
+[check]     ... still in the call after 64758 ms, free pages 220208
+[check]     ... still in the call after 69819 ms, free pages 220208
+[check]     ... still in the call after 74856 ms, free pages 220208
+[check]     ... still in the call after 79865 ms, free pages 220208
+[check]     ... still in the call after 84884 ms, free pages 88861
+[check]     ... still in the call after 89921 ms, free pages 88861
+[check]     ... still in the call after 95027 ms, free pages 88861
+[check]     ... still in the call after 100069 ms, free pages 88861
+[check]     ... still in the call after 105157 ms, free pages 88861
+[check]     ... still in the call after 110237 ms, free pages 88861
+[check]     ... still in the call after 115291 ms, free pages 88861
+[check]     ... still in the call after 120341 ms, free pages 88861
+[check]     ... still in the call after 125399 ms, free pages 88861
+[check]     ... still in the call after 130469 ms, free pages 88861
+[check]     ... still in the call after 135527 ms, free pages 88861
+[check]     ... still in the call after 140591 ms, free pages 88861
+[check]     ... still in the call after 145654 ms, free pages 88861
+[check]     ... still in the call after 150680 ms, free pages 88861
+[check]     ... still in the call after 155724 ms, free pages 88861
+[check]     ... still in the call after 160793 ms, free pages 88861
+[check]     ... still in the call after 165798 ms, free pages 88861
+[check]     ... still in the call after 170814 ms, free pages 88861
+[check]     ... still in the call after 175827 ms, free pages 88861
+[check]     ... still in the call after 180836 ms, free pages 88861
+[check]     ... still in the call after 185845 ms, free pages 88861
+[check]     ... still in the call after 190859 ms, free pages 87766
+[check] posix_fallocate 4 GiB -> -1 (errno 12 Cannot allocate memory), 191053 ms, free pages 351538 -> 88792
+[check] posix_fallocate 4 GiB: unlink -> 0, free pages 88792
+[check] posix_fallocate 1 TiB: open -> 3
+[check] posix_fallocate 1 TiB: calling, free pages 351451
+[check]     ... still in the call after 4741 ms, free pages 343241
+[check]     ... still in the call after 9794 ms, free pages 335033
+[check]     ... still in the call after 14836 ms, free pages 335033
+[check]     ... still in the call after 19856 ms, free pages 318617
+[check]     ... still in the call after 24895 ms, free pages 318617
+[check]     ... still in the call after 29939 ms, free pages 318617
+[check]     ... still in the call after 34964 ms, free pages 285785
+[check]     ... still in the call after 40022 ms, free pages 285785
+[check]     ... still in the call after 45063 ms, free pages 285785
+[check]     ... still in the call after 50115 ms, free pages 285785
+[check]     ... still in the call after 55126 ms, free pages 285785
+[check]     ... still in the call after 60168 ms, free pages 220121
+[check]     ... still in the call after 65199 ms, free pages 220121
+[check]     ... still in the call after 70266 ms, free pages 220121
+[check]     ... still in the call after 75353 ms, free pages 220121
+[check]     ... still in the call after 80388 ms, free pages 220121
+[check]     ... still in the call after 85432 ms, free pages 220121
+[check]     ... still in the call after 90475 ms, free pages 220121
+[check]     ... still in the call after 95524 ms, free pages 220121
+[check]     ... still in the call after 100603 ms, free pages 220121
+[check]     ... still in the call after 105653 ms, free pages 220121
+[check]     ... still in the call after 110674 ms, free pages 220121
+[check]     ... still in the call after 115699 ms, free pages 220121
+[check]     ... still in the call after 120711 ms, free pages 220121
+[check]     ... still in the call after 125726 ms, free pages 88792
+[check]     ... still in the call after 130773 ms, free pages 88792
+[check]     ... still in the call after 135982 ms, free pages 88792
+[check]     ... still in the call after 141056 ms, free pages 88792
+[check]     ... still in the call after 146080 ms, free pages 88792
+[check]     ... still in the call after 151143 ms, free pages 88792
+[check]     ... still in the call after 156190 ms, free pages 88792
+[check]     ... still in the call after 161258 ms, free pages 88792
+[check]     ... still in the call after 166292 ms, free pages 88792
+[check]     ... still in the call after 171362 ms, free pages 88792
+[check]     ... still in the call after 176382 ms, free pages 88792
+[check]     ... still in the call after 181443 ms, free pages 88792
+[check]     ... still in the call after 186462 ms, free pages 88792
+[check]     ... still in the call after 191509 ms, free pages 88792
+[check]     ... still in the call after 196537 ms, free pages 88792
+[check]     ... still in the call after 201602 ms, free pages 88792
+[check]     ... still in the call after 206639 ms, free pages 88792
+[check]     ... still in the call after 211655 ms, free pages 88792
+[check]     ... still in the call after 216675 ms, free pages 88792
+[check]     ... still in the call after 221686 ms, free pages 88792
+[check]     ... still in the call after 226695 ms, free pages 88792
+[check]     ... still in the call after 231711 ms, free pages 88792
+[check]     ... still in the call after 236726 ms, free pages 88279
+[check] posix_fallocate 1 TiB -> -1 (errno 12 Cannot allocate memory), 238309 ms, free pages 351451 -> 88756
+[check] posix_fallocate 1 TiB: unlink -> 0, free pages 88756
+[check] done

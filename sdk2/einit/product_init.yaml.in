@@ -1,0 +1,35 @@
+# Started by ProductEinit from the product ROMFS. VfsRamFs and VfsNet with the SDK's default environment and arguments
+# (precompiled_vfsConfig.cmake); dnet before VfsNet, as in the SDK's net_with_separate_vfs example.
+
+blob_container_romfs_prefix: "/romfs/product/"
+
+entities:
+
+- name: kl.drivers.DNetSrv
+  path: dnet_executable
+  wait_for: ready
+
+- name: kl.VfsNet
+  path: VfsNet
+  wait_for: ready
+  after:
+  - kl.drivers.DNetSrv
+  env:
+    RUMP_NETEN_NAME_POLICY: @VFSENV_RUMP_NETEN_NAME_POLICY@
+    VFS_NETWORK_BACKEND: server:kl.VfsNet
+    VFS_FILESYSTEM_BACKEND: server:kl.VfsNet
+    DEFAULT_DNS_SERVER: 8.8.8.8
+  args:
+  - '-l'
+  - 'devfs /dev devfs 0'
+
+- name: kl.VfsRamFs
+  path: VfsRamFs
+  wait_for: ready
+  env:
+    VFS_FILESYSTEM_BACKEND: server:kl.VfsRamFs
+  args:
+  - '-l'
+  - 'nodev /tmp ramfs 0'
+  - '-l'
+  - 'devfs /dev devfs 0'

@@ -1,0 +1,14 @@
+/* Allow everything: the checks are about the system calls, not the policy. */
+
+use nk.base._
+use minimal_kos._
+
+use EDL checks.Check
+
+execute { grant () }
+
+request { grant () }
+
+response { grant () }
+
+error { grant () }

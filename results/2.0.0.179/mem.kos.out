@@ -1,0 +1,11 @@
+[check] mmap(512 MiB, PROT_NONE, private anon)       -> ok, 18611 ms, free pages 461942 -> 330617 (512 MiB taken)
+[check] mmap(512 MiB, PROT_NONE, ... | MAP_NORESERVE) -> ok, 59 ms, free pages 462073 -> 461830 (0 MiB taken)
+[check] madvise(64 MiB touched, MADV_DONTNEED)       -> 0, free pages 445324 -> 445324
+[check]   first byte afterwards                      -> 1 (want 0 after MADV_DONTNEED)
+[check] madvise(the same 64 MiB, MADV_FREE)          -> 0, free pages 445324 -> 445324
+[check] munmap(the same 64 MiB)                      -> 0, free pages 445324 -> 461742
+[check] mmap(64 KiB, R|W|X, private anon)            -> Cannot allocate memory
+[check] mprotect(64 KiB R|X anon, to R|W|X)          -> -1, errno Cannot allocate memory
+[check] mprotect(R|W anon, code written, to R|X)     -> 0
+[check]   calling that code (mov w0, #42; ret)       -> 42
+[check] done

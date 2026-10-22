@@ -1,0 +1,11 @@
+[check] 8 UDP sockets, first fd 3, last fd 10
+[check] pthread_create -> 0
+[check] progress: 500 closes
+[check] progress: 1000 closes
+[check] progress: 1500 closes
+[check] progress: 2000 closes
+[check] progress: 2500 closes
+[check] progress: 3000 closes
+[check] closes while polling: 3000 (close failed 0)
+[check] poll calls 2995: returned >= 0 2985 (POLLNVAL entries 1); -1 EBADF 8, EINVAL 2, EACCES 0, other 0 (last errno 0)
+[check] done

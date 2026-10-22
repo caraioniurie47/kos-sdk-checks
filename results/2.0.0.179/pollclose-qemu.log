@@ -1,0 +1,825 @@
+[  4%] Generating /opt/sdkchecks-probe20/build/image.yaml
+gen_qemu_image_yaml.py[LINE:76]# INFO     [2026-10-20 06:25:22,590]  Namespace(qemu_cmd='/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/bin/qemu-system-aarch64;-m;2048;-machine;virt,gic-version=3,highmem=on,highmem-ecam=off;-cpu;cortex-a55;-nographic;-monitor;none;-smp;4;-device;rtl8139,netdev=net0;-netdev;user,id=net0;-serial;stdio;-device;sdhci-pci;-device;sd-card,drive=sdcard;-drive;file=rootfs.img,format=raw,if=none,id=sdcard;-initrd;vendor_romfs.romfs', with_kos_emulator=False, output_file='/opt/sdkchecks-probe20/build/image.yaml')
+[  4%] Built target generate_qemu_yaml
+[ 16%] Built target vendor_einit
+[ 16%] Built target db66454a9c12054a-copy_xdl_ProductEinit.edl
+[ 20%] Built target 278b8963ca376cf6-copy_xdl_Check.edl
+[ 20%] Built target ce825bc23fe413d2-copy_xdl_VendorEinit.edl
+[ 20%] Built target 118020b386187f6c-copy_xdl_Einit.edl
+[ 20%] Built target 4788a4b14aae05e1-copy_xdl_ProductRomfsLoader.edl
+[ 20%] Built target EinitQemu-kss-entities-built
+[ 25%] Generating EinitQemu-kss/ksm.module, EinitQemu-kss/security.psl.audit.c
+file content:
+/opt/sdkchecks-probe20/build/EinitQemu-kss/security.psl.c /opt/sdkchecks-probe20/build/EinitQemu-kss/ksm.module.d:    /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/share/vendor_rom/policy/minimal_kos.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/share/vendor_rom/policy/product_rom.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/share/vendor_rom/policy/vendor.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/VfsNet.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/VfsRamFs.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/drivers/BSP.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/drivers/DNetSrv.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/drivers/GPIO.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/drivers/PCIE.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/include/kl/drivers/SDCard.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/include/nk/base.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/include/nk/basic.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/include/nk/flow.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/include/nk/regex.psl   /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/include/nk/staticmap.psl   /opt/sdkchecks-probe20/sdk2/einit/security.psl
+
+[ 25%] Built target EinitQemu-kss-makekss-output
+[ 25%] Built target EinitQemu-kss-makekss-strip
+[ 29%] Generating vendor_romfs.romfs
+[File # 0][Size: 1564688] product_einit, path:/opt/sdkchecks-probe20/build/vendor_einit
+[File # 1][Size: 1822944] pcie_qemu, path:/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/bin/pcie_qemu
+[File # 2][Size: 1757024] bsp_qemu, path:/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/bin/bsp_qemu
+[File # 3][Size: 1889704] sdcard_qemu, path:/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/bin/sdcard_qemu
+[File # 4][Size: 1691744] gpio_qemu, path:/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/bin/gpio_qemu
+[File # 5][Size:     491] mount_settings.json, path:/opt/sdkchecks-probe20/build/mount_settings.json
+[File # 6][Size: 1385632] ksm.module, path:/opt/sdkchecks-probe20/build/EinitQemu-kss/ksm.module
+[ 29%] Built target vendor_romfs
+[ 41%] Built target product_einit
+[ 45%] Built target product_romfs
+[ 50%] Generating /opt/sdkchecks-probe20/build/Check.kpa/manifest/run_configuration.0.json by python
+[ 54%] Built target Check.kpa.run_configuration.0
+[ 58%] Built target f143ab02a2a1ccb-Check.edl.h
+[ 62%] Built target b7884f465a1f2ccf-Check.edl.h
+[ 62%] Built target 278b8963ca376cf6-generated_Check.edl
+[ 62%] Built target check_edl_files
+[ 70%] Built target Check
+[ 75%] Generating /opt/sdkchecks-probe20/build/Check.kpa/manifest/component.0.json by python
+[ 79%] Built target Check.kpa.component.0
+[ 83%] Generating /opt/sdkchecks-probe20/build/Check.kpa/manifest/manifest.json
+[ 87%] Packing /opt/sdkchecks-probe20/build/kpa/Check.kpa
+[ 87%] Built target Check.kpa.pack
+[ 91%] Removing temporary directory /opt/sdkchecks-probe20/build/Check.kpa/staging
+[ 91%] Built target Check.kpa.clean_artifacts
+[ 95%] Verifying /opt/sdkchecks-probe20/build/kpa/Check.kpa
+document is valid
+2026-10-20 06:25:41.221326: [info] Warning, installing without index file. Consider use option --index-ext.
+@(component/secure_platform/nk/caspack/app/pm/ALM/ExtraFiles.hs:45:7)
+2026-10-20 06:25:41.221513: [info] Warning, installing without index file. Consider use option --sign-ext.
+@(component/secure_platform/nk/caspack/app/pm/ALM/ExtraFiles.hs:59:7)
+['Check']
+[ 95%] Built target Check.kpa.verify
+[ 95%] Built target Check.kpa
+[ 95%] Built target rootfs_part_src
+
+[prepare_hdd_img.sh] Generating HDD image...
+removed '/opt/sdkchecks-probe20/build/rootfs.img'
+[prepare_hdd_img.sh] INFO: If you are using parted below version 3.3,
+[prepare_hdd_img.sh]       you may see a permission error before this line.
+[prepare_hdd_img.sh]       This behavior was fixed in 3.3, but also in <3.3
+[prepare_hdd_img.sh]       it did not cause any real problems, so you can ignore it.
+[prepare_hdd_img.sh] Creating /opt/sdkchecks-probe20/build/rootfs.img partition from 2048s to 100% of ext4 with type or GPT label "primary"
+[prepare_hdd_img.sh] INFO: If you are using parted below version 3.3,
+[prepare_hdd_img.sh]       you may see a permission error before this line.
+[prepare_hdd_img.sh]       This behavior was fixed in 3.3, but also in <3.3
+[prepare_hdd_img.sh]       it did not cause any real problems, so you can ignore it.
+Model:  (file)
+Disk /opt/sdkchecks-probe20/build/rootfs.img: 134217728B
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags: 
+
+Number  Start     End         Size        Type     File system  Flags
+ 1      1048576B  134217727B  133169152B  primary
+
+[prepare_hdd_img.sh] INFO: If you are using parted below version 3.3,
+[prepare_hdd_img.sh]       you may see a permission error before this line.
+[prepare_hdd_img.sh]       This behavior was fixed in 3.3, but also in <3.3
+[prepare_hdd_img.sh]       it did not cause any real problems, so you can ignore it.
+mke2fs 1.47.0 (5-Feb-2023)
+Discarding device blocks:      0/130048             done                            
+Creating filesystem with 130048 1k blocks and 32512 inodes
+Filesystem UUID: 30a71f38-08d0-4e23-b14d-8a1a70d5160a
+Superblock backups stored on blocks: 
+	8193, 24577, 40961, 57345, 73729
+
+Allocating group tables:  0/16     done                            
+Writing inode tables:  0/16     done                            
+Creating journal (4096 blocks): done
+Copying files into the device: done
+Writing superblocks and filesystem accounting information:  0/16     done
+
+260096+0 records in
+260096+0 records out
+133169152 bytes (133 MB, 127 MiB) copied, 0.490487 s, 272 MB/s
+[prepare_hdd_img.sh] Cleanup... 
+
+[prepare_hdd_img.sh] Your HDD image is ready ('/opt/sdkchecks-probe20/build/rootfs.img')!
+[prepare_hdd_img.sh] Now you can use it 
+[ 95%] Built target rootfs.img
+[ 95%] Built target rootfs
+[ 95%] Built target qemu
+[100%] Running QEMU with KasperskyOS image...
+QEMU emulator version: 9.2.4 (KasperskyOS-2.0.0.179)
+QEMU arguments: /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/toolchain/qemu/bin/qemu-system-aarch64 -m 2048 -machine virt,gic-version=3,highmem=on,highmem-ecam=off -cpu cortex-a55 -nographic -monitor none -smp 4 -device rtl8139,netdev=net0 -netdev user,id=net0 -serial stdio -device sdhci-pci -device sd-card,drive=sdcard -drive file=rootfs.img,format=raw,if=none,id=sdcard -initrd vendor_romfs.romfs -kernel /opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179/sysroot-aarch64-kos/share/minimal_kos/image 
+[BOOT] Starting...
+[BOOT] Checking FDT...
+[BOOT] Prepare earlycon device...
+[ERCN] Search stdout-path property in FDT
+[FDT ] stdout-path: '/pl011@9000000'
+[BOOT] Search initRd...
+[BOOT] Preparing memory...
+[FDT ] Memory node: "memory@40000000" have 1 region(s):
+[FDT ] [#00]: 0x0000000040000000 - 0x00000000bfffffff
+[BOOT] Preparing loader info...
+[BOOT] Reserve FDT memory region...
+[FDT ] 0x0000000048a00000 - 0x0000000048b00000 size: 0x0000000000100000 | 'loaded DTB'
+[BOOT] InitRd resources reservations...
+[BOOT] Dynamic memory reservations...
+[FDT ] Attempting to use v.1 algorithm to perform dynamic memory reservations.
+[BOOT] Checking memory size...
+[BOOT] Available RAM: 2048 MB.
+[BOOT] Discovering physical memory layout for PageDB...
+[BOOT] Post-process FDT...
+[BOOT] Setting up multiprocessing...
+[FDT ] PSCI Method: HVC
+[BOOT] Built CPU Identity table using FDT:
+[BOOT] Hardware ID of CPU #0: 0x0
+[BOOT] Hardware ID of CPU #1: 0x1
+[BOOT] Hardware ID of CPU #2: 0x2
+[BOOT] Hardware ID of CPU #3: 0x3
+[BOOT] Setting up TEE...
+[BOOT] Setting up architecture...
+[BOOT] Setting up interrupt controller...
+[BOOT] Setting up system timer...
+[BOOT] Collecting iommu info...
+[BOOT] Discovering RTC devices...
+[BOOT] Preparing disaster device...
+[BOOT] Preparing transport for GDB stub...
+[BOOT] Preparing PeripheryStatic region...
+[BPRM] For mapping devices need region having size 24576 bytes
+[BOOT] Configuring size of diag buffer for kernel...
+[DIAG] Size of kernel diag buffer is 2097152
+[KRNL] Used kernel mode: default
+[BOOT] Preparing init RomFS...
+[RMFS] Dump romfs.0 (init romFs):
+[RMFS] Files: 9, size: 13582336 (0x00cf4000).
+[RMFS] File #00: einit                            - size:  1577024 (0x00181040)
+[RMFS] File #01: BlobContainer                    - size:  1892832 (0x001ce1e0)
+[RMFS] File #02: DumpCollector                    - size:  1889784 (0x001cd5f8)
+[RMFS] File #03: ExecMgrEntity                    - size:  1418880 (0x0015a680)
+[RMFS] File #04: MountSettings                    - size:  1688056 (0x0019c1f8)
+[RMFS] File #05: PkgMgrEntity                     - size:   475280 (0x00074090)
+[RMFS] File #06: SystemSettings                   - size:   478032 (0x00074b50)
+[RMFS] File #07: dcm                              - size:  1621568 (0x0018be40)
+[RMFS] File #08: vfs_storage                      - size:  2511256 (0x00265198)
+[BOOT] Preparing vendor RomFS...
+[RMFS] initrd a not compressed gzip
+[RMFS] Dump romfs.1 (vendor romFs):
+[RMFS] Files: 7, size: 10137600 (0x009ab000).
+[RMFS] File #00: product_einit                    - size:  1564688 (0x0017e010)
+[RMFS] File #01: pcie_qemu                        - size:  1822944 (0x001bd0e0)
+[RMFS] File #02: bsp_qemu                         - size:  1757024 (0x001acf60)
+[RMFS] File #03: sdcard_qemu                      - size:  1889704 (0x001cd5a8)
+[RMFS] File #04: gpio_qemu                        - size:  1691744 (0x0019d060)
+[RMFS] File #05: mount_settings.json              - size:      491 (0x000001eb)
+[RMFS] File #06: ksm.module                       - size:  1385632 (0x001524a0)
+[BOOT] Preparing KasperskyOS kernel...
+[BOOT] Preparing trampoline to kernel...
+[BOOT] Preparing page table...
+[BOOT] Preparing diag buffer for kernel...
+[BOOT] Preparing boot env variables...
+[BOOT] Preparing board env variables...
+[BOOT] Search init task...
+[BOOT] Bootstrap secondary cores...
+[BOOT] Bootstrap CPU: 0
+[BOOT] Power up all CPUs...
+[BOOT] Preallocate PageDB space...
+[BOOT] Dump physical memory map...
+[BOOT] Mapping to kernel space devices...
+[BOOT] Starting KasperskyOS...
+
+Loading:
+ _  __                             _           ___  ____
+| |/ /__ _ ___ _ __   ___ _ __ ___| | ___   _ / _ \/ ___|
+| ' // _` / __| '_ \ / _ \ '__/ __| |/ / | | | | | \___ \
+| . \ (_| \__ \ |_) |  __/ |  \__ \   <| |_| | |_| |___) |
+|_|\_\__,_|___/ .__/ \___|_|  |___/_|\_\\__, |\___/|____/
+              |_|                       |___/
+
+
+Built on:   Oct  2 2026 12:19:31
+Board:      virt_qemu
+ARCH:       arm64
+Boot:       elf
+Git hash:   3b996c007ab3cb212ef3cc465cf5b88a727ca328
+
+
+[HAL ] PDB Free pages: 514839
+[HAL ] PDB Reserved pages: 9449
+[HAL ] Exceptions initialized
+Found CPU: ARMv8
+Armv8.1 LSE atomics are implemented
+System control register:
+	Instruction cache: enabled
+	Data cache: enabled
+[HAL ] Bootstrap Processor's ID - 0
+[HAL ] cpu #0 - 1076MHz
+[HAL ] Cpu initialized.
+[HAL ] WXN protection enabled.
+[HAL ] PAN protection enabled.
+[HAL ] MMU initialization - Done.
+[HAL ] Zero space initialized.
+[HAL ] CPU suspend method: PSCI CPU_OFF
+[HAL ] Found GICv3 with 288 interrupts.
+[HAL ] GIC automatic routing is not supported.
+[HAL ] Interrupts initiated.
+[CPU ] CPU0 - boot strap processor
+[CPU ] CPU1 - ordinary processor
+[CPU ] CPU2 - ordinary processor
+[CPU ] CPU3 - ordinary processor
+[HAL ] Hardware Abstraction Layer successfully initialized.
+[KDBG] GDB connection timeout: infinite.
+[INIT] Starting core...
+[MM  ] kmalloc alloc granularity 64
+[MM  ] kalloc allocator created. Frontend enabled.
+[PROF] Statistics counters initialized.
+[VMM ] #PF handler was installed.
+[UID ] Uid allocator initialized.
+[SID ] Sid allocator initialized.
+[IO  ] Initialize MMIO subsystem.
+[IO  ] Initialize DMA subsystem.
+[IO  ] Hardware interrupts successfully initialized.
+[IO  ] Resources registry initialized.
+[TASK] Task infrastructure initialized.
+[SMP ] Idle thread for CPU #0 created.
+[SMP ] Idle thread for CPU #1 created.
+[SMP ] Idle thread for CPU #2 created.
+[SMP ] Idle thread for CPU #3 created.
+[KDBG] Debug thread was created as initially sleeping.
+[KDBG] Transport thread was created as initially sleeping.
+[TASK] Scheduler interrupts initialized.
+[TASK] GSI page initialized.
+[HAL ] cpu #2 - 1130MHz
+[HAL ] cpu #3 - 1113MHz
+[HAL ] cpu #1 - 1130MHz
+[SMP ] CPU #3 - bootstrapped.
+[SMP ] CPU #2 - bootstrapped.
+[SMP ] CPU #1 - bootstrapped.
+[TASK] Multitasking infrastructure initialized.
+[HAL ] Common CPU capabilities:
+[HAL ] HWCAP1 = 0x1193f2
+[HAL ] HWCAP2 = 0x20000
+[TIME] Time infrastructure initialized.
+[VLOG] Virtual logging subsystem initialized.
+[IOMM] Probe arm64 IOMMU hardware.
+[VMM ] Started deduplication thread with 10 seconds timeout
+[VMM ] Virtual Memory Manager service initialized.
+[MM  ] Physical Memory Manager service initialized.
+[IO  ] I/O subsystem successfully initialized.
+[FS  ] File System Manager successfully initialized.
+[XHCI] XHCIDBG service initialized.
+[BLOB] Blob subsystem successfully initialized.
+[KSM ] Module: 'ksm.module' loaded.
+[KSM ] Audit log created.
+[KSM ] Module: 'ksm.module' initialized.
+[KSM ] Server: 'kl.core.Core' executed.
+[KSM ] Security system successfully initialized.
+[INIT] Starting 'Einit' ...
+[INIT] Starting system worker.
+[2026-10-20T03:25:44.447][Info][Einit][15:15][CRT0] Initing main app: statically-linked, no-PIE.
+[2026-10-20T03:25:44.456][Info][Einit][15:15][VFSCS] Initialized successfully
+[2026-10-20T03:25:44.457][Info][Einit][15:15][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:44.464][Info][Einit][15:15][Einit] Started
+[2026-10-20T03:25:44.470][Info][Einit][15:15][Einit] Successfully mounted 'romfs.1' to 'romfs/1'
+[2026-10-20T03:25:46.173][Info][Einit][15:15][Einit] Running 'kl.core.DCM'
+[2026-10-20T03:25:46.185][Info][Einit][15:15][Einit] Running 'kl.VendorEinit' and waiting for exit_success
+[2026-10-20T03:25:46.435][Info][kl.core.DCM][16:16][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:46.437][Info][kl.VendorEinit][17:17][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:46.448][Info][kl.core.DCM][16:16][VFSCS] Initialized successfully
+[2026-10-20T03:25:46.448][Info][kl.core.DCM][16:16][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:46.449][Info][kl.VendorEinit][17:17][VFSCS] Initialized successfully
+[2026-10-20T03:25:46.450][Info][kl.VendorEinit][17:17][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:46.453][Info][kl.core.DCM][16:16][DCM] Starting DCM service...
+[2026-10-20T03:25:46.458][Info][kl.VendorEinit][17:17][Einit] Started
+[2026-10-20T03:25:46.461][Info][kl.core.DCM][16:16][DCM] Starting dispatch loop...
+[2026-10-20T03:25:46.469][Info][kl.core.DCM][16:16][em_transport] Received app_ready notification
+[2026-10-20T03:25:46.470][Info][kl.VendorEinit][17:17][Einit] Successfully mounted 'romfs.1' to 'romfs/1'
+[2026-10-20T03:25:47.571][Info][kl.VendorEinit][17:17][Einit] Running 'kl.drivers.PCIE' and waiting for ready
+[2026-10-20T03:25:47.750][Info][kl.drivers.PCIE][27:27][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:47.758][Info][kl.drivers.PCIE][27:27][VFSCS] Initialized successfully
+[2026-10-20T03:25:47.759][Info][kl.drivers.PCIE][27:27][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:47.764][Info][kl.drivers.PCIE][27:27][em_transport] Sent app_start notification
+[2026-10-20T03:25:47.764][Info][kl.drivers.PCIE][27:27][PCIESR] PCIE server start
+[2026-10-20T03:25:47.789][Info][kl.drivers.PCIE][27:27][KDF] 'KdfServerPseudoDevice' successfully registered by security iface.
+[2026-10-20T03:25:47.888][Info][kl.drivers.PCIE][27:27][PCISR] Device 'pcie_00000000' successfully registered by security iface.
+[2026-10-20T03:25:47.889][Info][kl.drivers.PCIE][27:27][PCISR] Device 'pcie_00000008' successfully registered by security iface.
+[2026-10-20T03:25:47.890][Info][kl.drivers.PCIE][27:27][PCISR] Device 'pcie_00000010' successfully registered by security iface.
+[2026-10-20T03:25:47.891][Info][kl.drivers.PCIE][27:27][PCIESR] No static connection found
+[2026-10-20T03:25:47.961][Info][kl.drivers.PCIE][27:27][KDF_DCM] Service 'pcie' of type 'kl.drivers.PCIE' published to DCM
+[2026-10-20T03:25:47.963][Info][kl.drivers.PCIE][27:27][KDF_DCM] Service 'acpi' of type 'kl.drivers.ACPI' published to DCM
+[2026-10-20T03:25:47.966][Info][kl.drivers.PCIE][27:27][KDF_DCM] Service 'driver.driver' of type 'kl.drivers.Driver' published to DCM
+[2026-10-20T03:25:47.966][Info][kl.drivers.PCIE][27:33][KDF_DCM] DCM connections listening thread started
+[2026-10-20T03:25:48.013][Info][kl.drivers.PCIE][27:27][em_transport] Sent app_ready notification
+[2026-10-20T03:25:48.018][Info][kl.VendorEinit][17:17][Einit] Finished waiting for 'kl.drivers.PCIE'
+[2026-10-20T03:25:48.019][Info][kl.VendorEinit][17:17][Einit] Running 'kl.drivers.BSP' and waiting for ready
+[2026-10-20T03:25:48.191][Info][kl.drivers.BSP][28:28][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:48.200][Info][kl.drivers.BSP][28:28][VFSCS] Initialized successfully
+[2026-10-20T03:25:48.201][Info][kl.drivers.BSP][28:28][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:48.206][Info][kl.drivers.BSP][28:28][em_transport] Sent app_start notification
+[2026-10-20T03:25:48.206][Info][kl.drivers.BSP][28:28][BSPSR] BSP server start
+[2026-10-20T03:25:48.229][Info][kl.drivers.BSP][28:28][KDF] 'KdfServerPseudoDevice' successfully registered by security iface.
+[2026-10-20T03:25:48.231][Info][kl.drivers.BSP][28:28][BSPCL] No static target discovered
+[2026-10-20T03:25:48.239][Info][kl.drivers.BSP][28:28][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:25:48.239][Info][kl.drivers.BSP][28:28][KDF_DCM] Subscribed to service of type 'kl.drivers.BSP'
+[2026-10-20T03:25:48.245][Info][kl.drivers.BSP][28:28][BSP] Local drivers not found
+[2026-10-20T03:25:48.247][Info][kl.drivers.BSP][28:41][KDF_DCM] DCM discovery thread started
+[2026-10-20T03:25:48.297][Info][kl.drivers.BSP][28:28][KDF_DCM] Service 'bsp' of type 'kl.drivers.BSP' published to DCM
+[2026-10-20T03:25:48.300][Info][kl.drivers.BSP][28:28][KDF_DCM] Service 'driver.driver' of type 'kl.drivers.Driver' published to DCM
+[2026-10-20T03:25:48.301][Info][kl.drivers.BSP][28:42][KDF_DCM] DCM connections listening thread started
+[2026-10-20T03:25:48.344][Info][kl.drivers.BSP][28:41][KDF_DCM] Skip self-published endpoints with status 0
+[2026-10-20T03:25:48.358][Info][kl.drivers.BSP][28:28][em_transport] Sent app_ready notification
+[2026-10-20T03:25:48.361][Info][kl.VendorEinit][17:17][Einit] Finished waiting for 'kl.drivers.BSP'
+[2026-10-20T03:25:48.361][Info][kl.VendorEinit][17:17][Einit] Running 'kl.drivers.GPIO'
+[2026-10-20T03:25:48.364][Info][kl.VendorEinit][17:17][Einit] Running 'kl.drivers.SDCard' and waiting for ready
+[2026-10-20T03:25:48.599][Info][kl.drivers.GPIO][29:29][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:48.609][Info][kl.drivers.SDCard][30:30][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:48.613][Info][kl.drivers.GPIO][29:29][VFSCS] Initialized successfully
+[2026-10-20T03:25:48.615][Info][kl.drivers.GPIO][29:29][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:48.619][Info][kl.drivers.SDCard][30:30][VFSCS] Initialized successfully
+[2026-10-20T03:25:48.620][Info][kl.drivers.GPIO][29:29][GPIOSR] GPIO server start
+[2026-10-20T03:25:48.620][Info][kl.drivers.SDCard][30:30][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:48.626][Info][kl.drivers.SDCard][30:30][em_transport] Sent app_start notification
+[2026-10-20T03:25:48.627][Info][kl.drivers.SDCard][30:30][SDCARDSR] SDCard server start
+[2026-10-20T03:25:48.658][Info][kl.drivers.GPIO][29:29][KDF] 'KdfServerPseudoDevice' successfully registered by security iface.
+[2026-10-20T03:25:48.662][Info][kl.drivers.GPIO][29:29][GPIO_CLIENT] No static targets discovered
+[2026-10-20T03:25:48.670][Info][kl.drivers.GPIO][29:29][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:25:48.671][Info][kl.drivers.GPIO][29:29][KDF_DCM] Subscribed to service of type 'kl.drivers.GPIO'
+[2026-10-20T03:25:48.671][Info][kl.drivers.SDCard][30:30][KDF] 'KdfServerPseudoDevice' successfully registered by security iface.
+[2026-10-20T03:25:48.677][Info][kl.drivers.GPIO][29:29][GPIO_CLIENT] GPIO transport initialized
+[2026-10-20T03:25:48.679][Info][kl.drivers.GPIO][29:29][GPIO] Local drivers not found
+[2026-10-20T03:25:48.682][Info][kl.drivers.GPIO][29:29][GPIOSR] No static connection found
+[2026-10-20T03:25:48.682][Info][kl.drivers.GPIO][29:52][KDF_DCM] DCM discovery thread started
+[2026-10-20T03:25:48.684][Info][kl.drivers.SDCard][30:30][BSPCL] Discovered statically connected endpoint of type "kl.drivers.BSP" as kl.drivers.BSP/bsp
+[2026-10-20T03:25:48.732][Info][kl.drivers.SDCard][30:30][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:25:48.736][Info][kl.drivers.SDCard][30:30][KDF_DCM] Subscribed to service of type 'kl.drivers.BSP'
+[2026-10-20T03:25:48.751][Info][kl.drivers.GPIO][29:29][KDF_DCM] Service 'gpio' of type 'kl.drivers.GPIO' published to DCM
+[2026-10-20T03:25:48.755][Info][kl.drivers.GPIO][29:29][KDF_DCM] Service 'driver.driver' of type 'kl.drivers.Driver' published to DCM
+[2026-10-20T03:25:48.755][Info][kl.drivers.SDCard][30:30][BSP] Local drivers not found
+[2026-10-20T03:25:48.760][Info][kl.drivers.SDCard][30:54][KDF_DCM] DCM discovery thread started
+[2026-10-20T03:25:48.763][Info][kl.drivers.GPIO][29:53][KDF_DCM] DCM connections listening thread started
+[2026-10-20T03:25:48.764][Info][kl.drivers.SDCard][30:30][PCICL] No static target discovered
+[2026-10-20T03:25:48.787][Info][kl.drivers.SDCard][30:30][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:25:48.788][Info][kl.drivers.SDCard][30:30][KDF_DCM] Subscribed to service of type 'kl.drivers.PCIE'
+[2026-10-20T03:25:48.881][Info][kl.drivers.GPIO][29:29][GPIOSR] Server is not connected to EM, keep going
+[2026-10-20T03:25:48.886][Info][kl.drivers.GPIO][29:52][KDF_DCM] Skip self-published endpoints with status 0
+[2026-10-20T03:25:48.892][Info][kl.drivers.BSP][28:42][KDF_DCM] Client 'kl.drivers.SDCard' connected to endpoint 'driver.driver' of type 'kl.drivers.Driver'
+[2026-10-20T03:25:48.901][Info][kl.drivers.BSP][28:42][KDF_DCM] Client 'kl.drivers.SDCard' connected to endpoint 'bsp' of type 'kl.drivers.BSP'
+[2026-10-20T03:25:48.905][Info][kl.drivers.SDCard][30:54][KDF_DCM] Target set already has a target representing "kl.drivers.BSP" server, skip this one
+[2026-10-20T03:25:48.908][Info][kl.drivers.SDCard][30:30][PCICL] Waiting for first DCM connection
+[2026-10-20T03:25:48.966][Info][kl.drivers.PCIE][27:33][KDF_DCM] Client 'kl.drivers.SDCard' connected to endpoint 'driver.driver' of type 'kl.drivers.Driver'
+[2026-10-20T03:25:48.973][Info][kl.drivers.PCIE][27:33][KDF_DCM] Client 'kl.drivers.SDCard' connected to endpoint 'pcie' of type 'kl.drivers.PCIE'
+[2026-10-20T03:25:48.975][Info][kl.drivers.SDCard][30:54][PCICL] Discovered dynamically connected endpoint of type "kl.drivers.PCIE" as kl.drivers.PCIE/pcie
+[2026-10-20T03:25:48.978][Info][kl.drivers.PCIE][27:34][PCISR] _kl_drivers_PCIEInit(..)
+[2026-10-20T03:25:48.982][Info][kl.drivers.SDCard][30:54][KDF_DCM] Successfully connected to service 'driver.driver' of type 'kl.drivers.Driver' server 'kl.drivers.PCIE'
+[2026-10-20T03:25:48.982][Info][kl.drivers.SDCard][30:30][PCICL] Waiting for first DCM connection complete
+[2026-10-20T03:25:48.983][Info][kl.drivers.SDCard][30:54][KDF_DCM] Successfully connected to service 'pcie' of type 'kl.drivers.PCIE' server 'kl.drivers.PCIE'
+[2026-10-20T03:25:48.983][Info][kl.drivers.SDCard][30:30][PCICL] PCIe client initialized successfully
+[2026-10-20T03:25:49.318][Info][kl.drivers.SDCard][30:51][SDHC] version: 2.00
+[2026-10-20T03:25:49.470][Info][kl.drivers.SDCard][30:51][BLKPART] MBR:
+[2026-10-20T03:25:49.470][Info][kl.drivers.SDCard][30:51][BLKPART] entry[0] type = 0x83 lbaBegin =        2048 totalSec =      260096
+[2026-10-20T03:25:49.470][Info][kl.drivers.SDCard][30:51][BLKPART] entry[1] type = 0x00 lbaBegin =             totalSec =            
+[2026-10-20T03:25:49.471][Info][kl.drivers.SDCard][30:51][BLKPART] entry[2] type = 0x00 lbaBegin =             totalSec =            
+[2026-10-20T03:25:49.471][Info][kl.drivers.SDCard][30:51][BLKPART] entry[3] type = 0x00 lbaBegin =             totalSec =            
+[2026-10-20T03:25:49.474][Info][kl.drivers.SDCard][30:51][BLKPART] Add MBR/EBR partition 'mmc0_p0', type: 0x83, lbaBegin:   2048, size: 260096 (in sectors)
+[2026-10-20T03:25:49.786][Info][kl.drivers.SDCard][30:30][SDHC] version: 2.00
+[2026-10-20T03:25:49.925][Info][kl.drivers.SDCard][30:30][BLKDEVSR] Port 'mmc0' successfully registered by security iface.
+[2026-10-20T03:25:50.224][Info][kl.drivers.SDCard][30:30][SDHC] version: 2.00
+[2026-10-20T03:25:50.363][Info][kl.drivers.SDCard][30:30][BLKDEVSR] Port 'mmc0_p0' successfully registered by security iface.
+[2026-10-20T03:25:50.405][Info][kl.drivers.SDCard][30:30][SDCARDSR] No static connection found
+[2026-10-20T03:25:50.436][Info][kl.drivers.SDCard][30:30][KDF_DCM] Service 'block.block' of type 'kl.drivers.Block' published to DCM
+[2026-10-20T03:25:50.441][Info][kl.drivers.SDCard][30:70][KDF_DCM] DCM connections listening thread started
+[2026-10-20T03:25:50.441][Info][kl.drivers.SDCard][30:30][KDF_DCM] Service 'block.driver.driver' of type 'kl.drivers.Driver' published to DCM
+[2026-10-20T03:25:50.489][Info][kl.drivers.SDCard][30:30][em_transport] Sent app_ready notification
+[2026-10-20T03:25:50.493][Info][kl.VendorEinit][17:17][Einit] Finished waiting for 'kl.drivers.SDCard'
+[2026-10-20T03:25:50.497][Info][kl.VendorEinit][17:17][Einit] Successfully unmounted 'romfs/1'
+[2026-10-20T03:25:50.498][Info][kl.VendorEinit][17:17][Einit] Finished successfully
+[2026-10-20T03:25:50.526][Info][Einit][15:15][Einit] Finished waiting for 'kl.VendorEinit'
+[2026-10-20T03:25:50.527][Info][Einit][15:15][Einit] Running 'kl.MountSettings'
+[2026-10-20T03:25:50.529][Info][Einit][15:15][Einit] Running 'kl.VfsEntity' and waiting for ready
+[2026-10-20T03:25:50.768][Info][kl.MountSettings][18:18][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:50.777][Info][kl.MountSettings][18:18][VFSCS] Initialized successfully
+[2026-10-20T03:25:50.778][Info][kl.MountSettings][18:18][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:25:50.793][Info][kl.MountSettings][18:18][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:25:50.807][Info][kl.MountSettings][18:18][][mount_settings.c:main:99] Mount ROMFS: romfs.1 to romfs/1
+[2026-10-20T03:25:50.861][Info][kl.MountSettings][18:18][][mount_settings.c:main:111] Load config: romfs/1/mount_settings.json
+[2026-10-20T03:25:50.875][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:52] Entity: kl.VfsEntity
+[2026-10-20T03:25:50.876][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: -l
+[2026-10-20T03:25:50.876][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: devfs /dev devfs 0
+[2026-10-20T03:25:50.877][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: -l
+[2026-10-20T03:25:50.877][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: romfs /mnt/romfs romfs ro
+[2026-10-20T03:25:50.878][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: -l
+[2026-10-20T03:25:50.878][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: ramfs /mnt/ramfs ramfs 0
+[2026-10-20T03:25:50.879][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: -l
+[2026-10-20T03:25:50.879][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: ramfs /tmp ramfs 0
+[2026-10-20T03:25:50.879][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: -l
+[2026-10-20T03:25:50.880][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:58] ARG: fblk:/product_romfs /romfs/product romfs ro
+[2026-10-20T03:25:50.880][Info][kl.MountSettings][18:18][][mount_settings.c:RegisterArgsEnvs:65] ENV: ROOTFS=mmc0_p0 / auto 0
+[2026-10-20T03:25:50.883][Info][kl.MountSettings][18:18][em_transport] Received app_ready notification
+[2026-10-20T03:25:50.895][Info][kl.VfsEntity][19:19][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:50.904][Info][kl.VfsEntity][19:19][VFSCS] Initialized successfully
+[2026-10-20T03:25:50.949][Info][kl.VfsEntity][19:19][BLKDEVCL] No static targets discovered
+[2026-10-20T03:25:50.954][Info][kl.VfsEntity][19:19][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:25:50.954][Info][kl.VfsEntity][19:19][KDF_DCM] Subscribed to service of type 'kl.drivers.Block'
+[2026-10-20T03:25:50.963][Info][kl.VfsEntity][19:80][KDF_DCM] DCM discovery thread started
+[2026-10-20T03:25:50.977][Error][kl.VfsEntity][19:19][MOUNT] Failed to mount rootfs with type 'auto' on 'mmc0_p0': Operation not supported by device(19)
+[2026-10-20T03:25:50.982][Warn][kl.VfsEntity][19:19][MOUNT] Failed to mount rootfs with type 'auto' on 'mmc0_p0', error: Operation not supported by device(19), will retry in 1000 msec
+[2026-10-20T03:25:51.038][Info][kl.drivers.SDCard][30:70][KDF_DCM] Client 'kl.VfsEntity' connected to endpoint 'block.driver.driver' of type 'kl.drivers.Driver'
+[2026-10-20T03:25:51.046][Info][kl.drivers.SDCard][30:70][KDF_DCM] Client 'kl.VfsEntity' connected to endpoint 'block.block' of type 'kl.drivers.Block'
+[2026-10-20T03:25:51.049][Info][kl.VfsEntity][19:80][BLKDEVCL] Discovered dynamically connected endpoint of type "kl.drivers.Block" as kl.drivers.SDCard/block.block
+[2026-10-20T03:25:51.051][Info][kl.VfsEntity][19:80][KDF_DCM] Successfully connected to service 'block.driver.driver' of type 'kl.drivers.Driver' server 'kl.drivers.SDCard'
+[2026-10-20T03:25:51.052][Info][kl.VfsEntity][19:80][KDF_DCM] Successfully connected to service 'block.block' of type 'kl.drivers.Block' server 'kl.drivers.SDCard'
+[2026-10-20T03:25:52.262][Info][kl.drivers.SDCard][30:72][SDHC] version: 2.00
+[2026-10-20T03:25:52.419][Info][kl.VfsEntity][19:19][lwext4] Start mount
+[2026-10-20T03:25:52.420][Info][kl.VfsEntity][19:19][FSL] Cache size is 1024 kB (default value)
+[2026-10-20T03:25:52.488][Info][kl.VfsEntity][19:19][lwext4] Mounted. Block size 1024. Features C 0x3C I 0x2C2 R 0x46B.
+[2026-10-20T03:25:52.492][Info][kl.VfsEntity][19:19][ROOTFS] Successfully mounted 'mmc0_p0' to '/', fs 'auto'
+[2026-10-20T03:25:52.505][Info][kl.VfsEntity][19:19][VFS_SERVER] Static IPC connections are available
+[2026-10-20T03:25:52.536][Info][kl.VfsEntity][19:19][VFS_SERVER] Dynamic IPC connections over DCM are available
+[2026-10-20T03:25:52.541][Info][kl.VfsEntity][19:19][CRT0] VFS filesystem and network backends initialized with server
+[2026-10-20T03:25:52.552][Info][kl.VfsEntity][19:19][em_transport] Sent app_start notification
+[2026-10-20T03:25:52.568][Info][kl.VfsEntity][19:19][FSTAB] Successfully mounted 'devfs' to '/dev', fs 'devfs'
+[2026-10-20T03:25:52.651][Info][kl.VfsEntity][19:19][FSTAB] Successfully mounted 'romfs' to '/mnt/romfs', fs 'romfs'
+[2026-10-20T03:25:52.669][Info][kl.VfsEntity][19:19][FSTAB] Successfully mounted 'ramfs' to '/mnt/ramfs', fs 'ramfs'
+[2026-10-20T03:25:52.676][Info][kl.VfsEntity][19:19][FSTAB] Successfully mounted 'ramfs' to '/tmp', fs 'ramfs'
+[2026-10-20T03:25:52.724][Info][kl.VfsEntity][19:19][FSTAB] Successfully mounted 'fblk:/product_romfs' to '/romfs/product', fs 'romfs'
+[2026-10-20T03:25:52.726][Info][kl.VfsEntity][19:19][em_transport] Sent app_ready notification
+[2026-10-20T03:25:52.727][Info][Einit][15:15][Einit] Finished waiting for 'kl.VfsEntity'
+[2026-10-20T03:25:52.728][Info][Einit][15:15][Einit] Running 'kl.dc.DumpCollector'
+[2026-10-20T03:25:52.734][Info][Einit][15:15][Einit] Running 'kl.bc.BlobContainer'
+[2026-10-20T03:25:52.749][Info][Einit][15:15][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:25:52.751][Info][Einit][15:15][provider.c:715][CLOG] Server is unavailable. Going to write logs without server
+[2026-10-20T03:25:52.989][Info][kl.dc.DumpCollector][20:20][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:52.998][Info][kl.bc.BlobContainer][21:21][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:25:53.000][Info][kl.dc.DumpCollector][20:20][VFSCS] Initialized successfully
+[2026-10-20T03:25:53.010][Info][kl.bc.BlobContainer][21:21][VFSCS] Initialized successfully
+[2026-10-20T03:25:53.043][Info][kl.VfsEntity][19:87][VFS_SERVER_OCAP] New client kl.bc.BlobContainer create, total:1
+[2026-10-20T03:25:53.049][Info][kl.VfsEntity][19:87][VFS_SERVER] Created client "kl.bc.BlobContainer" config subtree.
+[2026-10-20T03:25:53.050][Info][kl.VfsEntity][19:87][VFS_SERVER] Client "kl.bc.BlobContainer" connected.
+[2026-10-20T03:25:53.062][Info][kl.bc.BlobContainer][21:21][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:25:53.080][Info][kl.bc.BlobContainer][21:21][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-20T03:25:53.099][Info][kl.bc.BlobContainer][21:21][provider.c:683][CLOG] Initial log level is Warning
+[2026-10-20T03:25:53.271][Info][kl.bc.BlobContainer][21:21][em_transport] Received app_ready notification
+[2026-10-20T03:25:53.411][Info][kl.VfsEntity][19:88][VFS_SERVER_OCAP] New client kl.dc.DumpCollector create, total:2
+[2026-10-20T03:25:53.413][Info][kl.VfsEntity][19:88][VFS_SERVER] Created client "kl.dc.DumpCollector" config subtree.
+[2026-10-20T03:25:53.414][Info][kl.VfsEntity][19:88][VFS_SERVER] Client "kl.dc.DumpCollector" connected.
+[2026-10-20T03:25:53.430][Info][kl.dc.DumpCollector][20:20][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:25:53.481][Info][kl.dc.DumpCollector][20:20][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-20T03:25:53.519][Info][kl.dc.DumpCollector][20:20][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:25:53.786][Info][kl.dc.DumpCollector][20:102][em_transport] Received app_ready notification
+[2026-10-20T03:25:53.790][Info][kl.dc.DumpCollector][20:20][em_transport] Received app_ready notification
+[2026-10-20T03:25:56.566][Info][Einit][15:15][Einit] Running 'kl.settings_manager.SystemSettings' and waiting for start
+[2026-10-20T03:26:00.006][Info][kl.settings_manager.SystemSettings][22:22][VFSCS] Initialized successfully
+[2026-10-20T03:26:00.019][Info][kl.VfsEntity][19:88][VFS_SERVER_OCAP] New client kl.settings_manager.SystemSettings create, total:3
+[2026-10-20T03:26:00.021][Info][kl.VfsEntity][19:88][VFS_SERVER] Created client "kl.settings_manager.SystemSettings" config subtree.
+[2026-10-20T03:26:00.021][Info][kl.VfsEntity][19:88][VFS_SERVER] Client "kl.settings_manager.SystemSettings" connected.
+[2026-10-20T03:26:00.025][Info][kl.settings_manager.SystemSettings][22:22][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:00.040][Info][kl.settings_manager.SystemSettings][22:22][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-20T03:26:00.065][Info][kl.settings_manager.SystemSettings][22:22][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-20T03:26:00.067][Info][kl.settings_manager.SystemSettings][22:22][em_transport] Sent app_start notification
+[2026-10-20T03:26:00.068][Info][Einit][15:15][Einit] Finished waiting for 'kl.settings_manager.SystemSettings'
+[2026-10-20T03:26:00.069][Info][kl.settings_manager.SystemSettings][22:22][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:26:00.103][Info][kl.settings_manager.SystemSettings][22:22][SM_ENTITY][main.cpp:main:54] Starting...
+[2026-10-20T03:26:00.126][Warning][kl.settings_manager.SystemSettings][22:22][SM_STUB][env.h:GetEnvVariableDefaulted:19] "KOS_SMGR_DB_PATH" env variable is not defined
+[2026-10-20T03:26:00.131][Warning][kl.settings_manager.SystemSettings][22:22][SM_STUB][env.h:GetEnvVariableDefaulted:19] "KOS_SMGR_SCHEMA_FILE" env variable is not defined
+[2026-10-20T03:26:00.134][Warning][kl.settings_manager.SystemSettings][22:22][SM_STUB][env.h:GetEnvVariableDefaulted:19] "KOS_SMGR_SUBSCRIPTIONS_LIMIT" env variable is not defined
+[2026-10-20T03:26:00.137][Warning][kl.settings_manager.SystemSettings][22:22][SM_STUB][env.h:GetEnvVariableDefaulted:19] "KOS_SMGR_TREE_SIZE_LIMIT" env variable is not defined
+[2026-10-20T03:26:00.175][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_manager.cpp:SettingsManager:66] Subscriptions limit: 10000
+[2026-10-20T03:26:00.181][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_manager.cpp:SettingsManager:83] +9047  Init: db path = '/etc/SystemSettings.db'...
+[2026-10-20T03:26:00.184][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_manager.cpp:SettingsManager:95] +9047  Create db...
+[2026-10-20T03:26:00.201][Info][kl.settings_manager.SystemSettings][22:22][KOS][sqlite_wrapper.cpp:CreateDatabase:14] sqlite_wrapper_CreateDatabase: Trying to open </etc/SystemSettings.db>
+[2026-10-20T03:26:00.274][Info][Einit][15:15][Einit] Running 'kl.PkgMgrEntity' and waiting for ready
+[2026-10-20T03:26:00.337][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_db.cpp:VerifySchema:228] VerifySchema...
+[2026-10-20T03:26:00.408][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_db.cpp:CreateSchema:265] CreateSchema...
+[2026-10-20T03:26:00.868][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_db.cpp:CreateSchema:289] CreateSchema...Ok
+[2026-10-20T03:26:00.869][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_db.cpp:VerifySchema:228] VerifySchema...
+[2026-10-20T03:26:00.894][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_db.cpp:VerifySchema:258] VerifySchema...Ok
+[2026-10-20T03:26:00.896][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_manager.cpp:SettingsManager:98] +9047  Read db...
+[2026-10-20T03:26:00.912][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_manager.cpp:SettingsManager:101] +9047  Empty db output
+[2026-10-20T03:26:00.914][Info][kl.settings_manager.SystemSettings][22:22][SM][settings_manager.cpp:SettingsManager:147] +9047  OK: 1 node(s), size: 40 bytes (limit: 1000000)
+[2026-10-20T03:26:00.942][Warning][kl.settings_manager.SystemSettings][22:22][SM_COMP][env.h:GetEnvVariableDefaulted:19] "KOS_SMGR_NOTIFICATION_PROCESSING_TIMEOUT_MS" env variable is not defined
+[2026-10-20T03:26:00.947][Info][kl.settings_manager.SystemSettings][22:22][SM_COMP][settings_manager_component.cpp:SettingsManagerComponent:114] 264E StubNotificationProcessingTimeoutMs = 1000ms
+[2026-10-20T03:26:00.970][Info][kl.settings_manager.SystemSettings][22:22][SM_STUB][stub.cpp:RunSmgrStub:87] SM component created
+[2026-10-20T03:26:01.196][Info][kl.settings_manager.SystemSettings][22:22][SM_STUB][stub.cpp:RunSmgrStub:120] SM stub created
+[2026-10-20T03:26:01.222][Info][kl.settings_manager.SystemSettings][22:22][em_transport] Sent app_ready notification
+[2026-10-20T03:26:01.628][Info][kl.PkgMgrEntity][23:23][VFSCS] Initialized successfully
+[2026-10-20T03:26:01.639][Info][kl.VfsEntity][19:87][VFS_SERVER_OCAP] New client kl.PkgMgrEntity create, total:4
+[2026-10-20T03:26:01.640][Info][kl.VfsEntity][19:87][VFS_SERVER] Created client "kl.PkgMgrEntity" config subtree.
+[2026-10-20T03:26:01.640][Info][kl.VfsEntity][19:87][VFS_SERVER] Client "kl.PkgMgrEntity" connected.
+[2026-10-20T03:26:01.647][Info][kl.PkgMgrEntity][23:23][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:01.660][Info][kl.PkgMgrEntity][23:23][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-20T03:26:01.689][Info][kl.PkgMgrEntity][23:23][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-20T03:26:01.692][Info][kl.PkgMgrEntity][23:23][em_transport] Sent app_start notification
+[2026-10-20T03:26:01.694][Info][kl.PkgMgrEntity][23:23][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:26:01.701][Info][kl.PkgMgrEntity][23:23][PKGMGR][kos_logger_setup.cpp:SetupLogFromEnvImpl:43] LOG_LEVEL environment variable is not set, so LOG_LEVEL=LOG_INFO will be used
+[2026-10-20T03:26:01.705][Info][kl.PkgMgrEntity][23:23][PKGMGR][main.cpp:main:216] Custom package layout isn't set. Using default schema
+[2026-10-20T03:26:01.708][Info][kl.PkgMgrEntity][23:23][PKGMGR][main.cpp:main:241] Dev mode flag is set. Using developer signing mode
+[2026-10-20T03:26:02.076][Info][kl.PkgMgrEntity][23:23][PKGMGR][package_manager.cpp:Initialize:130] PKGM: Initialization started
+[2026-10-20T03:26:02.088][Info][kl.PkgMgrEntity][23:23][PKGMGR][kpa_package_handler.cpp:InstallPackage:346] Install package '/product.init/packages/kl.ServiceManager.kpa'
+[2026-10-20T03:26:02.092][Warning][kl.PkgMgrEntity][23:23][PKGMGR][kpa_package_handler.cpp:AdjustInstallPackageInfo:94] Default package signature '/product.init/packages/kl.ServiceManager.kcat' is not found
+[2026-10-20T03:26:02.133][Info][kl.PkgMgrEntity][23:23][PKGMGR][kpa_package_handler.cpp:ParsePkg:1115] Package parsing completed
+[2026-10-20T03:26:02.195][Info][kl.PkgMgrEntity][23:23][PKGMGR][kpa_package_handler.cpp:HandleJSONItems:1334] Installing "ServiceManager" item, size = 1234472 bytes
+[2026-10-20T03:26:03.396][Info][kl.PkgMgrEntity][23:23][PKGMGR][kpa_package_handler.cpp:InstallPackage:719] Package /product.init/packages/kl.ServiceManager.kpa installed
+[2026-10-20T03:26:03.400][Info][kl.PkgMgrEntity][23:23][PKGMGR][package_manager.cpp:Initialize:161] PKGM: Initialization finished
+[2026-10-20T03:26:03.433][Info][kl.PkgMgrEntity][23:23][em_transport] Sent app_ready notification
+[2026-10-20T03:26:03.434][Info][Einit][15:15][Einit] Finished waiting for 'kl.PkgMgrEntity'
+[2026-10-20T03:26:03.679][Info][Einit][15:15][Einit] Running 'kl.ExecMgrEntity' and waiting for ready
+[2026-10-20T03:26:03.905][Info][kl.ExecMgrEntity][24:24][VFSCS] Initialized successfully
+[2026-10-20T03:26:03.918][Info][kl.VfsEntity][19:88][VFS_SERVER_OCAP] New client kl.ExecMgrEntity create, total:5
+[2026-10-20T03:26:03.919][Info][kl.VfsEntity][19:88][VFS_SERVER] Created client "kl.ExecMgrEntity" config subtree.
+[2026-10-20T03:26:03.919][Info][kl.VfsEntity][19:88][VFS_SERVER] Client "kl.ExecMgrEntity" connected.
+[2026-10-20T03:26:03.924][Info][kl.ExecMgrEntity][24:24][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:03.935][Info][kl.ExecMgrEntity][24:24][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-20T03:26:03.942][Info][kl.ExecMgrEntity][24:24][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-20T03:26:03.945][Info][kl.ExecMgrEntity][24:24][em_transport] Sent app_start notification
+[2026-10-20T03:26:03.949][Info][kl.ExecMgrEntity][24:24][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:26:03.967][Info][kl.ExecMgrEntity][24:24][EXECMGR][main.cpp:main:141] Config: (root_path=/data/packages.containers; app_path=/applications, system_path=,  main_connection_name: ExecMgrEntity)
+[2026-10-20T03:26:04.057][Info][kl.ExecMgrEntity][24:24][EXECMGR][main.cpp:main:153] Autostart config: kl.ServiceManager:default
+[2026-10-20T03:26:04.076][Info][kl.ExecMgrEntity][24:24][EXECMGR][process_controller.cpp:StartProcess:55] (0x00, Ok)
+[2026-10-20T03:26:04.078][Info][kl.ExecMgrEntity][24:124][EXECMGR][kos_logger_setup.cpp:SetupLogFromEnvImpl:43] LOG_LEVEL environment variable is not set, so LOG_LEVEL=LOG_INFO will be used
+[2026-10-20T03:26:04.080][Info][kl.ExecMgrEntity][24:124][EXECMGR][package_manager_proxy.cpp:PackageManagerProxy:58] Trying to connect package manager statically
+[2026-10-20T03:26:04.095][Info][kl.ExecMgrEntity][24:24][EXECMGR][stub.cpp:RunStub:102] Event loops are created
+[2026-10-20T03:26:04.197][Info][kl.ExecMgrEntity][24:24][EXECMGR][stub.cpp:RunStub:125] Event loops are running, EM is listening for connections
+[2026-10-20T03:26:04.201][Info][kl.ExecMgrEntity][24:24][em_transport] Sent app_ready notification
+[2026-10-20T03:26:04.202][Info][kl.ExecMgrEntity][24:24][EXECMGR][stub.cpp:RunStub:129] Sent app_ready notification
+[2026-10-20T03:26:04.202][Info][Einit][15:15][Einit] Finished waiting for 'kl.ExecMgrEntity'
+[2026-10-20T03:26:04.206][Info][Einit][15:15][Einit] Successfully unmounted 'romfs/1'
+[2026-10-20T03:26:04.206][Info][Einit][15:15][Einit] Finished successfully
+[2026-10-20T03:26:04.210][Info][kl.ExecMgrEntity][24:124][EXECMGR][process.cpp:MakeProcessArgument:393] [kl.ServiceManager] Get entity_name from run_config: name: [ServiceManager.0]
+App args:
+
+name: ServiceManager.0
+eiid: kl.ServiceManager
+path: "/data/packages.unpacked/kl.ServiceManager/v0.0.0/bin/ServiceManager"
+
+envs: VFS_FILESYSTEM_BACKEND=client:kl.VfsEntity;KOS_APP_PACKAGE_DIR=/data/packages.unpacked/kl.ServiceManager/v0.0.0/
+
+[2026-10-20T03:26:04.831][Info][kl.ExecMgrEntity][24:124][EXECMGR][application.cpp:Application:58] [ServiceManager.0] Successful connect to DCM
+[2026-10-20T03:26:04.834][Info][kl.ExecMgrEntity][24:124][EXECMGR][application.cpp:Application:62] [ServiceManager.0] Application(name: ServiceManager.0; eiid: kl.ServiceManager; path: /data/packages.unpacked/kl.ServiceManager/v0.0.0/bin/ServiceManager) created
+[2026-10-20T03:26:05.720][Info][kl.ExecMgrEntity][24:124][EXECMGR][dynamic_launch_support.cpp:GetDynamicLaunchInfo:73] Dynamic executable </data/packages.unpacked/kl.ServiceManager/v0.0.0/bin/ServiceManager> requires dynamic linker: </lib/ld.elf_so.2>, versionless: </lib/ld.elf_so> with base address above <0x0>
+[2026-10-20T03:26:05.749][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:172] ELF: path:/data/packages.unpacked/kl.ServiceManager/v0.0.0/bin/ServiceManager, elfBase:0xADBA02000, relocBase:0xADBA02000, entryPoint:0x55DEBDF94, ldPath:/lib/ld.elf_so.2
+[2026-10-20T03:26:05.750][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #0, loadAddr:0xADBA02000, offset:0x0, size:0x59000, fileoffset:0x0
+[2026-10-20T03:26:05.751][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #1, loadAddr:0xADBA6A000, offset:0x0, size:0x8A000, fileoffset:0x584C0
+[2026-10-20T03:26:05.752][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #2, loadAddr:0xADBB03000, offset:0x0, size:0x5000, fileoffset:0xE1050
+[2026-10-20T03:26:05.752][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #3, loadAddr:0xADBB17000, offset:0x0, size:0x6000, fileoffset:0xE5840
+[2026-10-20T03:26:05.753][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #4, loadAddr:0xADBB1E000, offset:0x0, size:0x19000, fileoffset:0xE6F80
+[2026-10-20T03:26:05.754][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #5, loadAddr:0xADBB38000, offset:0x0, size:0x2D000, fileoffset:0xFFEEA
+[2026-10-20T03:26:05.755][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #6, loadAddr:0x55DE08000, offset:0x0, size:0x99000, fileoffset:0x0
+[2026-10-20T03:26:05.755][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #7, loadAddr:0x55DEB0000, offset:0x0, size:0x150000, fileoffset:0x98D40
+[2026-10-20T03:26:05.756][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #8, loadAddr:0x55E00F000, offset:0x0, size:0x9000, fileoffset:0x1E77D0
+[2026-10-20T03:26:05.757][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #9, loadAddr:0x55E027000, offset:0x0, size:0x71000, fileoffset:0x1EF8D8
+[2026-10-20T03:26:05.757][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #10, loadAddr:0x55E099000, offset:0x0, size:0x42000, fileoffset:0x1F6720
+[2026-10-20T03:26:05.758][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable.cpp:print_address_space_diagnostic:176] Segment #11, loadAddr:0x55E0DC000, offset:0x0, size:0x25000, fileoffset:0x237DB1
+[2026-10-20T03:26:07.207][Info][ServiceManager.0][131:131][VFSCS] Initialized successfully
+[2026-10-20T03:26:07.389][Info][kl.VfsEntity][19:87][VFS_SERVER_OCAP] New client ServiceManager.0 create, total:6
+[2026-10-20T03:26:07.392][Info][kl.VfsEntity][19:87][VFS_SERVER] Created client "ServiceManager.0" config subtree.
+[2026-10-20T03:26:07.392][Info][kl.VfsEntity][19:87][VFS_SERVER] Client "ServiceManager.0" connected.
+[2026-10-20T03:26:07.397][Info][ServiceManager.0][131:131][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:07.411][Info][ServiceManager.0][131:131][CRT0] VFS filesystem backend initialized with env(client:kl.VfsEntity)
+[2026-10-20T03:26:07.421][Info][ServiceManager.0][131:131][CRT0] Initing main app: dynamically-linked, PIE.
+[2026-10-20T03:26:07.433][Info][ServiceManager.0][131:131][em_transport] Sent app_start notification
+[2026-10-20T03:26:07.437][Info][ServiceManager.0][131:131][provider.c:683][CLOG] Initial log level is Info
+[2026-10-20T03:26:07.447][Info][ServiceManager.0][131:131][SVCMGR][kos_logger_setup.cpp:SetupLogFromEnvImpl:43] LOG_LEVEL environment variable is not set, so LOG_LEVEL=LOG_INFO will be used
+[2026-10-20T03:26:07.450][Info][ServiceManager.0][131:131][SVCMGR][main.cpp:main:111] Server initializing
+[2026-10-20T03:26:07.458][Info][ServiceManager.0][131:131][SVCMGR][package_manager_proxy.cpp:PackageManagerProxy:58] Trying to connect package manager statically
+Failed to connect to static channel "PkgMgrEntity"
+[2026-10-20T03:26:07.513][Error][ServiceManager.0][131:131][SVCMGR][package_manager_proxy.cpp:PackageManagerProxy:67] Failed to connect package manager statically: kosipc_detail::MakeProxyImpl(): error connecting to endpoint
+[2026-10-20T03:26:07.515][Info][ServiceManager.0][131:131][SVCMGR][package_manager_proxy.cpp:PackageManagerProxy:70] Trying dynamically connection via DCM.
+[2026-10-20T03:26:07.530][Info][ServiceManager.0][131:131][SVCMGR][execution_manager_proxy.cpp:CreateExecutionManager:609] Try to static connect
+Failed to connect to static channel "ExecMgrEntity"
+[2026-10-20T03:26:07.541][Info][ServiceManager.0][131:131][SVCMGR][execution_manager_proxy.cpp:CreateExecutionManager:616] Try to dynamic connect via DCM: timeout: 30s
+[2026-10-20T03:26:07.594][Info][ServiceManager.0][131:131][SM][settings_manager.cpp:SettingsManager:66] Subscriptions limit: 10000
+[2026-10-20T03:26:07.595][Info][ServiceManager.0][131:131][SM][settings_manager.cpp:SettingsManager:83] +4CFC  Init: db path = '/etc/ServiceManager.db'...
+[2026-10-20T03:26:07.596][Info][ServiceManager.0][131:131][SM][settings_manager.cpp:SettingsManager:95] +4CFC  Create db...
+[2026-10-20T03:26:07.597][Info][ServiceManager.0][131:131][SVCMGR][sqlite_wrapper.cpp:CreateDatabase:14] sqlite_wrapper_CreateDatabase: Trying to open </etc/ServiceManager.db>
+[2026-10-20T03:26:07.628][Info][ServiceManager.0][131:131][SM][settings_db.cpp:VerifySchema:228] VerifySchema...
+[2026-10-20T03:26:07.652][Info][ServiceManager.0][131:131][SM][settings_db.cpp:CreateSchema:265] CreateSchema...
+[2026-10-20T03:26:07.738][Info][ServiceManager.0][131:131][SM][settings_db.cpp:CreateSchema:289] CreateSchema...Ok
+[2026-10-20T03:26:07.744][Info][ServiceManager.0][131:131][SM][settings_db.cpp:VerifySchema:228] VerifySchema...
+[2026-10-20T03:26:07.755][Info][ServiceManager.0][131:131][SM][settings_db.cpp:VerifySchema:258] VerifySchema...Ok
+[2026-10-20T03:26:07.756][Info][ServiceManager.0][131:131][SM][settings_manager.cpp:SettingsManager:98] +4CFC  Read db...
+[2026-10-20T03:26:07.763][Info][ServiceManager.0][131:131][SM][settings_manager.cpp:SettingsManager:101] +4CFC  Empty db output
+[2026-10-20T03:26:07.764][Info][ServiceManager.0][131:131][SM][settings_manager.cpp:SettingsManager:147] +4CFC  OK: 1 node(s), size: 40 bytes (limit: 1000000)
+[2026-10-20T03:26:07.770][Warning][ServiceManager.0][131:131][SM][settings_manager.cpp:GetSetting:741] +4CFC  GetSetting(initial_packages_installed/): uvc: Item with given id does not exist [Resource not found = 0x90000013(Severity: 1, Space: 0, Facility: 0, Code: 13)]
+[2026-10-20T03:26:07.810][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:InstallPackage:346] Install package '/product.init/packages/kl.ProductRomfsLoader.kpa'
+[2026-10-20T03:26:07.816][Warning][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:AdjustInstallPackageInfo:94] Default package signature '/product.init/packages/kl.ProductRomfsLoader.kcat' is not found
+[2026-10-20T03:26:07.857][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:ParsePkg:1115] Package parsing completed
+[2026-10-20T03:26:07.907][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:HandleJSONItems:1334] Installing "init_loader" item, size = 2029424 bytes
+[2026-10-20T03:26:09.884][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:HandleJSONItems:1334] Installing "fsusr" item, size = 1555744 bytes
+[2026-10-20T03:26:11.396][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:HandleJSONItems:1334] Installing "product_romfs_loader" item, size = 2027048 bytes
+[2026-10-20T03:26:13.351][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:InstallPackage:719] Package /product.init/packages/kl.ProductRomfsLoader.kpa installed
+[2026-10-20T03:26:13.356][Info][ServiceManager.0][131:131][SVCMGR][service_manager_impl.cpp:InitialInstall:146] Initial package 'kl.ProductRomfsLoader' installed
+[2026-10-20T03:26:13.366][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:InstallPackage:346] Install package '/product.init/packages/Check.kpa'
+[2026-10-20T03:26:13.368][Warning][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:AdjustInstallPackageInfo:94] Default package signature '/product.init/packages/Check.kcat' is not found
+[2026-10-20T03:26:13.399][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:ParsePkg:1115] Package parsing completed
+[2026-10-20T03:26:13.430][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:HandleJSONItems:1334] Installing "Check" item, size = 1922952 bytes
+[2026-10-20T03:26:15.246][Info][kl.PkgMgrEntity][23:119][PKGMGR][kpa_package_handler.cpp:InstallPackage:719] Package /product.init/packages/Check.kpa installed
+[2026-10-20T03:26:15.249][Info][ServiceManager.0][131:131][SVCMGR][service_manager_impl.cpp:InitialInstall:146] Initial package 'Check' installed
+[2026-10-20T03:26:15.388][Warning][ServiceManager.0][131:131][SM][settings_manager.cpp:GetSetting:741] +4CFC  GetSetting(services/): uvc: Item with given id does not exist [Resource not found = 0x90000013(Severity: 1, Space: 0, Facility: 0, Code: 13)]
+[2026-10-20T03:26:15.392][Info][ServiceManager.0][131:131][SVCMGR][service_manager.cpp:ServiceManager:36] Services aren't configured, applying the initial configuration
+[2026-10-20T03:26:15.634][Info][ServiceManager.0][131:131][SVCMGR][service_runner.cpp:StartService:122] Starting service: Check, runconfiguration: default
+[2026-10-20T03:26:15.821][Info][kl.ExecMgrEntity][24:129][EXECMGR][process_controller.cpp:StartProcess:55] (0x00, Ok)
+[2026-10-20T03:26:15.838][Info][ServiceManager.0][131:131][SVCMGR][service_runner.cpp:StartService:122] Starting service: ProductRomfsLoader, runconfiguration: default
+[2026-10-20T03:26:15.880][Info][kl.ExecMgrEntity][24:124][EXECMGR][process.cpp:MakeProcessArgument:393] [Check] Get entity_name from run_config: name: [Check.1]
+App args:
+
+name: Check.1
+eiid: checks.Check
+path: "/data/packages.unpacked/Check/v0.0.0/bin/Check"
+
+envs: VFS_FILESYSTEM_BACKEND=client:task:kl.VfsRamFs:timeout_dcm_ms:600000;VFS_NETWORK_BACKEND=client:task:kl.VfsNet:timeout_dcm_ms:600000;KOS_APP_PACKAGE_DIR=/data/packages.unpacked/Check/v0.0.0/
+[2026-10-20T03:26:15.969][Info][kl.ExecMgrEntity][24:129][EXECMGR][process_controller.cpp:StartProcess:55] (0x00, Ok)
+
+[2026-10-20T03:26:16.018][Info][kl.ExecMgrEntity][24:124][EXECMGR][application.cpp:Application:58] [Check.1] Successful connect to DCM
+[2026-10-20T03:26:16.019][Info][kl.ExecMgrEntity][24:124][EXECMGR][application.cpp:Application:62] [Check.1] Application(name: Check.1; eiid: checks.Check; path: /data/packages.unpacked/Check/v0.0.0/bin/Check) created
+[2026-10-20T03:26:16.038][Info][ServiceManager.0][131:131][SM_COMP][settings_manager_component.cpp:SettingsManagerComponent:114] 17A7 StubNotificationProcessingTimeoutMs = 1000ms
+[2026-10-20T03:26:16.041][Info][ServiceManager.0][131:131][SVCMGR][service_manager_impl.cpp:InitInstance:85] Service Manager is ready
+[2026-10-20T03:26:16.182][Info][ServiceManager.0][131:131][SVCMGR][main.cpp:RunServer:98] Server started
+[2026-10-20T03:26:16.183][Info][ServiceManager.0][131:131][em_transport] Sent app_ready notification
+[2026-10-20T03:26:17.308][Info][kl.ExecMgrEntity][24:124][EXECMGR][process.cpp:MakeProcessArgument:393] [kl.ProductRomfsLoader] Get entity_name from run_config: name: [init_loader.2]
+App args:
+
+name: init_loader.2
+eiid: kl.ProductRomfsLoader
+path: "/data/packages.unpacked/kl.ProductRomfsLoader/v0.0.0/bin/init_loader"
+
+envs: KOS_APP_PACKAGE_DIR=/data/packages.unpacked/kl.ProductRomfsLoader/v0.0.0/
+
+[2026-10-20T03:26:17.541][Info][kl.ExecMgrEntity][24:124][EXECMGR][application.cpp:Application:58] [init_loader.2] Successful connect to DCM
+[2026-10-20T03:26:17.544][Info][kl.ExecMgrEntity][24:124][EXECMGR][application.cpp:Application:62] [init_loader.2] Application(name: init_loader.2; eiid: kl.ProductRomfsLoader; path: /data/packages.unpacked/kl.ProductRomfsLoader/v0.0.0/bin/init_loader) created
+[2026-10-20T03:26:18.226][Info][Check.1][139:139][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:18.265][Info][Check.1][139:139][VFSCS] Initialized successfully
+[2026-10-20T03:26:19.300][Info][init_loader.2][143:143][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:19.308][Info][init_loader.2][143:143][VFSCS] Initialized successfully
+[2026-10-20T03:26:19.463][Info][kl.VfsEntity][19:98][VFS_SERVER_OCAP] New client init_loader.2 create, total:7
+[2026-10-20T03:26:19.466][Info][kl.VfsEntity][19:98][VFS_SERVER] Created client "init_loader.2" config subtree.
+[2026-10-20T03:26:19.467][Info][kl.VfsEntity][19:98][VFS_SERVER] Client "init_loader.2" connected.
+[2026-10-20T03:26:19.472][Info][init_loader.2][143:143][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:19.487][Info][init_loader.2][143:143][CRT0] VFS filesystem and network backends initialized with client
+[2026-10-20T03:26:19.504][Info][init_loader.2][143:143][em_transport] Sent app_start notification
+[2026-10-20T03:26:19.553][Info][ServiceManager.0][131:136][SVCMGR][service_runner.cpp:OnServiceUpdate:263] Service running: ProductRomfsLoader
+[2026-10-20T03:26:21.791][Info][kl.VfsEntity][19:87][VFS_SERVER] Client h:0x359 b:0x1410c2fa3a40 disconnected.
+[2026-10-20T03:26:21.798][Info][kl.VfsEntity][19:77][VFS_SERVER_OCAP] client init_loader.2 free, total:6
+[2026-10-20T03:26:21.917][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable_runner.cpp:CompletedExecutable:180] [init_loader.2] Executable completed
+[2026-10-20T03:26:21.922][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable_runner.cpp:CompletedExecutable:197] [init_loader.2] Executable completed with: exitStatus=ExitNormal, exitCode=0, exitReason=(0x00, Ok)
+[2026-10-20T03:26:21.923][Info][ServiceManager.0][131:136][SVCMGR][service_runner.cpp:OnServiceUpdate:254] Service stopped: ProductRomfsLoader with success
+[2026-10-20T03:26:22.360][Info][kl.ProductRomfsLoader][147:147][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:22.369][Info][kl.ProductRomfsLoader][147:147][VFSCS] Initialized successfully
+[2026-10-20T03:26:22.369][Info][kl.core.FSUsr][146:146][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:22.381][Info][kl.core.FSUsr][146:146][VFSCS] Initialized successfully
+[2026-10-20T03:26:22.382][Info][kl.core.FSUsr][146:146][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:26:22.387][Info][kl.core.FSUsr][146:146][FSUSRSR] FSUsr service start.
+[2026-10-20T03:26:22.557][Info][kl.VfsEntity][19:98][VFS_SERVER_OCAP] New client kl.ProductRomfsLoader create, total:7
+[2026-10-20T03:26:22.558][Info][kl.VfsEntity][19:98][VFS_SERVER] Created client "kl.ProductRomfsLoader" config subtree.
+[2026-10-20T03:26:22.559][Info][kl.VfsEntity][19:98][VFS_SERVER] Client "kl.ProductRomfsLoader" connected.
+[2026-10-20T03:26:22.567][Info][kl.ProductRomfsLoader][147:147][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:22.595][Info][kl.ProductRomfsLoader][147:147][CRT0] VFS filesystem and network backends initialized with client
+Starting MinimalKOS product ROMFS loader.
+ProductRomFsLoader Seek to find file size.
+ProductRomFsLoader mmap romfs.
+ProductRomFsLoader close ROMFS fd.
+ProductRomFsLoader product ROMFS was loaded.
+ProductRomFsLoader Fs backend was changed to FSBackendUsr.
+[2026-10-20T03:26:27.329][Info][kl.core.FSUsr][146:148][FSUSR] Files: 4, size: 11309056 (0x00ac9000).
+[2026-10-20T03:26:27.330][Info][kl.core.FSUsr][146:148][FSUSR] File #00: product_einit    - size:  1563584 (0x0017dbc0)
+[2026-10-20T03:26:27.330][Info][kl.core.FSUsr][146:148][FSUSR] File #01: dnet_executable  - size:  1827504 (0x001be2b0)
+[2026-10-20T03:26:27.331][Info][kl.core.FSUsr][146:148][FSUSR] File #02: VfsNet           - size:  5528328 (0x00545b08)
+[2026-10-20T03:26:27.332][Info][kl.core.FSUsr][146:148][FSUSR] File #03: VfsRamFs         - size:  2377480 (0x00244708)
+ProductRomFsLoader product ROMFS was set up.
+ProductRomFsLoader Launching task 'product_einit'
+Product ROMFS loader is finished successfully.
+[2026-10-20T03:26:27.828][Info][kl.VfsEntity][19:88][VFS_SERVER] Client h:0x37f b:0x1410c2fa3b80 disconnected.
+[2026-10-20T03:26:27.838][Info][kl.VfsEntity][19:77][VFS_SERVER_OCAP] client kl.ProductRomfsLoader free, total:6
+[2026-10-20T03:26:28.465][Info][kl.ProductEinit][155:155][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:28.475][Info][kl.ProductEinit][155:155][VFSCS] Initialized successfully
+[2026-10-20T03:26:28.476][Info][kl.ProductEinit][155:155][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:26:28.480][Info][kl.ProductEinit][155:155][Einit] Started
+[2026-10-20T03:26:30.550][Info][kl.ProductEinit][155:155][Einit] Running 'kl.VfsRamFs' and waiting for ready
+[2026-10-20T03:26:30.733][Info][kl.VfsRamFs][156:156][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:30.742][Info][kl.VfsRamFs][156:156][VFSCS] Initialized successfully
+[2026-10-20T03:26:30.880][Info][kl.VfsRamFs][156:156][VFS_SERVER] Dynamic IPC connections over DCM are available
+[2026-10-20T03:26:30.882][Info][kl.VfsRamFs][156:156][CRT0] VFS filesystem backend initialized with env(server:kl.VfsRamFs)
+[2026-10-20T03:26:30.889][Info][kl.VfsRamFs][156:156][em_transport] Sent app_start notification
+[2026-10-20T03:26:30.895][Info][kl.VfsRamFs][156:156][FSTAB] Successfully mounted 'nodev' to '/tmp', fs 'ramfs'
+[2026-10-20T03:26:30.898][Info][kl.VfsRamFs][156:156][FSTAB] Successfully mounted 'devfs' to '/dev', fs 'devfs'
+[2026-10-20T03:26:30.901][Info][kl.VfsRamFs][156:156][em_transport] Sent app_ready notification
+[2026-10-20T03:26:30.903][Info][kl.ProductEinit][155:155][Einit] Finished waiting for 'kl.VfsRamFs'
+[2026-10-20T03:26:30.904][Info][kl.ProductEinit][155:155][Einit] Running 'kl.drivers.DNetSrv' and waiting for ready
+[2026-10-20T03:26:31.112][Info][kl.drivers.DNetSrv][157:157][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:31.122][Info][kl.drivers.DNetSrv][157:157][VFSCS] Initialized successfully
+[2026-10-20T03:26:31.123][Info][kl.drivers.DNetSrv][157:157][CRT0] VFS filesystem and network backends initialized with stub (related calls will return EIO)
+[2026-10-20T03:26:31.128][Info][kl.drivers.DNetSrv][157:157][em_transport] Sent app_start notification
+[2026-10-20T03:26:31.130][Info][kl.drivers.DNetSrv][157:157][DNETSR] DNet server start
+[2026-10-20T03:26:31.166][Info][kl.VfsRamFs][156:163][VFS_SERVER_OCAP] New client Check.1 create, total:1
+[2026-10-20T03:26:31.170][Info][kl.VfsRamFs][156:163][VFS_SERVER] Created client "Check.1" config subtree.
+[2026-10-20T03:26:31.173][Info][kl.VfsRamFs][156:163][VFS_SERVER] Client "Check.1" connected.
+[2026-10-20T03:26:31.180][Info][kl.drivers.DNetSrv][157:157][KDF] 'KdfServerPseudoDevice' successfully registered by security iface.
+[2026-10-20T03:26:31.181][Info][kl.drivers.DNetSrv][157:157][DNETSR] No static connection found
+[2026-10-20T03:26:31.185][Info][Check.1][139:139][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:31.190][Info][kl.drivers.DNetSrv][157:157][DNET_CLIENT] No static targets discovered
+[2026-10-20T03:26:31.203][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:26:31.204][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.DNet'
+[2026-10-20T03:26:31.205][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetMac'
+[2026-10-20T03:26:31.206][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetWifi'
+[2026-10-20T03:26:31.207][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetSupplicant'
+[2026-10-20T03:26:31.208][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetMbim'
+[2026-10-20T03:26:31.214][Info][kl.drivers.DNetSrv][157:157][DNET_CLIENT] DNet transport initialized
+[2026-10-20T03:26:31.215][Info][kl.drivers.DNetSrv][157:157][DNET] Try to init driver rtk
+[2026-10-20T03:26:31.218][Info][kl.drivers.DNetSrv][157:168][KDF_DCM] DCM discovery thread started
+[2026-10-20T03:26:31.218][Info][kl.drivers.DNetSrv][157:157][PCICL] No static target discovered
+[2026-10-20T03:26:31.228][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:26:31.231][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Subscribed to service of type 'kl.drivers.PCIE'
+[2026-10-20T03:26:31.287][Info][kl.drivers.DNetSrv][157:157][PCICL] Waiting for first DCM connection
+[2026-10-20T03:26:31.306][Info][kl.drivers.PCIE][27:33][KDF_DCM] Client 'kl.drivers.DNetSrv' connected to endpoint 'driver.driver' of type 'kl.drivers.Driver'
+[2026-10-20T03:26:31.313][Info][kl.drivers.PCIE][27:33][KDF_DCM] Client 'kl.drivers.DNetSrv' connected to endpoint 'pcie' of type 'kl.drivers.PCIE'
+[2026-10-20T03:26:31.318][Info][kl.drivers.DNetSrv][157:168][PCICL] Discovered dynamically connected endpoint of type "kl.drivers.PCIE" as kl.drivers.PCIE/pcie
+[2026-10-20T03:26:31.319][Info][kl.drivers.PCIE][27:35][PCISR] _kl_drivers_PCIEInit(..)
+[2026-10-20T03:26:31.322][Info][kl.drivers.DNetSrv][157:168][KDF_DCM] Successfully connected to service 'driver.driver' of type 'kl.drivers.Driver' server 'kl.drivers.PCIE'
+[2026-10-20T03:26:31.322][Info][kl.drivers.DNetSrv][157:157][PCICL] Waiting for first DCM connection complete
+[2026-10-20T03:26:31.323][Info][kl.drivers.DNetSrv][157:168][KDF_DCM] Successfully connected to service 'pcie' of type 'kl.drivers.PCIE' server 'kl.drivers.PCIE'
+[2026-10-20T03:26:31.324][Info][kl.drivers.DNetSrv][157:157][PCICL] PCIe client initialized successfully
+[2026-10-20T03:26:31.362][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Service 'dnet.dnet' of type 'kl.drivers.DNet' published to DCM
+[2026-10-20T03:26:31.365][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] DCM connections listening thread started
+[2026-10-20T03:26:31.367][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Service 'dnet.mac' of type 'kl.drivers.DNetMac' published to DCM
+[2026-10-20T03:26:31.375][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Service 'dnet.wifi' of type 'kl.drivers.DNetWifi' published to DCM
+[2026-10-20T03:26:31.381][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Service 'dnet.supplicant' of type 'kl.drivers.DNetSupplicant' published to DCM
+[2026-10-20T03:26:31.385][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Service 'dnet.mbim' of type 'kl.drivers.DNetMbim' published to DCM
+[2026-10-20T03:26:31.389][Info][kl.drivers.DNetSrv][157:157][KDF_DCM] Service 'dnet.driver.driver' of type 'kl.drivers.Driver' published to DCM
+[2026-10-20T03:26:31.398][Info][kl.drivers.DNetSrv][157:168][KDF_DCM] Skip self-published endpoints with status 0
+[2026-10-20T03:26:31.463][Info][kl.drivers.DNetSrv][157:157][em_transport] Sent app_ready notification
+[2026-10-20T03:26:31.468][Info][kl.ProductEinit][155:155][Einit] Finished waiting for 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:31.471][Info][kl.ProductEinit][155:155][Einit] Running 'kl.VfsNet' and waiting for ready
+[2026-10-20T03:26:31.565][Info][kl.drivers.DNetSrv][157:166][RTK] iface rtk:0 - chip is RTL8139C+ (revision 0x74800000)
+[2026-10-20T03:26:31.608][Info][kl.drivers.DNetSrv][157:166][DNET] Try to register port rtk:0
+[2026-10-20T03:26:31.846][Info][kl.VfsNet][158:158][CRT0] Initing main app: statically-linked, PIE.
+[2026-10-20T03:26:31.874][Info][kl.VfsNet][158:158][VFSCS] Initialized successfully
+[2026-10-20T03:26:34.110][Info][kl.VfsNet][158:233][DNET_CLIENT] No static targets discovered
+[2026-10-20T03:26:34.119][Info][kl.VfsNet][158:158][RUMPFS_DEV_MANAGER] Add VFS register callback. New device registered: 2 of 2 expected
+[2026-10-20T03:26:34.141][Info][kl.VfsNet][158:233][KDF_DCM] Subscribed to service of type 'kl.drivers.Driver'
+[2026-10-20T03:26:34.142][Info][kl.VfsNet][158:233][KDF_DCM] Subscribed to service of type 'kl.drivers.DNet'
+[2026-10-20T03:26:34.144][Info][kl.VfsNet][158:233][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetMac'
+[2026-10-20T03:26:34.145][Info][kl.VfsNet][158:233][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetWifi'
+[2026-10-20T03:26:34.146][Info][kl.VfsNet][158:233][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetSupplicant'
+[2026-10-20T03:26:34.148][Info][kl.VfsNet][158:233][KDF_DCM] Subscribed to service of type 'kl.drivers.DNetMbim'
+[2026-10-20T03:26:34.154][Info][kl.VfsNet][158:233][DNET_CLIENT] DNet transport initialized
+[2026-10-20T03:26:34.157][Info][kl.VfsNet][158:234][KDF_DCM] DCM discovery thread started
+[2026-10-20T03:26:34.176][Info][kl.VfsNet][158:158][VFS_SERVER] Dynamic IPC connections over DCM are available
+[2026-10-20T03:26:34.179][Info][kl.VfsNet][158:158][CRT0] VFS filesystem and network backends initialized with env(server:kl.VfsNet)
+[2026-10-20T03:26:34.187][Info][kl.VfsNet][158:158][em_transport] Sent app_start notification
+[2026-10-20T03:26:34.189][Warn][kl.VfsNet][158:158][VfsNet] No allowed filesystem paths specified
+[2026-10-20T03:26:34.197][Info][kl.VfsNet][158:158][FSTAB] Successfully mounted 'devfs' to '/dev', fs 'devfs'
+[2026-10-20T03:26:34.201][Info][kl.VfsNet][158:158][STARTUP] hostname is 'kos-host'
+[2026-10-20T03:26:34.203][Info][kl.VfsNet][158:158][em_transport] Sent app_ready notification
+[2026-10-20T03:26:34.204][Info][kl.ProductEinit][155:155][Einit] Finished waiting for 'kl.VfsNet'
+[2026-10-20T03:26:34.207][Info][kl.ProductEinit][155:155][Einit] Finished successfully
+[2026-10-20T03:26:34.209][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] Client 'kl.VfsNet' connected to endpoint 'dnet.driver.driver' of type 'kl.drivers.Driver'
+[2026-10-20T03:26:34.336][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] Client 'kl.VfsNet' connected to endpoint 'dnet.dnet' of type 'kl.drivers.DNet'
+[2026-10-20T03:26:34.488][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] Client 'kl.VfsNet' connected to endpoint 'dnet.mac' of type 'kl.drivers.DNetMac'
+[2026-10-20T03:26:34.594][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] Client 'kl.VfsNet' connected to endpoint 'dnet.wifi' of type 'kl.drivers.DNetWifi'
+[2026-10-20T03:26:34.607][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] Client 'kl.VfsNet' connected to endpoint 'dnet.supplicant' of type 'kl.drivers.DNetSupplicant'
+[2026-10-20T03:26:34.623][Info][kl.drivers.DNetSrv][157:169][KDF_DCM] Client 'kl.VfsNet' connected to endpoint 'dnet.mbim' of type 'kl.drivers.DNetMbim'
+[2026-10-20T03:26:34.628][Info][kl.VfsNet][158:234][DNET_CLIENT] Discovered dynamically connected endpoint of type "kl.drivers.DNet" as kl.drivers.DNetSrv/dnet.dnet
+[2026-10-20T03:26:34.631][Info][kl.VfsNet][158:234][DNET_CLIENT] Discovered dynamically connected endpoint of type "kl.drivers.DNetMac" as kl.drivers.DNetSrv/dnet.mac
+[2026-10-20T03:26:34.633][Info][kl.VfsNet][158:234][DNET_CLIENT] Discovered dynamically connected endpoint of type "kl.drivers.DNetWifi" as kl.drivers.DNetSrv/dnet.wifi
+[2026-10-20T03:26:34.635][Info][kl.VfsNet][158:234][DNET_CLIENT] Discovered dynamically connected endpoint of type "kl.drivers.DNetSupplicant" as kl.drivers.DNetSrv/dnet.supplicant
+[2026-10-20T03:26:34.638][Info][kl.VfsNet][158:234][DNET_CLIENT] Discovered dynamically connected endpoint of type "kl.drivers.DNetMbim" as kl.drivers.DNetSrv/dnet.mbim
+[2026-10-20T03:26:34.640][Info][kl.VfsNet][158:234][KDF_DCM] Successfully connected to service 'dnet.driver.driver' of type 'kl.drivers.Driver' server 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:34.643][Info][kl.VfsNet][158:234][KDF_DCM] Successfully connected to service 'dnet.dnet' of type 'kl.drivers.DNet' server 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:34.646][Info][kl.VfsNet][158:234][KDF_DCM] Successfully connected to service 'dnet.mac' of type 'kl.drivers.DNetMac' server 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:34.650][Info][kl.VfsNet][158:234][KDF_DCM] Successfully connected to service 'dnet.wifi' of type 'kl.drivers.DNetWifi' server 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:34.651][Info][kl.VfsNet][158:234][KDF_DCM] Successfully connected to service 'dnet.supplicant' of type 'kl.drivers.DNetSupplicant' server 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:34.654][Info][kl.VfsNet][158:234][KDF_DCM] Successfully connected to service 'dnet.mbim' of type 'kl.drivers.DNetMbim' server 'kl.drivers.DNetSrv'
+[2026-10-20T03:26:34.742][Info][kl.VfsNet][158:178][DNETIF] Port 'rtk:0': attached
+[2026-10-20T03:26:34.932][Info][kl.VfsNet][158:236][VFS_SERVER_OCAP] New client Check.1 create, total:1
+[2026-10-20T03:26:34.938][Info][kl.VfsNet][158:236][VFS_SERVER] Created client "Check.1" config subtree.
+[2026-10-20T03:26:34.939][Info][kl.VfsNet][158:236][VFS_SERVER] Client "Check.1" connected.
+[2026-10-20T03:26:34.943][Info][Check.1][139:139][VFS_CLIENT] Shutdown & config changed notification started
+[2026-10-20T03:26:34.949][Info][kl.VfsNet][158:238][DNETIF] Port 'rtk:0': registered as 'en0', address '52:54:00:12:34:56'
+[2026-10-20T03:26:34.980][Info][Check.1][139:139][CRT0] VFS filesystem backend initialized with env(client:task:kl.VfsRamFs:timeout_dcm_ms:600000)
+[2026-10-20T03:26:34.982][Info][Check.1][139:139][CRT0] VFS network backend initialized with env(client:task:kl.VfsNet:timeout_dcm_ms:600000)
+[2026-10-20T03:26:35.011][Info][Check.1][139:139][em_transport] Sent app_start notification
+[2026-10-20T03:26:35.012][Info][ServiceManager.0][131:136][SVCMGR][service_runner.cpp:OnServiceUpdate:263] Service running: Check
+[check] 8 UDP sockets, first fd 3, last fd 10
+[check] pthread_create -> 0
+
+==============================================================================
+                           Access to invalid handle
+==============================================================================
+
+    EIID     : checks.Check
+    Name     : Check.1
+    Path     : /data/packages.unpacked/Check/v0.0.0/bin/Check
+    Handle   : 0x158
+    Type     : 0x10004
+    Status   : 0
+    Expected : 0x1
+    Current  : 0x0
+
+Trace of access to invalid handle:
+
+Relocation base: <0x0000000679654000>
+Stack bounds: 0x000006440a143000 0x000006440a243000
+Call Trace (User Mode):
+    [<0x000000067971e900>] CallEx+0x50
+    [<0x0000000679717b24>] KnNoticeSubscribeToObject+0x94
+    [<0x000000067977e93c>] poll+0x4ec
+    [<0x00000006796f81cc>] Poller+0x11c
+    [<0x00000006797c69e4>] pthread__errorfunc+0x1c4
+[2026-10-20T03:26:35.305][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable_runner.cpp:CompletedExecutable:180] [Check.1] Executable completed
+[2026-10-20T03:26:35.310][Info][kl.ExecMgrEntity][24:124][EXECMGR][executable_runner.cpp:CompletedExecutable:197] [Check.1] Executable completed with: exitStatus=ExitNormal, exitCode=1, exitReason=(0x00, Ok)
+[2026-10-20T03:26:35.313][Info][kl.VfsRamFs][156:159][VFS_SERVER_OCAP] client Check.1 free, total:0
+[2026-10-20T03:26:35.313][Info][ServiceManager.0][131:136][SVCMGR][service_runner.cpp:OnServiceUpdate:254] Service stopped: Check with success
+[2026-10-20T03:26:35.316][Info][kl.VfsNet][158:175][VFS_SERVER_OCAP] client Check.1 free, total:0
+qemu-system-aarch64: Slirp: Failed to send packet, ret: -1
+qemu-system-aarch64: terminating on signal 15 from pid 46578 (bash)
+gmake[2]: *** [CMakeFiles/Makefile2:1256: CMakeFiles/sim.dir/all] Terminated
+gmake[1]: *** [CMakeFiles/Makefile2:1263: CMakeFiles/sim.dir/rule] Terminated
+gmake: *** [Makefile:715: sim] Terminated

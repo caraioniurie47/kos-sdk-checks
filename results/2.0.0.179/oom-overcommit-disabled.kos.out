@@ -1,0 +1,15 @@
+[check] free pages at start: 356175 (1391 MiB)
+[check] 1. mmap(256 MiB, R|W) #1 -> ok, free pages 290508; writing it
+[check] 1. mmap(256 MiB, R|W) #2 -> ok, free pages 224838; writing it
+[check] 1. mmap(256 MiB, R|W) #3 -> ok, free pages 159171; writing it
+[check] 1. mmap(256 MiB, R|W) #4 -> ok, free pages 93504; writing it
+[check] 1. mmap(256 MiB, R|W) #5 -> ok, free pages 27837; writing it
+[check] 1. mmap(256 MiB, R|W) #6 -> Cannot allocate memory, free pages 27837
+[check] 1. all unmapped, free pages 356172
+[check] 2. reserve, mprotect(R|W) #1 -> ok, free pages 290506; writing it
+[check] 2. reserve, mprotect(R|W) #2 -> ok, free pages 224841; writing it
+[check] 2. reserve, mprotect(R|W) #3 -> ok, free pages 159174; writing it
+[check] 2. reserve, mprotect(R|W) #4 -> ok, free pages 93507; writing it
+[check] 2. reserve, mprotect(R|W) #5 -> ok, free pages 27839; writing it
+[check] 2. mmap(256 MiB, PROT_NONE, MAP_NORESERVE) #6 -> Cannot allocate memory
+[check] done
