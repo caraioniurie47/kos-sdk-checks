@@ -84,3 +84,6 @@ temporary copy. `host/sdk-check.sh`, `host/thread-api-check.sh` and `host/toolch
 `/opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102`, or the directory given as the first argument, such as
 `/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179`). Each prints every
 command as `$ <command>` before its output.
+
+`host/coverage-check.py FINDINGS.md` reads each finding's "Check:" paragraph and reports, per finding, whether its
+scripts and `results/`/`results/2.0.0.179/` outputs exist on disk (derived from the files present, not a fixed list).

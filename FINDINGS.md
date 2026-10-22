@@ -32,7 +32,7 @@ links the page of the online documentation that holds the passage, for a quick c
 
 | Category | What it means |
 |---|---|
-| Bugs | Contradicts a "shall" of POSIX, or, for a function POSIX does not have, the documentation of NetBSD, which the SDK's libc and network stack come from; or a system program crashes. An `errno` counts when POSIX describes the condition: implementations "shall not generate a different error number from one required by this volume of POSIX.1-2024 for an error condition described in this volume of POSIX.1-2024" (XSH 2.3). |
+| Bugs | Contradicts a "shall" of POSIX, or, for a function POSIX does not have, the documentation of NetBSD, which the SDK's libc and network stack come from; or a system program crashes. An `errno` counts when POSIX describes the condition: implementations "shall not generate a different error number from one required by this volume of POSIX.1-2024 for an error condition described in this volume of POSIX.1-2024" ([XSH 2.3](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_03)). |
 | Documentation errors | The manual states something a check contradicts; typos. |
 | Undocumented behaviour | Behaviour POSIX allows or leaves open, or of a function POSIX does not have, that differs from Linux, or behaviour of the SDK's tools and libraries that portable code does not expect; in each case, that the documentation does not mention. |
 | Missing features | A library, header, function or constant that portable code expects and the SDK lacks. |
@@ -64,7 +64,7 @@ Every finding was re-checked on 2.0.0.179: the programs and host scripts ran aga
 | `mkstemps("/tmp/tmpXXXXXX.tmp", 4)` | -1, errno Invalid argument | -1, errno Invalid argument | 3 |
 | `mkstemp("/tmp/tmpXXXXXX")` | 3 | 3 | 4 |
 
-`mkstemps()` is not POSIX; NetBSD's man page (the libc comes from NetBSD) gives the template form
+`mkstemps()` is not POSIX; [NetBSD's man page](https://man.netbsd.org/NetBSD-10.0/mktemp.3) (the libc comes from NetBSD) gives the template form
 `/tmp/tmpXXXXXXsuffix`, which this call follows. .NET's `Path.GetTempFileName()` uses it; on KasperskyOS it failed with
 "Invalid argument" until my port created the file itself.
 
@@ -88,7 +88,7 @@ of yours.
 | `fsync(pipe write end)` | -1, errno Function not implemented | -1, errno Function not implemented | -1, errno Invalid argument |
 | `ftruncate(pipe write end, 0)` | -1, errno Function not implemented | -1, errno Function not implemented | -1, errno Invalid argument |
 
-On a pipe, POSIX.1-2024 gives `ESPIPE` for `pread` and `EINVAL` for `fsync` and `ftruncate`, in its "shall fail" lists,
+On a pipe, POSIX.1-2024 gives `ESPIPE` for [`pread`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pread.html) and `EINVAL` for [`fsync`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/fsync.html) and [`ftruncate`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/ftruncate.html), in its "shall fail" lists,
 and Linux returns those; on `/dev/null`, Linux lets `pread` and `pwrite` succeed. Portable code handles those; `ENOSYS`
 it does not. The manual's table "Functions implemented by the vfs::lib_fs library" (pp. 96-97 of the 1.4 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview)) lists all
 four. (Correction, 2026-10-22: another table of the same manual, "Description and implementation details of the
@@ -121,7 +121,7 @@ document it; or another choice of yours.
 |---|---|---|---|
 | `utimensat(0444 file it created, explicit times)` | -1, errno Permission denied | -1, errno Permission denied | 0 |
 
-POSIX: "Only a process with the effective user ID equal to the user ID of the file or with appropriate privileges may
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/utimensat.html): "Only a process with the effective user ID equal to the user ID of the file or with appropriate privileges may
 use futimens() or utimensat() with a non-null times argument ...", and its ERRORS say the call "shall fail" with
 `[EPERM]` when explicit times are given, "the calling process' effective user ID does not match the owner of the file,
 and the calling process does not have appropriate privileges." In .NET, setting a read-only file's times throws
@@ -133,7 +133,7 @@ and the calling process does not have appropriate privileges." In .NET, setting 
 |---|---|---|---|
 | `rename(file, 32799-character path)` | -1, errno Invalid argument | -1, errno Invalid argument | -1, errno File name too long |
 
-The path is `/tmp/` and one 32794-character component; the SDK's `NAME_MAX` is 511. POSIX's "shall fail" list gives
+The path is `/tmp/` and one 32794-character component; the SDK's `NAME_MAX` is 511. [POSIX's](https://pubs.opengroup.org/onlinepubs/9799919799/functions/rename.html) "shall fail" list gives
 `ENAMETOOLONG` for that ("The length of a component of a pathname is longer than {NAME_MAX}."), as Linux returns. In
 .NET, moves to over-long paths report a generic I/O error rather than "path too long".
 
@@ -144,7 +144,7 @@ The path is `/tmp/` and one 32794-character component; the SDK's `NAME_MAX` is 5
 | `posix_fallocate(fd, 0, 1 TiB) return value` | -1 (errno 12) | not returned when the run stopped at its 10-minute limit | 28 (errno 0) |
 | `ftruncate(fd, 1 TiB)` | -1, errno Cannot allocate memory | not reached | 0 |
 
-POSIX: "Upon successful completion, posix_fallocate() shall return zero; otherwise, an error number shall be returned to
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/posix_fallocate.html): "Upon successful completion, posix_fallocate() shall return zero; otherwise, an error number shall be returned to
 indicate the error." It returns -1 and sets `errno` instead. .NET's tests that preallocate more space than the disk has
 see no error.
 
@@ -241,13 +241,13 @@ Nothing to choose: fixed in 2.0. Listed so that this list is complete.
 | `  then revents` | 0x1 | 0x1 | 0x11 |
 | `  then recvmsg(1-byte buffer, MSG_DONTWAIT)` | 0 | 0 | -1, errno Resource temporarily unavailable |
 
-POSIX says `shutdown()` "shall fail" with `ENOTCONN` when "The socket is not connected." In NetBSD 10's source it
-succeeds too: its `soshutdown()` has no connection check, although its `shutdown(2)` man page lists `ENOTCONN`. On the
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/shutdown.html) says `shutdown()` "shall fail" with `ENOTCONN` when "The socket is not connected." In NetBSD 10's source it
+succeeds too: its [`soshutdown()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket.c#L1666-L1684) has no connection check. Its `shutdown(2)` man page does list `ENOTCONN`. On the
 UDP socket, a non-blocking receive afterwards returns 0 bytes, as if an empty datagram had arrived, where Linux's fails
 with `EAGAIN` (both report the socket readable).
 
 .NET's `Socket.Disconnect` on an unconnected socket does not throw. When .NET closes a UDP socket that a receive is
-blocked on, it calls `shutdown(SHUT_RDWR)` to wake that receive (`SafeSocketHandle.Unix.cs`); what the woken receive
+blocked on, it calls shutdown(SHUT_RDWR) to wake that receive ([`SafeSocketHandle.Unix.cs`](https://github.com/dotnet/runtime/blob/1cddd530157ff15811616f9c48fd4bde2b877173/src/libraries/System.Net.Sockets/src/System/Net/Sockets/SafeSocketHandle.Unix.cs#L234-L241)); what the woken receive
 returns was not measured on either system.
 
 Check: [`src/net-check.c`](src/net-check.c); output [`results/net.kos.out`](results/net.kos.out), [`results/2.0.0.179/net.kos.out`](results/2.0.0.179/net.kos.out),
@@ -263,8 +263,8 @@ afterwards; or another choice of yours.
 |---|---|---|---|
 | `accept4(non-blocking listener, SOCK_CLOEXEC): O_NONBLOCK` | set | set | clear |
 
-POSIX.1-2024 says the new socket's `O_NONBLOCK` "shall be determined solely by the flag argument", and NetBSD's
-`accept4()` (its `paccept()`) clears the inherited flag; only `accept()` may inherit it ("it is implementation-defined
+[POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/functions/accept4.html) says the new socket's `O_NONBLOCK` "shall be determined solely by the flag argument", and NetBSD's
+`accept4()` (its [`paccept()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_syscalls.c#L300-L324)) clears the inherited flag; only `accept()` may inherit it ("it is implementation-defined
 whether O_NONBLOCK will be set on the file description created by accept()").
 
 .NET clears the flag after `accept()` on macOS and FreeBSD, but on a system with `accept4` it assumes Linux behaviour. On
@@ -285,10 +285,10 @@ document it; or another choice of yours.
 | `poll({open socket, closed descriptor}, 2, 0)` | -1, errno Bad file descriptor | -1, errno Bad file descriptor | 2 |
 | `  revents` | 0x0, 0x0 | 0x0, 0x0 | 0x14, 0x20 |
 
-POSIX: "poll() or ppoll() shall set the POLLHUP, POLLERR, and POLLNVAL flag in revents if the condition is true", where
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/poll.html): "poll() or ppoll() shall set the POLLHUP, POLLERR, and POLLNVAL flag in revents if the condition is true", where
 POLLNVAL means "The specified fd value is not an open file descriptor."; `EBADF` is not among its errors. The
 requirement is the "shall set": POSIX describes this condition and its outcome, a flag in the entry, so failing the whole
-call is not one of the additional errors XSH 2.3 allows. NetBSD 10's `pollscan` sets
+call is not one of the additional errors [XSH 2.3](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_03) allows. NetBSD 10's [`pollscan`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/sys_select.c#L568-L598) sets
 `POLLNVAL` for such an entry and goes on, so the whole-call failure comes from KasperskyOS's layer.
 
 An event loop that polls many sockets while other threads close them gets whole-call failures instead of per-descriptor
@@ -311,7 +311,7 @@ another choice of yours.
 | `  then connect(AF_UNSPEC)` | -1, errno Address family not supported by protocol family | -1, errno Address family not supported by protocol family | 0 |
 | `  then connect(0.0.0.0:0)` | -1, errno Can't assign requested address | -1, errno Can't assign requested address | 0 |
 
-POSIX `connect()`: "If the sa_family member of address is AF_UNSPEC, the socket's peer address shall be reset." Here it
+POSIX [`connect()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/connect.html): "If the sa_family member of address is AF_UNSPEC, the socket's peer address shall be reset." Here it
 fails with `EAFNOSUPPORT`, and connecting to `0.0.0.0:0` fails too. .NET's test of connecting a datagram socket twice
 fails with "Can't assign requested address".
 
@@ -328,8 +328,8 @@ choice of yours.
 |---|---|---|---|
 | `recv(non-blocking TCP, 0 bytes), nothing queued` | 0 | 0 | -1, errno Resource temporarily unavailable |
 
-POSIX: "If no messages are available at the socket and O_NONBLOCK is set on the socket's file descriptor, recv() shall
-fail and set errno to [EAGAIN] or [EWOULDBLOCK]". A return of 0 reads as end of stream. NetBSD's `soreceive` returns 0
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/recv.html): "If no messages are available at the socket and O_NONBLOCK is set on the socket's file descriptor, recv() shall
+fail and set errno to [EAGAIN] or [EWOULDBLOCK]". A return of 0 reads as end of stream. NetBSD's [`soreceive`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket.c#L1266-L1270) returns 0
 for a zero-length request before that check, so this one is inherited. No failing .NET test traced to it.
 
 Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](results/net3.kos.out), [`results/2.0.0.179/net3.kos.out`](results/2.0.0.179/net3.kos.out),
@@ -351,7 +351,7 @@ Options: fail with `EAGAIN`, as POSIX describes; keep NetBSD's 0 and document it
 | `  then the receiver's first recvfrom` | 0 | 0 | 0 |
 | `  then the receiver's second recvfrom` | 1 | 1 | 1 |
 
-POSIX: "The sendto() function shall send a message through a connection-mode or connectionless-mode socket." Here it
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/sendto.html): "The sendto() function shall send a message through a connection-mode or connectionless-mode socket." Here it
 returns 0, the size of an empty message, without sending one. `sendmsg()` with one empty iovec does send the empty
 datagram, as the last four rows show. No failing .NET test traced to this (.NET sends datagrams with `sendmsg`).
 
@@ -371,8 +371,8 @@ yours.
 | `UDP sendmsg with 1024 one-byte iovecs` | -1, errno Invalid argument | -1, errno Invalid argument | 1024 |
 | `UDP sendmsg with 1025 one-byte iovecs` | -1, errno Invalid argument | -1, errno Invalid argument | -1, errno Message too long |
 
-POSIX's `sendmsg()` lists "[EMSGSIZE] ... the msg_iovlen member of the msghdr structure pointed to by message is less
-than or equal to 0 or is greater than {IOV_MAX}." as a "shall fail" error; NetBSD returns `EMSGSIZE` there. The value 10
+POSIX's [`sendmsg()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/sendmsg.html) lists "[EMSGSIZE] ... the msg_iovlen member of the msghdr structure pointed to by message is less
+than or equal to 0 or is greater than {IOV_MAX}." as a "shall fail" error ([XSH 2.3](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_03)); NetBSD returns `EMSGSIZE` there. The value 10
 itself is documented as the VFS IPC's `MaxIovecsCount` (p. 869 of the 1.4 PDF, p. 832 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/system_limits)), but it is below `_XOPEN_IOV_MAX` (16).
 .NET's datagram sends and receives with more than 10 buffers fail with "Invalid argument", where its tests expect
 "message too long".
@@ -393,7 +393,7 @@ could the documentation state the value 10 with `IOV_MAX`?
 | `non-blocking write(TCP, 4 KiB) until it stops` | -1, errno Resource temporarily unavailable after 13 writes that sent data | -1, errno Resource temporarily unavailable after 23 writes that sent data | -1, errno Resource temporarily unavailable after 646 writes that sent data |
 | `write(TCP) blocked, another thread closes the socket` | 4096 | 4096 | still blocked 5 s later |
 
-POSIX's `<errno.h>` defines the error numbers as "distinct positive values"; -3 is not an error number at all, so
+POSIX's [`<errno.h>`](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/errno.h.html) defines the error numbers as "distinct positive values"; -3 is not an error number at all, so
 `strerror()` and any error mapping cannot name it. A 64 KiB `write()` made once the send buffer is full (the last
 non-blocking write failed with `EAGAIN`), and still blocked 1 s later, returns 4096 when the socket is closed, not an
 error. No failing .NET test traced to it.
@@ -417,8 +417,8 @@ Options: return a positive error number, such as `EBADF`; keep -3 and document i
 | `  then open() of a /tmp file until it fails (limit 1024)` | 509, errno Too many open files | 509, errno Too many open files | 1020, errno Too many open files |
 
 A process cannot have more than 512 descriptors (`OPEN_MAX` in the SDK's `limits.h`), and nothing changes that:
-`getrlimit(RLIMIT_NOFILE)` fails with `EINVAL` and `setrlimit()` with `ENOSYS`. POSIX.1-2024 moved both functions, with
-`RLIMIT_NOFILE`, from the XSI option into the Base. At the limit, `open()` of a `/tmp` file fails with `EMFILE`, but `open()` of `/dev/null` with
+[`getrlimit(RLIMIT_NOFILE)`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/getrlimit.html) fails with `EINVAL` and [`setrlimit()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/setrlimit.html) with `ENOSYS`. POSIX.1-2024 moved both functions, with
+`RLIMIT_NOFILE`, from the XSI option into the Base. At the limit, [`open()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/open.html) of a `/tmp` file fails with `EMFILE`, but `open()` of `/dev/null` with
 `ENFILE`, which POSIX describes as "The maximum allowable number of files is currently open in the system."; for "All
 file descriptors available to the process are currently open." it gives `EMFILE`. .NET raises the soft limit at startup,
 which fails silently here, and the System.Net.Sockets tests sometimes reach the limit when their test classes overlap.
@@ -442,7 +442,7 @@ document it; or another choice of yours. And could the documentation give the li
 | `sigaction(SIGTERM, handler)` | 0; handler read back: installed | 0; handler read back: installed | 0; handler read back: installed |
 | `sigaction(SIGUSR1, handler)` | 0; handler read back: installed | 0; handler read back: installed | 0; handler read back: installed |
 
-POSIX: "The sigaction() function shall fail if: [EINVAL] The sig argument is not a valid signal number or an attempt is
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/sigaction.html): "The sigaction() function shall fail if: [EINVAL] The sig argument is not a valid signal number or an attempt is
 made to catch a signal that cannot be caught or ignore a signal that cannot be ignored." Since the kernel delivers no
 signals, the handler never runs; the effect is that code asking `sigaction` whether a signal can be handled gets the
 wrong answer.
@@ -464,7 +464,7 @@ accepts any signal; or another choice of yours.
 ```
 
 POSIX lists "[ENOTSUP] The implementation does not support the combination of accesses requested in the prot argument."
-among the errors `mprotect()` "shall fail" with, and the `mprotect()` row of the POSIX limitations says "it will only
+among the errors [`mprotect()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/mprotect.html) "shall fail" with, and the `mprotect()` row of the POSIX limitations says "it will only
 return the -1 value and will assign the ENOTSUP value to the errno variable" (p. 452 of the 1.4 PDF, p. 462 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_uns_ifaces)). Writing a page,
 then switching it to `PROT_READ | PROT_EXEC`, works.
 
@@ -484,7 +484,7 @@ $ grep -nw dlerror include/dlfcn.h
 36:const char *dlerror(void);
 ```
 
-POSIX declares `char *dlerror(void);`. Code that stores the result in a `char *` gets a qualifier warning, an error where
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/dlerror.html) declares `char *dlerror(void);`. Code that stores the result in a `char *` gets a qualifier warning, an error where
 warnings are errors (as in .NET's native build).
 
 **On 2.0.0.179:** the same declaration, at line 37.
@@ -581,7 +581,7 @@ expected writes to read-only files to succeed. The POSIX support limitations ([w
 ([web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_ifaces_impl_features)) pages do
 not say what uid 0 means on KasperskyOS.
 
-Yet the same process may remove an empty directory with `unlink()`, which POSIX allows only if "the process has
+Yet the same process may remove an empty directory with [`unlink()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/unlink.html), which POSIX allows only if "the process has
 appropriate privileges and the implementation supports using unlink() on directories". Which privileges are
 appropriate is for the implementation to define. The image's security policy grants everything; whether that is what
 lets the call through was not tested (the check never ran under a stricter policy). In .NET, `File.Delete` on a directory deletes it instead of throwing.
@@ -604,7 +604,7 @@ choice of yours.
 | `statvfs(/tmp): f_blocks, f_bfree, f_bavail` | 1, 0, 0 (f_frsize 1024) | 1, 0, 0 (f_frsize 1024) | 16384, 16384, 16384 (f_frsize 4096) |
 | `  the same with a 4 MiB file in /tmp` | 4098, 0, 0 | 4098, 0, 0 | 16384, 15360, 15360 |
 
-`f_bfree` and `f_bavail` stay 0, and `f_blocks` counts only the space in use. POSIX allows that ("It is unspecified
+`f_bfree` and `f_bavail` stay 0, and `f_blocks` counts only the space in use. [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/statvfs.html) allows that ("It is unspecified
 whether all members of the statvfs structure have meaningful values on all file systems."), but the manual says
 `statvfs()` gives the "number of available blocks" (p. 460 of the 1.4 PDF, p. 470 of the 2.0 PDF; [web page](https://support.kaspersky.com/kos-community-edition/2.0/sys_inf_libc)), and nothing says VfsRamFs reports none.
 .NET's `DriveInfo` reports 0 bytes free and the space in use as the drive's size, and its test that expects free space on
@@ -624,7 +624,7 @@ document them; or another choice of yours.
 | `rmdir of that directory while the stream is open` | 0 | 0 | 0 |
 | `  then readdir()` | NULL, errno No such file or directory | NULL, errno No such file or directory | NULL (end, errno unchanged) |
 
-Linux ends the stream. POSIX lists "[ENOENT] The current position of the directory stream is invalid.", so this is
+Linux ends the stream. [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/readdir.html) lists "[ENOENT] The current position of the directory stream is invalid.", so this is
 allowed, but code that reads NULL plus an `errno` as an error sees one: .NET's directory enumeration throws when the
 directory is removed under it.
 
@@ -646,7 +646,7 @@ Options: end the stream, as Linux does; keep `ENOENT` and document it; or anothe
 `getaddrinfo()` runs in VfsNet (the manual lists it under "Functions implemented by the vfs::lib_net library", p. 97; 2.0: p. 103; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vfs_overview)),
 which reads `/etc/hosts` from its own file systems: an `/etc/hosts` written to the program's file system (the middle rows) changes nothing (on
 Linux that file is the system's, so the check does not write it). The manual's examples list a hosts file among VfsNet's configuration files, but nothing
-says that name resolution, `localhost` included, needs one; RFC 6761 (6.3) recommends that resolvers always return the
+says that name resolution, `localhost` included, needs one; [RFC 6761 (6.3)](https://www.rfc-editor.org/rfc/rfc6761#section-6.3) recommends that resolvers always return the
 loopback address for `localhost`. The program above gives VfsNet no hosts file.
 
 .NET's socket tests connect to `localhost` by name, and 26 of them failed. After I gave VfsNet a ROMFS `/etc/hosts` with
@@ -671,8 +671,9 @@ included, needs a hosts file for VfsNet or DNS; or another choice of yours.
 | `ioctl(UDP, FIONREAD), one 3-byte datagram queued` | 19 | 19 | 3 |
 | `ioctl(TCP, FIONREAD), 3 bytes queued` | 3 | 3 | 3 |
 
-16 is the size of the sender's `sockaddr_in`, which NetBSD's source also counts (its `sb_cc` includes the address
-mbuf); not measured on NetBSD. `FIONREAD` is not in POSIX. .NET's `Socket.Available` overstates on a UDP socket.
+16 is the size of the sender's `sockaddr_in`, which NetBSD's source also counts: its [`sbappendaddr()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket2.c#L1023-L1081)
+runs `sballoc()` over the address mbuf along with the data, adding its length to the socket buffer's byte count; not measured on NetBSD.
+`FIONREAD` is not in POSIX. .NET's `Socket.Available` overstates on a UDP socket.
 
 Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](results/net3.kos.out), [`results/2.0.0.179/net3.kos.out`](results/2.0.0.179/net3.kos.out),
 [`results/net3.linux.out`](results/net3.linux.out).
@@ -688,8 +689,8 @@ Options: report the payload bytes, as Linux does; keep NetBSD's count and docume
 | `setsockopt(TCP, SO_RCVBUF, 0)` | -1, errno Invalid argument | -1, errno Invalid argument | 0 |
 | `setsockopt(UDP, SO_SNDBUF, 0)` | -1, errno Invalid argument | -1, errno Invalid argument | 0 |
 
-POSIX gives no minimum: the option "requests that the buffer space ... be set to the value". It lists `EINVAL` for
-"The specified option is invalid at the specified socket level", and XSH 2.3 lets an implementation use a listed error
+POSIX gives no minimum: the [`setsockopt()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/setsockopt.html) option "requests that the buffer space ... be set to the value": it lists `EINVAL` for
+"The specified option is invalid at the specified socket level", and [XSH 2.3](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_03) lets an implementation use a listed error
 under other circumstances when it can be handled as the described one, which a rejected value can. NetBSD does the same:
 its `sosetopt1()`
 ([`uipc_socket.c`:1802-1809](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_socket.c#L1802-L1809),
@@ -712,8 +713,8 @@ document the accepted range; or another choice of yours.
 | `getsockopt(SO_RCVBUF, buffer, option_len 0)` | 0 | 0 | 0 |
 
 POSIX does not allow a null `option_value`, so the result is undefined ("If an argument to a function has an invalid
-value, such as ... a null pointer, the behavior is undefined", XSH 2.1.1) and failing is allowed. NetBSD's
-`getsockopt()` accepts it with length 0 and copies nothing, as Linux does. .NET's `GetSocketOption` with an empty buffer
+value, such as ... a null pointer, the behavior is undefined", [XSH 2.1.1](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_01_01)) and failing is allowed. NetBSD's
+[`getsockopt()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/getsockopt.html) accepts it with length 0 and copies nothing, as Linux does. .NET's `GetSocketOption` with an empty buffer
 threw "Invalid argument"; my port passes a one-byte buffer.
 
 Check: [`src/net3-check.c`](src/net3-check.c); output [`results/net3.kos.out`](results/net3.kos.out), [`results/2.0.0.179/net3.kos.out`](results/2.0.0.179/net3.kos.out),
@@ -741,8 +742,8 @@ Options: accept a NULL buffer with length 0, as NetBSD does; keep `EINVAL` and d
 | `  bytes the peer read after send` | 65536 | 65536 | 1048576 |
 
 The limit is on the length, not on buffer space: on a blocking socket whose peer is reading, the call fails and sends
-nothing, where `send()` on the same sockets sends part. POSIX's `EMSGSIZE` is for "The message is too large to be sent
-all at once (as the socket requires)", which a stream socket does not require; XSH 2.3 lets an implementation use a
+nothing, where [`send()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/send.html) on the same sockets sends part. POSIX's `EMSGSIZE` is for "The message is too large to be sent
+all at once (as the socket requires)", which a stream socket does not require; [XSH 2.3](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_03) lets an implementation use a
 listed error under other circumstances when it can be handled as the described one, which, in my judgement, a caller
 can, by sending less.
 NetBSD's `sosend` fails with `EMSGSIZE` only for a socket that sends atomically, or for control data over the buffer size
@@ -767,8 +768,8 @@ keep the limit and document it; or another choice of yours.
 | `accept4(AF_UNIX listener, address_len 128)` | 0 | 0 | 0 |
 | `accept4(AF_UNIX listener, address_len 244)` | -1, errno Permission denied | -1, errno Permission denied | 0 |
 
-POSIX `accept()`: `address_len` "on input specifies the length of the supplied sockaddr structure", and a longer
-address "shall be truncated"; a larger buffer is legal. `EACCES` is not among `accept()`'s errors, but XSH 2.3 lets an
+POSIX [`accept()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/accept.html): `address_len` "on input specifies the length of the supplied sockaddr structure", and a longer
+address "shall be truncated"; a larger buffer is legal. `EACCES` is not among `accept()`'s errors, but [XSH 2.3](https://pubs.opengroup.org/onlinepubs/9799919799/functions/V2_chap02.html#tag_16_03) lets an
 implementation "generate additional errors unless explicitly disallowed". NetBSD shortens the returned length and never fails on it. 128
 matches the VFS IPC's `MaxSockAddrSize` (p. 869; 2.0: p. 832; [web page](https://support.kaspersky.com/kos-community-edition/2.0/system_limits)). .NET passes a 244-byte buffer when accepting on an `AF_UNIX` listener,
 so its named-pipe server failed with "Permission denied" in 120 of the 128 named-pipe tests, until my port passed 128.
@@ -788,7 +789,7 @@ it; or another choice of yours.
 | `setsockopt(SO_KEEPALIVE, 1) after the peer reset` | -1, errno Connection reset by peer | -1, errno Connection reset by peer | 0 |
 | `close() after that` | 0 | 0 | 0 |
 
-NetBSD's `tcp_ctloutput` returns `ECONNRESET` when the socket has no protocol control block; that a reset connection
+NetBSD's [`tcp_ctloutput`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/netinet/tcp_usrreq.c#L257-L277) returns `ECONNRESET` when the socket has no protocol control block; that a reset connection
 has none is my reading, not traced. .NET's abortive close sets `SO_LINGER {1, 0}` and did not close the descriptor when
 that failed, so each socket reset by its peer leaked one, until my port treated `ECONNRESET` there as success.
 
@@ -809,8 +810,8 @@ another choice of yours.
 | `  then accept() with descriptors free` | -1, errno Resource temporarily unavailable | -1, errno Resource temporarily unavailable | 0 |
 
 At the limit `accept()` fails with `EMFILE`, as expected, but the pending connection is dropped: the client reads EOF,
-and a later `accept()` with descriptors free finds nothing. POSIX lists "[EMFILE] All file descriptors available to the
-process are currently open." and says nothing about the connection. NetBSD 10's source allocates the descriptor before
+and a later `accept()` with descriptors free finds nothing. [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/accept.html) lists "[EMFILE] All file descriptors available to the
+process are currently open." and says nothing about the connection. [NetBSD 10's source](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_syscalls.c#L174-L234) allocates the descriptor before
 it takes the connection off the queue, so there the connection stays queued, as it does on Linux. A .NET server's
 `Accept` at the limit fails "Too many open files", and its client then sees the connection closed. (On Linux the check
 lowers the limit to 256 first.)
@@ -835,7 +836,7 @@ Options: keep the connection queued, as NetBSD and Linux do; document that it is
 
 The product and version are available at build time (`include/platform/version.h` has
 `PRODUCT_NAME "KasperskyOS-Community-Edition-Qemu"` and `PRODUCT_VERSION "1.4.0.102"`), but `uname()` does not tell a
-program which KasperskyOS it runs on. POSIX: "The format of each member is implementation-defined."
+program which KasperskyOS it runs on. [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/uname.html): "The format of each member is implementation-defined."
 
 **On 2.0.0.179:** the same output, while `version.h` has `PRODUCT_NAME "KasperskyOS-Community-Edition-Qemu-arm64"` and
 `PRODUCT_VERSION "2.0.0.179"`.
@@ -855,7 +856,7 @@ them; or another choice of yours.
 | `pthread_condattr_init(a byte copy of it)` | 22, errno Invalid argument | 22, errno Invalid argument | 0 |
 | `pthread_condattr_init(after pthread_condattr_destroy)` | 0 | 0 | 0 |
 
-POSIX leaves re-initializing an initialized attribute undefined, so this is allowed. But a stack variable that happens
+[POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_condattr_init.html) leaves re-initializing an initialized attribute undefined, so this is allowed. But a stack variable that happens
 to reuse the bytes of an earlier attribute that was never destroyed looks initialized, and the call fails on it; .NET's
 garbage collector declares such an attribute on the stack, and my port now zeroes it first.
 
@@ -922,7 +923,7 @@ is normal.
 
 Only `munmap` returns the pages. To give memory back without losing the reservation, the GC on Linux maps `PROT_NONE`
 over the range with `MAP_FIXED` (documented as not supported on KasperskyOS: [web page](https://support.kaspersky.com/kos-community-edition/2.0/posix_ifaces_impl_features)) or calls `madvise(MADV_FREE)`, so my port
-cannot return freed heap memory to the system short of unmapping it. POSIX does not say when memory is committed, and
+cannot return freed heap memory to the system short of unmapping it. [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html) does not say when memory is committed, and
 `madvise` and `MAP_NORESERVE` are not POSIX.
 
 **On 2.0.0.179:** the same behaviour. The plain reservation took 18611 ms and 512 MiB, the `MAP_NORESERVE` one 59 ms
@@ -1016,7 +1017,7 @@ cannot be backed; keep the current behaviour and document the commit and overcom
 | `mprotect(.rodata page, PROT_READ\|PROT_WRITE), then PROT_READ` | -1, errno Permission denied, then 0 | -1, errno Permission denied, then 0 | 0, then 0 |
 | `mprotect(anonymous page, PROT_READ\|PROT_WRITE), then PROT_READ` | 0, then 0 | 0, then 0 | 0, then 0 |
 
-Raising fails with `EACCES`; lowering and restoring its protection works. POSIX leaves `mprotect()` unspecified for
+Raising fails with `EACCES`; lowering and restoring its protection works. POSIX leaves [`mprotect()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/mprotect.html) unspecified for
 memory not mapped by `mmap()`, and lists "[EACCES] The prot argument specifies a protection that violates the access
 permission the process has to the underlying memory object", which describes this. .NET's NativeAOT runtime can keep its
 stack-protection cookie on a read-only page that it makes writable once at startup; my port leaves that off on
@@ -1140,8 +1141,8 @@ environment variable `KOS_HANDLE_SANITIZER=True` (p. 592; [web page](https://sup
 processes in which the handle sanitizer is enabled." (p. 593); this image does not set the variable. The parameter
 above "Disables the handle sanitizer functionality for detecting the use of invalid handles." (p. 170; [web page](https://support.kaspersky.com/kos-community-edition/2.0/kernel_command_line)). So the detection is on in every
 process by default and ends the process, which the manual does not say; its "Critical changes in version 2.0" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) do not
-mention it. POSIX's `close()` and `poll()` say nothing about a descriptor closed while another thread polls it. NetBSD's
-`fd_close()` calls such a close "typically an application error - the descriptor is being closed while still in use.
+mention it. POSIX's [`close()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/close.html) and [`poll()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/poll.html) say nothing about a descriptor closed while another thread polls it. NetBSD's
+[`fd_close()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/kern_descrip.c#L685-L690) calls such a close "typically an application error - the descriptor is being closed while still in use.
 (Or just a threaded application trying to unblock its thread that sleeps in (say) accept()).", and waits for the other
 thread's use to end; the process lives.
 
@@ -1200,8 +1201,8 @@ $ grep -rl generate_qemu_target $SDK/examples --include=CMakeLists.txt | wc -l
 The function is still defined, but it adds no target, with only a warning, and the build fails at `make`. The examples
 now boot a prebuilt MinimalKOS with `generate_qemu_target()`. The 2.0 documentation does not say that an image around
 Einit alone can no longer be built. The 1.4 manual says "build_kos_qemu_image() creates the target for building a
-solution image for QEMU." (p. 550), and its web page `cmake_build_qemu` ([web page](https://support.kaspersky.com/kos-community-edition/1.4/cmake_build_qemu)) has no 2.0 version; the 2.0 page "Breaking
-changes" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) names neither the function nor such images, and the closest statement in the 2.0 "What's new" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/whats_new)) is "The internal architecture and the process of loading OS
+solution image for QEMU." (p. 550), and its web page `cmake_build_qemu` ([web page](https://support.kaspersky.com/kos-community-edition/1.4/cmake_build_qemu)) has no 2.0 version; the 2.0 page "Critical
+changes in version 2.0" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) names neither the function nor such images, and the closest statement in the 2.0 "What's new" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/whats_new)) is "The internal architecture and the process of loading OS
 components and system programs have been modified."; the 2.0 manual's "Critical changes in version 2.0" (p. 32) say
 nothing on building images, and the manual never names `build_kos_qemu_image`. One leftover: the PAL test steps still
 say "select the target named `kos-qemu-image-PalTest<N>-sim`" (p. 73; [web page](https://support.kaspersky.com/kos-community-edition/2.0/vscode_ext_use)). This repository's [`sdk2/`](sdk2/) builds the same programs the
@@ -1244,7 +1245,7 @@ choice of yours.
 | `sysconf(_SC_PHYS_PAGES)` | -1, errno Invalid argument | -1, errno Invalid argument | 4094840 |
 | `sysconf(_SC_PAGESIZE)` | 4096 | 4096 | 4096 |
 
-`_SC_PHYS_PAGES` is not in POSIX, so `EINVAL` is what POSIX asks for a name the system does not support; but `unistd.h`
+`_SC_PHYS_PAGES` is not in POSIX, so `EINVAL` is what [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/functions/sysconf.html) asks for a name the system does not support; but `unistd.h`
 defines it, and portable code that finds the name uses it for the memory size. .NET's GC reads the memory size this way
 at startup; my port reads `KnGroupStatGetParam(GROUP_PARAM_MEM_TOTAL)` instead.
 
@@ -1270,8 +1271,8 @@ $ find . -name opensslv.h -o -type d -name openssl | wc -l
 ```
 
 To build against these libraries I had to use the headers from the 1.1.1t release tarball, configured with OpenSSL's
-defaults, and check by hand that their disabled-feature set matched the symbols in the libraries. And since OpenSSL 1.1.1
-reached its upstream end of life on 2023-09-11, current software that needs newer APIs cannot use it (for example ML-KEM,
+defaults, and check by hand that their disabled-feature set matched the symbols in the libraries. And since [OpenSSL 1.1.1
+reached its upstream end of life on 2023-09-11](https://openssl-library.org/post/2023-03-28-1.1.1-eol/), current software that needs newer APIs cannot use it (for example ML-KEM,
 ML-DSA and SLH-DSA in .NET, which on KasperskyOS throw `PlatformNotSupportedException` with 1.1.1).
 
 **On 2.0.0.179, partly fixed:** the libraries are OpenSSL 3.5.7, still without headers (the first command now matches
@@ -1375,7 +1376,7 @@ $ grep -rlw -E "SA_RESETHAND|SA_NODEFER" include | wc -l
 0
 ```
 
-POSIX.1-2024's `<signal.h>` says "The <signal.h> header shall also define the following symbolic constants:", and the
+POSIX.1-2024's [`<signal.h>`](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/signal.h.html) says "The <signal.h> header shall also define the following symbolic constants:", and the
 list includes `SA_RESETHAND` and `SA_NODEFER`, marked CX, not XSI; its Issue 7 change history says "The SA_RESETHAND,
 SA_RESTART, SA_SIGINFO, SA_NOCLDWAIT, and SA_NODEFER constants are moved from the XSI option to the Base.", so the
 documented absence of XSI does not cover them. Signals other than `SIGTERM` are not delivered, so this only breaks
@@ -1403,7 +1404,7 @@ $ $SDK/toolchain/bin/llvm-nm --defined-only lib/libc.a 2>/dev/null | grep -cw -E
 ```
 
 The only `uchar.h` in the SDK is libc++'s C++ wrapper (`toolchain/include/c++/v1/uchar.h`), and the compiler reports
-`__STDC_VERSION__` 201710L. ICU 78 includes `<uchar.h>` from C code on every platform but Darwin and old Cygwin, so its
+`__STDC_VERSION__` 201710L. ICU 78 [includes `<uchar.h>` from C code](https://github.com/unicode-org/icu/blob/21d1eb0f306e1141c10931e914dfc038c06121da/icu4c/source/common/unicode/ptypes.h#L55-L61) on [every platform but Darwin and old Cygwin](https://github.com/unicode-org/icu/blob/21d1eb0f306e1141c10931e914dfc038c06121da/icu4c/source/common/unicode/platform.h#L722-L729), so its
 cross build stopped until I patched it.
 
 **On 2.0.0.179:** the same output.
@@ -1555,7 +1556,7 @@ Behaviour POSIX requires, listed because Linux differs.
 | `poll(513 entries, every fd -1, timeout 0)` | -1, errno Invalid argument | -1, errno Invalid argument | 0 |
 | `poll(512 entries, every fd -1, timeout 0)` | 0 | 0 | 0 |
 
-`poll()` "shall fail" with `EINVAL` when "The nfds argument is greater than {OPEN_MAX}", and the SDK's `limits.h`
+[`poll()`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/poll.html) "shall fail" with `EINVAL` when "The nfds argument is greater than {OPEN_MAX}", and the SDK's `limits.h`
 defines `OPEN_MAX` 512. Code that polls more descriptors has to split the set.
 
 Check: [`src/net-check.c`](src/net-check.c), [`host/sdk-check.sh`](host/sdk-check.sh) (`OPEN_MAX`); output
