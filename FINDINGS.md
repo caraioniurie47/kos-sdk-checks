@@ -1205,8 +1205,8 @@ nothing on building images, and the manual never names `build_kos_qemu_image`. O
 say "select the target named `kos-qemu-image-PalTest<N>-sim`" (p. 73). This repository's [`sdk2/`](sdk2/) builds the same programs the
 2.0 way.
 
-Check: the commands above, on 2.0.0.179; output
-[`results/2.0.0.179/build-1.4-project.out`](results/2.0.0.179/build-1.4-project.out).
+Check: [`host/image-check.sh`](host/image-check.sh), which runs the commands above; output
+[`results/2.0.0.179/image-check.out`](results/2.0.0.179/image-check.out).
 
 Options: list the change among the breaking changes, with a pointer to the new model; make `build_kos_qemu_image()` stop
 at configure with that pointer instead of a warning; or another choice of yours.

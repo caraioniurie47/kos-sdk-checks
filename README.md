@@ -23,6 +23,7 @@ Linux do, what it breaks, and the options; the last column below links the findi
 | [`src/mem-check.c`](src/mem-check.c) | `mmap(PROT_NONE)` reservations, `MADV_DONTNEED`, `MADV_FREE`, write-and-execute mappings | [B15](FINDINGS.md#b15), [U15](FINDINGS.md#u15) |
 | [`src/cpu-check.c`](src/cpu-check.c) | CPU feature queries through `sysctlbyname` | [P3](FINDINGS.md#p3) |
 | [`src/sig-check.c`](src/sig-check.c) | `sigaction` for `SIGKILL` and `SIGSTOP` | [B14](FINDINGS.md#b14) |
+| [`host/image-check.sh`](host/image-check.sh) | SDK 2.0 only: this repository's 1.4 image project (`build_kos_qemu_image()`) configured and built with SDK 2.0; what the SDK has instead | [U21](FINDINGS.md#u21) |
 | [`host/thread-api-check.sh`](host/thread-api-check.sh) | thread suspension and register access in the headers; what the exception handler API documents | [P1](FINDINGS.md#p1), [P2](FINDINGS.md#p2) |
 | [`host/toolchain-check.sh`](host/toolchain-check.sh) | `-static-pie`, unprefixed compilers, typos in log messages; also where the manual says that stdout needs a VFS program (documented, p. 94 of the 1.4 manual, p. 100 of the 2.0 manual: nothing to report) | [E4](FINDINGS.md#e4), [U18](FINDINGS.md#u18), [U19](FINDINGS.md#u19) |
 
@@ -32,7 +33,7 @@ The output of each on 1.4.0.102, as run on 2026-09-24 (`mem` and `sig` on 2026-0
 `open("/tmp/big.bin")` since 2026-10-19, so the 1.4 output lacks that line. The output on 2.0.0.179, run from
 2026-10-19 to 2026-10-22, is in [`results/2.0.0.179/`](results/2.0.0.179/), with `oom` also under the kernel startup
 parameters `vmm.overcommit=exception` and `disabled`, `pollclose` also under `handle.disable_detect_invalid_access`, and
-`build-1.4-project.out`, the 1.4 image project built with SDK 2.0 ([U21](FINDINGS.md#u21)). The Linux outputs are
+`image-check.out`, the 1.4 image project built with SDK 2.0 ([U21](FINDINGS.md#u21)). The Linux outputs are
 those of the 1.4 runs.
 
 The VfsRamFs crash ([B4](FINDINGS.md#b4)) has its own reproducer:
@@ -78,7 +79,8 @@ programs use KasperskyOS interfaces and have no Linux counterpart.
 
 ## Scripts on the host
 
-`host/sdk-check.sh`, `host/thread-api-check.sh` and `host/toolchain-check.sh` inspect an installed SDK (default
+`host/image-check.sh` (default: the 2.0.0.179 SDK) builds this repository's 1.4 image project with SDK 2.0, in a
+temporary copy. `host/sdk-check.sh`, `host/thread-api-check.sh` and `host/toolchain-check.sh` inspect an installed SDK (default
 `/opt/KasperskyOS-Community-Edition-Qemu-1.4.0.102`, or the directory given as the first argument, such as
 `/opt/KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179`). Each prints every
 command as `$ <command>` before its output.
