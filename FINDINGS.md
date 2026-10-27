@@ -38,7 +38,7 @@ links the page of the online documentation that holds the passage, for a quick c
 |---|---|
 | Bugs | Contradicts a "shall" of POSIX, or, for a function POSIX does not have or one of a POSIX option the SDK does not claim, the documentation of NetBSD, which the SDK's libc and network stack come from; or a system program crashes. An `errno` counts when POSIX describes the condition: implementations "shall not generate a different error number from one required by this volume of POSIX.1-2017 for an error condition described in this volume of POSIX.1-2017" ([XSH 2.3](https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_03)). |
 | Documentation errors | The manual states something a check contradicts; typos. |
-| Undocumented behaviour | Behaviour POSIX allows or leaves open, or of a function POSIX does not have, that differs from Linux, or behaviour of the SDK's tools and libraries that portable code does not expect; in each case, that the documentation does not mention. |
+| Undocumented behaviour | Behaviour POSIX allows or leaves open, or of a function POSIX does not have or one of a POSIX option the SDK does not claim, that differs from Linux, or behaviour of the SDK's tools and libraries that portable code does not expect; in each case, that the documentation does not mention. |
 | Missing features | A library, header, function or constant that portable code expects and the SDK lacks. |
 | Proposals | An interface KasperskyOS has no equivalent for, with what it would let software do. |
 
@@ -155,8 +155,8 @@ The path is `/tmp/` and one 32794-character component; the SDK's `NAME_MAX` is 5
 defines `_POSIX_ADVISORY_INFO` as -1), so POSIX treats its use as an extension ([XBD 2.1.6](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap02.html#tag_02_01_06): "an application that
 attempts to use anything associated only with the option is considered to be requiring an extension"), and NetBSD's
 documentation applies. [NetBSD's man page](https://man.netbsd.org/NetBSD-10.0/posix_fallocate.2): "If successful, the posix_fallocate() function will return zero.", and
-otherwise an error number is returned, "without setting errno"; the option's [POSIX page](https://pubs.opengroup.org/onlinepubs/9699919799/functions/posix_fallocate.html) says the same. It returns -1
-and sets `errno` instead. .NET's tests that preallocate more space than the disk has
+otherwise an error number is returned, "without setting errno"; the option's [POSIX page](https://pubs.opengroup.org/onlinepubs/9699919799/functions/posix_fallocate.html) also has it "return zero" or
+return "an error number". It returns -1 and sets `errno` instead. .NET's tests that preallocate more space than the disk has
 see no error.
 
 **On 2.0.0.179, `posix_fallocate()` returns 0 for more space than the file system can give, after many minutes.** As the
@@ -278,9 +278,11 @@ afterwards; or another choice of yours.
 | `accept4(non-blocking listener, SOCK_CLOEXEC): O_NONBLOCK` | set | set | clear |
 
 `accept4()` is not in POSIX.1-2008, so NetBSD's documentation applies. [NetBSD's man page](https://man.netbsd.org/NetBSD-10.0/accept.2) says "The accept4() function
-matches Linux semantics and appeared in NetBSD 8.0.", and Linux clears the flag (the table); the same page also says
-that `paccept()`, which `accept4()` calls, "behaves exactly like accept()", and that "The accept() implementation makes
-the new file descriptor inherit file flags (like O_NONBLOCK) from the listening socket." In the code, NetBSD's
+matches Linux semantics and appeared in NetBSD 8.0.", and Linux clears the flag (the table). Its COMPATIBILITY section
+says that "The accept() implementation makes the new file descriptor inherit file flags (like O_NONBLOCK) from the
+listening socket.", that Linux's does not, that "Portable programs should not rely on either of the behaviours.", and
+that "The accept4() function is compatible with the Linux implementation." (Its description of `paccept()`, which
+`accept4()` calls, says it "behaves exactly like accept()" but for the flags it sets.) In the code, NetBSD's
 `accept4()` (its [`paccept()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_syscalls.c#L300-L324)) clears the inherited flag. [POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/functions/accept4.html), which added
 `accept4()`, requires the same: the new socket's `O_NONBLOCK` "shall be determined solely by the flag argument"; only
 `accept()` may inherit it ("it is implementation-defined whether O_NONBLOCK will be set on the file description created
@@ -733,7 +735,7 @@ document the accepted range; or another choice of yours.
 | `getsockopt(SO_RCVBUF, NULL, option_len 0)` | -1, errno Invalid argument | -1, errno Invalid argument | 0 |
 | `getsockopt(SO_RCVBUF, buffer, option_len 0)` | 0 | 0 | 0 |
 
-POSIX's [`getsockopt()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/getsockopt.html) does not allow a null `option_value`, so the result is undefined ("If an argument
+POSIX's [`getsockopt()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/getsockopt.html) says nothing of a null `option_value`, so the result is undefined ("If an argument
 to a function has an invalid value (such as ... or a null pointer), the behavior is undefined", [XSH 2.1.1](https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_01_01)) and
 failing is allowed. NetBSD's `getsockopt()` accepts it with length 0 and copies nothing, as Linux does: it sets
 `valsize` to 0 for a NULL value and returns before copying out ([`uipc_syscalls.c`:1186-1223](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_syscalls.c#L1186-L1223),
