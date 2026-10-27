@@ -282,7 +282,8 @@ matches Linux semantics and appeared in NetBSD 8.0.", and Linux clears the flag 
 says that "The accept() implementation makes the new file descriptor inherit file flags (like O_NONBLOCK) from the
 listening socket.", that Linux's does not, that "Portable programs should not rely on either of the behaviours.", and
 that "The accept4() function is compatible with the Linux implementation." (Its description of `paccept()`, which
-`accept4()` calls, says it "behaves exactly like accept()" but for the flags it sets.) In the code, NetBSD's
+`accept4()` is "equivalent to" with a NULL signal mask, says it "behaves exactly like accept()" but for its flags and
+signal mask.) In the code, NetBSD's
 `accept4()` (its [`paccept()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/uipc_syscalls.c#L300-L324)) clears the inherited flag. [POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/functions/accept4.html), which added
 `accept4()`, requires the same: the new socket's `O_NONBLOCK` "shall be determined solely by the flag argument"; only
 `accept()` may inherit it ("it is implementation-defined whether O_NONBLOCK will be set on the file description created
