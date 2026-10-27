@@ -120,7 +120,7 @@ Options: on a pipe, fail as POSIX describes (`ESPIPE` for `pread`, `EINVAL` for 
 document it; or another choice of yours.
 
 <a id="b3"></a>
-### B3. VfsRamFs: `utimensat()`, `rename()` and `posix_fallocate()` differ from POSIX
+### B3. VfsRamFs: `utimensat()`, `rename()` and `posix_fallocate()` differ from POSIX and NetBSD's documentation
 
 **`utimensat()` with explicit times fails with `EACCES` on a read-only file the process created.**
 
@@ -442,7 +442,9 @@ Options: return a positive error number, such as `EBADF`; keep -3 and document i
 
 A process cannot have more than 512 descriptors (`OPEN_MAX` in the SDK's `limits.h`), and nothing changes that:
 [`getrlimit(RLIMIT_NOFILE)`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/getrlimit.html) fails with `EINVAL` and [`setrlimit()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/setrlimit.html) with `ENOSYS`. In POSIX.1-2008 both belong to the XSI option,
-which KasperskyOS does not support; [POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/functions/getrlimit.html) moved them, with `RLIMIT_NOFILE`, into the Base. At the limit, [`open()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html) of a `/tmp` file fails with `EMFILE`, but `open()` of `/dev/null` with
+which KasperskyOS does not support, so NetBSD's documentation applies: its [man page](https://man.netbsd.org/NetBSD-10.0/getrlimit.2) documents "RLIMIT_NOFILE The
+maximum number of open files for this process." and fails `getrlimit()` with `EINVAL` only when the "Specified resource
+was invalid". [POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/functions/getrlimit.html) moved both, with `RLIMIT_NOFILE`, into the Base. At the limit, [`open()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html) of a `/tmp` file fails with `EMFILE`, but `open()` of `/dev/null` with
 `ENFILE`, which POSIX describes as "The maximum allowable number of files is currently open in the system."; for "All
 file descriptors available to the process are currently open." it gives `EMFILE`. .NET raises the soft limit at startup,
 which fails silently here, and the System.Net.Sockets tests sometimes reach the limit when their test classes overlap.
@@ -1171,7 +1173,7 @@ processes in which the handle sanitizer is enabled." (p. 593); this image does n
 above "Disables the handle sanitizer functionality for detecting the use of invalid handles." (p. 170; [web page](https://support.kaspersky.com/kos-community-edition/2.0/kernel_command_line)). So the detection is on in every
 process by default and ends the process, which the manual does not say; its "Critical changes in version 2.0" ([web page](https://support.kaspersky.com/kos-community-edition/2.0/breaking_changes)) do not
 mention it. POSIX's [`close()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html) and [`poll()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/poll.html) say nothing about a descriptor closed while another thread polls it. NetBSD's
-[`fd_close()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/kern_descrip.c#L685-L690) calls such a close "typically an application error - the descriptor is being closed while still in use.
+[`fd_close()`](https://github.com/NetBSD/src/blob/984c8a44149ca20397329137080f3eac31b2245d/sys/kern/kern_descrip.c#L685-L691) calls such a close "typically an application error - the descriptor is being closed while still in use.
 (Or just a threaded application trying to unblock its thread that sleeps in (say) accept()).", and waits for the other
 thread's use to end; the process lives.
 
