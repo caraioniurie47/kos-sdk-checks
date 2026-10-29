@@ -61,8 +61,8 @@ or `host/run-check.sh net [SDK directory]`, which does both, prints the `[check]
 `[check] done`. The SDK's CMake warns "Do not use build_kos_xxx_image() in root 'CMakeLists.txt'"; the image builds
 and runs regardless.
 
-The 2.0 SDK used here, `KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179`, is downloaded by hand from
-https://appicenter.kaspersky.dev/tools/sdk/kos.ce (it needs Ubuntu 24.04). SDK 2.0 builds no image around Einit alone
+The 2.0 SDK used here, `KasperskyOS-Community-Edition-Qemu-arm64-2.0.0.179`, is linked from Kaspersky's
+[download page](https://os.kaspersky.com/download-community-edition/) (it needs Ubuntu 24.04). SDK 2.0 builds no image around Einit alone
 ([U21](FINDINGS.md#u21)). [`sdk2/`](sdk2/) builds the same programs as the
 KPA package `Check` on the SDK's prebuilt MinimalKOS, with VfsRamFs, VfsNet and the `dnet` programs in a product ROMFS
 (`cmake -S sdk2 ...`, target `qemu` to build, `sim` to run); `host/run-check.sh` picks it for an SDK that has
